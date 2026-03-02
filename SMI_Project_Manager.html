@@ -761,6 +761,57 @@
             background: rgba(88, 166, 255, 0.03);
             /* Subtle blue tint to confirm load */
         }
+
+        /* --- Cloud Sync UI --- */
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+        }
+
+        .sync-dot.online {
+            background: var(--accent-green);
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        .sync-dot.syncing {
+            background: var(--accent-blue);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.4;
+            }
+        }
+
+        .nav-item.sync-btn {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            border-radius: 0;
+            padding-top: 20px;
+        }
     </style>
 </head>
 
@@ -781,6 +832,12 @@
             <li class="nav-item" data-page="kanban" onclick="showPage('kanban')"><i>📋</i> Kanban Wall</li>
             <li class="nav-item" data-page="outreach" onclick="showPage('outreach')"><i>🤝</i> Outreach</li>
         </ul>
+        <div class="sync-status" id="cloud-status-box">
+            <div class="sync-dot" id="sync-indicator"></div>
+            <span id="sync-text">Cloud Storage: Offline</span>
+        </div>
+        <button class="btn btn-outline" style="width: 100%; margin-top: 10px; font-size: 0.8rem;"
+            onclick="openCloudModal()">⚙️ Cloud Settings</button>
         <div
             style="font-size: 0.75rem; color: var(--text-dim); padding: 10px; border-top: 1px solid var(--border-color); margin-top: 20px;">
             SMI Engine v5.5 [DEBUG]<br>
@@ -1012,10 +1069,50 @@
         </div>
     </div>
 
+    <!-- Modal for Cloud Settings -->
+    <div id="cloud-modal" class="modal-overlay">
+        <div class="modal">
+            <h3>GitHub Cloud Sync</h3>
+            <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px;">
+                Use your GitHub repository as a shared database. Data will be saved to
+                <code>Assets/Data/SMI_Cloud_State.json</code>.
+            </p>
+            <label>GitHub Personal Access Token (PAT)</label>
+            <input type="password" id="cloud-token" placeholder="ghp_xxxxxxxxxxxx">
+            <label>Repository Owner</label>
+            <input type="text" id="cloud-owner" placeholder="keithesanks-prog">
+            <label>Repository Name</label>
+            <input type="text" id="cloud-repo" placeholder="science-of-military-intelligence">
+
+            <div
+                style="background: rgba(88, 166, 255, 0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.85rem;">
+                <strong>Sync Strategy:</strong>
+                <p style="margin-top: 5px;">When active, the app will auto-pull on load and auto-push on every change.
+                    Uses SHA-based conflict resolution.</p>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveCloudSettings()">Enable Sync</button>
+                <button class="btn btn-danger" style="flex: 0.5;" onclick="disableCloudSync()">Disable</button>
+                <button class="btn btn-outline" style="flex: 0.5;" onclick="closeCloudModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let episodes = [];
         let folderManifest = [];
         let editingId = null;
+
+        // --- CLOUD SYNC STATE ---
+        let cloudConfig = {
+            active: false,
+            token: '',
+            owner: '',
+            repo: '',
+            sha: null,
+            filePath: 'Assets/Data/SMI_Cloud_State.json'
+        };
 
         // Embedded data fallbacks to bypass fetch() restrictions on local files
         const DEFAULT_EPISODES = [
@@ -1081,9 +1178,25 @@
         // Initialize App
         async function init() {
             console.log("=== APP INIT START ===");
+
+            // Load Cloud Config
+            const savedCloud = localStorage.getItem('smi_cloud_config');
+            if (savedCloud) {
+                cloudConfig = JSON.parse(savedCloud);
+                updateSyncUI();
+                if (cloudConfig.active) {
+                    await githubSync.pull();
+                }
+            }
+
             // Load production & equipment data
             loadProductionData();
             loadEquipState();
+
+            // Migrate local data to cloud if active and cloud is empty
+            if (cloudConfig.active) {
+                await syncToCloud();
+            }
 
             // Migration: Ensure all production keys are normalized
             console.log("Running ID Normalization Sync...");
@@ -1295,6 +1408,7 @@
 
         function saveProductionData() {
             localStorage.setItem(PROD_KEY, JSON.stringify(productionData));
+            if (cloudConfig.active) githubSync.push();
         }
 
         function getEpProd(epId) {
@@ -1573,6 +1687,7 @@
 
         function saveEquipState() {
             localStorage.setItem(EQUIP_KEY, JSON.stringify(equipState));
+            if (cloudConfig.active) githubSync.push();
         }
 
         function renderEquipment() {
@@ -1960,6 +2075,137 @@
             saveState();
             document.getElementById('task-text').value = '';
             closeTaskModal();
+        }
+
+        // --- GITHUB CLOUD ENGINE ---
+        const githubSync = {
+            async pull() {
+                if (!cloudConfig.active || !cloudConfig.token) return;
+                setSyncStatus('syncing', 'Pulling Cloud Data...');
+
+                try {
+                    const url = `https://api.github.com/repos/${cloudConfig.owner}/${cloudConfig.repo}/contents/${cloudConfig.filePath}`;
+                    const res = await fetch(url, {
+                        headers: { 'Authorization': `token ${cloudConfig.token}` }
+                    });
+
+                    if (res.status === 404) {
+                        setSyncStatus('online', 'Cloud Ready (File New)');
+                        return;
+                    }
+
+                    const data = await res.json();
+                    cloudConfig.sha = data.sha;
+                    const content = JSON.parse(atob(data.content));
+
+                    // Merge/Replace local data
+                    if (content.productionData) productionData = content.productionData;
+                    if (content.equipState) equipState = content.equipState;
+                    if (content.episodes) episodes = content.episodes;
+
+                    renderAll();
+                    setSyncStatus('online', 'Cloud Synced');
+                } catch (e) {
+                    console.error("Cloud Pull Failed:", e);
+                    setSyncStatus('', 'Cloud Error');
+                }
+            },
+
+            async push() {
+                if (!cloudConfig.active || !cloudConfig.token) return;
+                setSyncStatus('syncing', 'Pushing Changes...');
+
+                try {
+                    const payload = {
+                        productionData,
+                        equipState,
+                        episodes
+                    };
+
+                    const body = {
+                        message: "Sync: Data Update from SMI Project Manager",
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2)))),
+                        sha: cloudConfig.sha
+                    };
+
+                    const url = `https://api.github.com/repos/${cloudConfig.owner}/${cloudConfig.repo}/contents/${cloudConfig.filePath}`;
+                    const res = await fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${cloudConfig.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        cloudConfig.sha = data.content.sha;
+                        setSyncStatus('online', 'Cloud Saved');
+                    } else if (res.status === 409) {
+                        setSyncStatus('', 'Sync Conflict! Refresh.');
+                        alert("Conflict detected. Another user has updated the data. Please refresh to pull latest.");
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } catch (e) {
+                    console.error("Cloud Push Failed:", e);
+                    setSyncStatus('', 'Push Error');
+                }
+            }
+        };
+
+        function setSyncStatus(st, text) {
+            const ind = document.getElementById('sync-indicator');
+            const txt = document.getElementById('sync-text');
+            ind.className = 'sync-dot ' + st;
+            txt.textContent = text;
+        }
+
+        async function syncToCloud() {
+            if (!cloudConfig.active) return;
+            // Initial push to establish remote file if it doesn't exist
+            await githubSync.push();
+        }
+
+        function openCloudModal() {
+            document.getElementById('cloud-token').value = cloudConfig.token || '';
+            document.getElementById('cloud-owner').value = cloudConfig.owner || '';
+            document.getElementById('cloud-repo').value = cloudConfig.repo || '';
+            document.getElementById('cloud-modal').style.display = 'flex';
+        }
+
+        function closeCloudModal() {
+            document.getElementById('cloud-modal').style.display = 'none';
+        }
+
+        async function saveCloudSettings() {
+            cloudConfig.token = document.getElementById('cloud-token').value;
+            cloudConfig.owner = document.getElementById('cloud-owner').value;
+            cloudConfig.repo = document.getElementById('cloud-repo').value;
+            cloudConfig.active = true;
+
+            localStorage.setItem('smi_cloud_config', JSON.stringify(cloudConfig));
+            updateSyncUI();
+
+            // Try initial pull
+            await githubSync.pull();
+            closeCloudModal();
+        }
+
+        function disableCloudSync() {
+            cloudConfig.active = false;
+            localStorage.setItem('smi_cloud_config', JSON.stringify(cloudConfig));
+            updateSyncUI();
+            closeCloudModal();
+        }
+
+        function updateSyncUI() {
+            if (cloudConfig.active) {
+                setSyncStatus('online', 'Cloud Active');
+            } else {
+                setSyncStatus('', 'Cloud Offline');
+            }
         }
 
         init();
