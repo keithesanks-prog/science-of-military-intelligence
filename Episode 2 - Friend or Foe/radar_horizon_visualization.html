@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Horizon Visualizer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #04080f;
+            --panel-bg: rgba(10, 20, 35, 0.95);
+            --accent: #00e5ff;
+            --accent-dim: rgba(0, 229, 255, 0.2);
+            --earth: #2a4b8d;
+            --critical: #ff3e3e;
+            --success: #00ff88;
+            --border: rgba(0, 229, 255, 0.3);
+            --text: #e0f2f1;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Orbitron', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 16px 30px;
+            background: linear-gradient(90deg, #0a1423, transparent);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand h1 {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .brand p {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 2px;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        .controls {
+            width: 320px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-section h3 {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .slider-wrap {
+            margin-bottom: 18px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        .val-display {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-dim);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+
+        .stats-grid {
+            margin-top: auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .stat-card .st-label {
+            font-size: 0.6rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+
+        .stat-card .st-val {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-top: 4px;
+        }
+
+        .vis-area {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at 50% 120%, #112244 0%, #04080f 70%);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay-hud {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            pointer-events: none;
+        }
+
+        .los-tag {
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            border: 1px solid;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+        }
+
+        .los-tag.visible {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .los-tag.occluded {
+            border-color: var(--critical);
+            color: var(--critical);
+        }
+
+        .hint {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.75rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>Radar Horizon Explorer</h1>
+            <p>Line of Sight vs. Earth Curvature Simulation</p>
+        </div>
+        <div class="los-tag" id="los-status">Target Status: Scanning...</div>
+    </header>
+
+    <div class="main-container">
+        <aside class="controls">
+            <div class="control-section">
+                <h3>Radar Site</h3>
+                <div class="slider-wrap">
+                    <div class="label-row"><span>Radar Height (Hᵣ)</span><span class="val-display"
+                            id="val-hR">10m</span></div>
+                    <input type="range" id="sl-hR" min="2" max="500" value="10" oninput="update()">
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>Target Vessel</h3>
+                <div class="slider-wrap">
+                    <div class="label-row"><span>Target Height (Hₜ)</span><span class="val-display"
+                            id="val-hT">15m</span></div>
+                    <input type="range" id="sl-hT" min="1" max="100" value="15" oninput="update()">
+                </div>
+                <div class="slider-wrap">
+                    <div class="label-row"><span>Distance</span><span class="val-display" id="val-dist">15km</span>
+                    </div>
+                    <input type="range" id="sl-dist" min="5" max="80" value="15" step="0.5" oninput="update()">
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>Environment</h3>
+                <div class="slider-wrap">
+                    <div class="label-row"><span>Atmospheric Refraction (K)</span><span class="val-display"
+                            id="val-k">1.33</span></div>
+                    <input type="range" id="sl-k" min="1.0" max="1.6" value="1.33" step="0.01" oninput="update()">
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="st-label">Radar Horizon Range</div>
+                    <div class="st-val" id="stat-horiz">0.0 km</div>
+                </div>
+                <div class="stat-card">
+                    <div class="st-label">Max Detection Range</div>
+                    <div class="st-val" id="stat-max">0.0 km</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="vis-area" id="vis-container">
+            <canvas id="horizCanvas"></canvas>
+            <div class="hint">Adjust heights to see the horizon expand. (Scale is exaggerated for clarity)</div>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('horizCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('vis-container');
+
+        // Physics Constants
+        const R_EARTH = 6371; // km
+
+        let state = {
+            hR: 10,  // Radar height (m)
+            hT: 15,  // Target height (m)
+            dist: 15, // Ground distance (km)
+            k: 1.33,  // K-factor for refraction
+            horizRange: 0,
+            maxRange: 0
+        };
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+            update();
+            animate();
+        }
+
+        function resize() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+
+        function update() {
+            state.hR = parseFloat(document.getElementById('sl-hR').value);
+            state.hT = parseFloat(document.getElementById('sl-hT').value);
+            state.dist = parseFloat(document.getElementById('sl-dist').value);
+            state.k = parseFloat(document.getElementById('sl-k').value);
+
+            // Digital readout updates
+            document.getElementById('val-hR').innerText = state.hR + 'm';
+            document.getElementById('val-hT').innerText = state.hT + 'm';
+            document.getElementById('val-dist').innerText = state.dist + 'km';
+            document.getElementById('val-k').innerText = state.k.toFixed(2);
+
+            // Calculations based on 4/3 earth model
+            // d (km) ≈ 3.57 * sqrt(k) * sqrt(h (m)) -- actually standard is approx 4.12 * sqrt(h)
+            // Exact: d = sqrt(2 * k * R * h/1000)
+            state.horizRange = Math.sqrt(2 * state.k * R_EARTH * (state.hR / 1000));
+            document.getElementById('stat-horiz').innerText = state.horizRange.toFixed(1) + ' km';
+
+            // Max range where target hT can be seen
+            const targetHoriz = Math.sqrt(2 * state.k * R_EARTH * (state.hT / 1000));
+            state.maxRange = state.horizRange + targetHoriz;
+            document.getElementById('stat-max').innerText = state.maxRange.toFixed(1) + ' km';
+
+            // LOS Status
+            const statusTag = document.getElementById('los-status');
+            if (state.dist <= state.maxRange) {
+                statusTag.innerText = "Target Status: VISIBLE (Within LOS)";
+                statusTag.className = "los-tag visible";
+            } else {
+                statusTag.innerText = "Target Status: OCCLUDED (Beyond Horizon)";
+                statusTag.className = "los-tag occluded";
+            }
+        }
+
+        function drawEarth(cx, cy, rPixels) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, rPixels, 0, Math.PI * 2);
+            const grad = ctx.createRadialGradient(cx, cy, rPixels * 0.9, cx, cy, rPixels);
+            grad.addColorStop(0, '#0a1a3a');
+            grad.addColorStop(1, '#00d4ff');
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgba(0, 229, 255, 0.4)';
+            ctx.stroke();
+
+            // Grid lines on earth
+            ctx.beginPath();
+            for (let i = 0; i < 30; i++) {
+                const ang = -Math.PI / 2 - 0.2 + (i * 0.02);
+                ctx.moveTo(cx + rPixels * Math.cos(ang), cy + rPixels * Math.sin(ang));
+                ctx.lineTo(cx + (rPixels - 20) * Math.cos(ang), cy + (rPixels - 20) * Math.sin(ang));
+            }
+            ctx.strokeStyle = 'rgba(0, 229, 255, 0.1)';
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const W = canvas.width;
+            const H = canvas.height;
+
+            // Geometry constants for drawing (Scale is exaggerated)
+            // earthRadiusPixels: Reduced slightly to show MORE curvature in a smaller horizontal segment
+            const earthRadiusPixels = H * 2.2;
+            const cx = W * 0.12;
+            const cy = H + earthRadiusPixels - 220; // RAISED: ground is now ~220px from bottom
+
+            drawEarth(cx, cy, earthRadiusPixels);
+
+            // Horizon Point calculation
+            const angle0 = -Math.PI / 2;
+            const distScale = 15; // Increased: 1km = 15px
+            const horizAngle = angle0 + (state.horizRange * distScale / earthRadiusPixels);
+            const tangentX = cx + earthRadiusPixels * Math.cos(horizAngle);
+            const tangentY = cy + earthRadiusPixels * Math.sin(horizAngle);
+
+            // Visual Horizon Glow
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(tangentX, tangentY, 4, 0, 7);
+            ctx.fillStyle = '#fff';
+            ctx.shadowBlur = 15; ctx.shadowColor = '#fff';
+            ctx.fill();
+            ctx.restore();
+
+            // Radar Tower
+            const hScale = 1.0; // 1m = 1px (Good for 50-500m ranges)
+            const hRPix = state.hR * hScale;
+
+            const baseRX = cx + earthRadiusPixels * Math.cos(angle0);
+            const baseRY = cy + earthRadiusPixels * Math.sin(angle0);
+
+            // Tower Body
+            ctx.beginPath();
+            ctx.moveTo(baseRX - 8, baseRY);
+            ctx.lineTo(baseRX - 2, baseRY - hRPix);
+            ctx.lineTo(baseRX + 2, baseRY - hRPix);
+            ctx.lineTo(baseRX + 8, baseRY);
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
+            ctx.fill();
+            ctx.strokeStyle = '#e0f2f1';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Antenna
+            ctx.beginPath();
+            ctx.arc(baseRX, baseRY - hRPix, 6, 0, Math.PI * 2);
+            ctx.fillStyle = varColor('--accent');
+            ctx.fill();
+
+            // Sight lines
+            // Draw LOS Beam (Tangent from Radar)
+            ctx.beginPath();
+            ctx.setLineDash([5, 5]);
+            ctx.moveTo(baseRX, baseRY - hRPix);
+            ctx.lineTo(tangentX, tangentY);
+            ctx.strokeStyle = varColor('--accent-dim');
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Target Logic
+            const targetAngle = angle0 + (state.dist * distScale / earthRadiusPixels);
+            const targetBaseX = cx + earthRadiusPixels * Math.cos(targetAngle);
+            const targetBaseY = cy + earthRadiusPixels * Math.sin(targetAngle);
+            const hTPix = state.hT * hScale;
+
+            // Target vector direction
+            const txTopX = cx + (earthRadiusPixels + hTPix) * Math.cos(targetAngle);
+            const txTopY = cy + (earthRadiusPixels + hTPix) * Math.sin(targetAngle);
+
+            const isVisible = state.dist <= state.maxRange;
+
+            // Target Vessel Rendering (Simple representation)
+            ctx.beginPath();
+            ctx.moveTo(targetBaseX, targetBaseY);
+            ctx.lineTo(txTopX, txTopY);
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = isVisible ? varColor('--success') : varColor('--critical');
+            ctx.stroke();
+
+            // Vessel base line
+            ctx.beginPath();
+            const bx1 = cx + earthRadiusPixels * Math.cos(targetAngle - 0.012);
+            const by1 = cy + earthRadiusPixels * Math.sin(targetAngle - 0.012);
+            const bx2 = cx + earthRadiusPixels * Math.cos(targetAngle + 0.012);
+            const by2 = cy + earthRadiusPixels * Math.sin(targetAngle + 0.012);
+            ctx.moveTo(bx1, by1);
+            ctx.lineTo(bx2, by2);
+            ctx.stroke();
+
+            // Label at target
+            ctx.fillStyle = isVisible ? varColor('--success') : varColor('--critical');
+            ctx.font = '700 11px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText(isVisible ? 'VISIBLE' : 'HIDDEN', txTopX, txTopY - 15);
+            ctx.font = '400 9px Orbitron';
+            ctx.fillText(state.dist.toFixed(1) + 'km', targetBaseX, targetBaseY + 20);
+
+            requestAnimationFrame(animate);
+        }
+
+        const varColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(name);
+
+        init();
+    </script>
+</body>
+
+</html>

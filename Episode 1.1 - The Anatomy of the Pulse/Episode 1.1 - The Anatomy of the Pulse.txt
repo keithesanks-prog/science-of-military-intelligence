@@ -1,0 +1,63 @@
+# Episode 1.1: The Anatomy of the Pulse
+
+### Act 1: The Pulse's Birth (The Block Diagram)
+**(Visual: A clean, 2D vector animation of a Radar Block Diagram. We start at a single glowing dot: The Master Oscillator.)**
+
+**Narrator:** "In Episode 1, we saw the 'Spark'—the violent, chaotic discharge of energy. But a modern military radar isn't an explosion; it’s a symphony. It begins here: the **Master Oscillator**. This is the heart of the machine, creating a low-power, perfectly stable reference signal. It is the 'DNA' of the pulse."
+
+**(Visual: The signal flows into a larger box: The Power Amplifier.)**
+
+**Narrator:** "But a DNA strand can't move a mountain. To reach out 200 miles, that signal needs muscle. It enters the **Power Amplifier**—often a TWT (Traveling Wave Tube) or a solid-state array. This takes that tiny reference and boosts it by millions of watts. This is the 'Shout' being prepared."
+
+**(Visual: The high-power pulse reaches a junction labeled 'DUPLEXER.' A gate flips to the left, toward the Antenna.)**
+
+**Narrator:** "Now we hit the most critical traffic cop in engineering: the **Duplexer**. Remember, a radar uses the same antenna to transmit and receive. If that million-watt 'Shout' leaked into the sensitive 'Ear' of the receiver, it would melt it instantly. The Duplexer acts as a high-speed switch, slamming the door to the receiver shut the microsecond the transmitter fires."
+
+---
+
+### Act 2: The Logic of the Leap (PRF & Pulse Width)
+**(Visual: A timeline. We see a short green block (The Pulse), then a long gap (The Listen Time). Text: **PULSE WIDTH ($\tau$)** points to the block; **PRI (Interval)** points to the gap.)**
+
+**Narrator:** "A radar doesn't just 'shine.' It pulses. And the geometry of that pulse determines what you see. First, there’s **Pulse Width**. Think of this as the 'thickness' of your flashlight beam. A wide pulse puts more energy on the target, meaning you can see further. But there’s a catch: two planes flying close together will look like one big blob. If you want **Range Resolution**—the ability to tell two targets apart—you need a 'thin' pulse."
+
+**(Visual: The timeline zooms out. We see the pulses repeating rapidly. Text: **PRF (Pulse Repetition Frequency)**.)**
+
+**Narrator:** "Then there’s the **PRF**—how many times a second you shout. If you shout too fast, the echo from your first pulse might come back after you’ve already sent the second one. The computer gets confused; it doesn't know if the target is 50 miles away or 500. This is the **Ambiguous Range**. To see far, you have to be patient. To see fast, you have to be frequent. Engineering is the art of picking your poison."
+
+---
+
+### Act 3: The Ghost's Return (The Receiver Chain)
+**(Visual: The Duplexer flips to the right. A tiny, faint blue 'Echo' travels from the Antenna into the Receiver.)**
+
+**Narrator:** "The 'Shout' is over. Now, the machine must listen. The echo that returns is billions of times weaker than the pulse we sent. It is a whisper in a hurricane. To hear it, the receiver uses a **Mixer** and a **Local Oscillator**."
+
+**(Visual: Two waves (The Echo and the Local Oscillator) move into the Mixer. They combine to form a lower-frequency 'Intermediate Frequency' (IF) wave.)**
+
+**Narrator:** "We don't try to process the raw high-frequency signal; it’s too fast. Instead, we 'mix' it with a known signal to drop it down to a manageable frequency. This is like translating a high-speed foreign language into a slow, clear dialect. This is where we pull the 'Handshake' out of the noise."
+
+**(Visual: A jagged basement line on a graph. The Echo spike just barely pokes above it. Text: **NOISE FLOOR**.)**
+
+**Narrator:** "The ultimate limit isn't power; it’s heat. Every component in the radar vibrates with thermal energy, creating 'Noise.' This is the **Noise Floor** ($kTB$). If the echo is weaker than the noise, the ghost is lost. This is why we chill receivers or use exotic materials—to lower the floor so we can hear the whisper of a ghost from across the horizon."
+
+---
+
+### Act 4: Frequency Scaling (The Speed of the Secret)
+**(Visual: A slow sine wave (L-Band) vs. a rapid, tight sine wave (X-Band).)**
+
+**Narrator:** "Finally, why do we want 'faster' pulses? Why move from the 'Bass' of the L-Band to the 'Whistle' of the X-Band? Because higher frequencies mean shorter wavelengths. And shorter wavelengths mean smaller antennas and sharper 'Pencil Beams.' 
+
+As we move up the spectrum ($f \uparrow$), the pulse gets more precise. We go from 'There is a plane' to 'There is an F-16 with two external fuel tanks.' Higher frequency is the high-definition of the invisible world."
+
+---
+
+### SMI Key Concepts:
+1.  **Master Oscillator**: The ultra-stable source for the radar frequency.
+2.  **Duplexer**: The switch that protects the receiver from the high-power transmitter.
+3.  **Pulse Width ($\tau$)**: The duration of the transmitted pulse; determines range resolution.
+4.  **PRF (Pulse Repetition Frequency)**: The number of pulses transmitted per second; determines maximum unambiguous range.
+5.  **Duty Cycle**: The ratio of 'on' time to total time.
+6.  **Mixer / Local Oscillator**: Components that down-convert the high-frequency echo for processing.
+7.  **Sensitivity / Noise Floor ($kTB$)**: The minimum signal level a radar can detect over its own internal thermal noise.
+8.  **Range Resolution**: The ability of a radar to distinguish between two closely spaced targets.
+9.  **Intermediate Frequency (IF)**: The lower frequency signal produced after mixing, used for easier amplification and filtering.
+10. **TWT (Traveling Wave Tube)**: A specialized vacuum tube used in high-power radar transmitters.

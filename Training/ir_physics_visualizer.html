@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMI Training: The Silent Eye (IR Physics)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --panel-bg: rgba(20, 20, 25, 0.9);
+            --accent-color: #00f2ff;
+            --text-color: #e0e0e0;
+            --ir-color: #ff3c00;
+            --window-color: rgba(0, 242, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            height: 100vh;
+        }
+
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+        }
+
+        #controls {
+            width: 350px;
+            padding: 30px;
+            background: var(--panel-bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .value-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        button.active {
+            background: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+        }
+
+        #visual-area {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+            background: radial-gradient(circle at center, #101015 0%, #050505 100%);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        #curve-panel {
+            height: 60%;
+        }
+
+        #distance-panel {
+            height: 35%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .math-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        .equation {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .result {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        #target-glow {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 20px #fff;
+            transition: transform 0.1s linear;
+        }
+
+        .window-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.6rem;
+            color: var(--accent-color);
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls">
+        <div id="hud">
+            <h1>SMI: The Silent Eye</h1>
+        </div>
+
+        <div class="control-group" style="margin-top: 60px;">
+            <label>Temperature (Kelvin)</label>
+            <input type="range" id="temp-slider" min="100" max="6000" value="300">
+            <div class="value-display"><span id="temp-val">300</span> K</div>
+        </div>
+
+        <div class="control-group">
+            <label>Distance (Meters)</label>
+            <input type="range" id="dist-slider" min="1" max="10000" value="100">
+            <div class="value-display"><span id="dist-val">100</span> m</div>
+        </div>
+
+        <div class="control-group">
+            <label>Presets</label>
+            <div class="presets">
+                <button onclick="setPreset('human')">Human (310K)</button>
+                <button onclick="setPreset('campfire')">Campfire (1000K)</button>
+                <button onclick="setPreset('engine')">Jet Exhaust (1200K)</button>
+                <button onclick="setPreset('missile')">Missile Plume (2500K)</button>
+                <button onclick="setPreset('sun')">Sun Surface (5778K)</button>
+                <button onclick="setPreset('space')">SBIRS Lock (2500K @ 35k km)</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Detection Band</label>
+            <div id="band-info" style="font-size: 0.8rem; line-height: 1.4; color: #aaa;">
+                Currently peak in: <span id="current-band" style="color: var(--accent-color)">LWIR</span><br>
+                Recommended Sensor: <span id="rec-sensor" style="color: #fff">Microbolometer</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="visual-area">
+        <div id="curve-panel" class="panel">
+            <canvas id="curveCanvas"></canvas>
+            <div class="math-overlay">
+                <div class="equation">Wien's Law: λmax = 2898/T</div>
+                <div class="result" id="wien-result">9.66 μm</div>
+                <div class="equation" style="margin-top: 15px;">Stefan-Boltzmann: P ∝ T⁴</div>
+                <div class="result" id="stefan-result">1.0x energy</div>
+            </div>
+        </div>
+
+        <div id="distance-panel" class="panel">
+            <div id="target-glow"></div>
+            <div class="math-overlay">
+                <div class="equation">Inv. Square Law: I = P / 4πr²</div>
+                <div class="result" id="inv-square-result">1.0x intensity</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tempSlider = document.getElementById('temp-slider');
+        const distSlider = document.getElementById('dist-slider');
+        const tempVal = document.getElementById('temp-val');
+        const distVal = document.getElementById('dist-val');
+        const wienResult = document.getElementById('wien-result');
+        const stefanResult = document.getElementById('stefan-result');
+        const invSquareResult = document.getElementById('inv-square-result');
+        const currentBand = document.getElementById('current-band');
+        const recSensor = document.getElementById('rec-sensor');
+        const targetGlow = document.getElementById('target-glow');
+        const curveCanvas = document.getElementById('curveCanvas');
+        const ctx = curveCanvas.getContext('2d');
+
+        function setPreset(type) {
+            switch (type) {
+                case 'human': tempSlider.value = 310; distSlider.value = 5; break;
+                case 'campfire': tempSlider.value = 1000; distSlider.value = 50; break;
+                case 'engine': tempSlider.value = 1200; distSlider.value = 200; break;
+                case 'missile': tempSlider.value = 2500; distSlider.value = 1000; break;
+                case 'sun': tempSlider.value = 5778; distSlider.value = 5000; break;
+                case 'space': tempSlider.value = 2500; distSlider.value = 10000; break; // 10k is max for slider
+            }
+            update();
+        }
+
+        function planck(lambda, T) {
+            // simplified planck function for visualization
+            // lambda in micrometers, T in Kelvin
+            const c1 = 37417; // 2 * pi * h * c^2
+            const c2 = 14387; // h * c / k
+            return (c1 / Math.pow(lambda, 5)) / (Math.exp(c2 / (lambda * T)) - 1);
+        }
+
+        function update() {
+            const T = parseFloat(tempSlider.value);
+            const R = parseFloat(distSlider.value);
+
+            tempVal.innerText = T;
+            distVal.innerText = R;
+
+            // Wien's Law
+            const lambdaMax = 2898 / T;
+            wienResult.innerText = `${lambdaMax.toFixed(2)} μm`;
+
+            // Stefan-Boltzmann (Relative to 300K)
+            const powerRatio = Math.pow(T / 300, 4);
+            stefanResult.innerText = `${powerRatio.toExponential(1)}x energy`;
+
+            // Inverse Square Law (Relative to 1m)
+            const intensityRatio = powerRatio / Math.pow(R, 2);
+            invSquareResult.innerText = `${intensityRatio.toExponential(1)}x received`;
+
+            // Band Info
+            if (lambdaMax < 0.75) {
+                currentBand.innerText = "VISIBLE";
+                recSensor.innerText = "Silicon CCD";
+                currentBand.style.color = "#fff";
+            } else if (lambdaMax < 3) {
+                currentBand.innerText = "SWIR";
+                recSensor.innerText = "InGaAs / InSb";
+                currentBand.style.color = "#00f2ff";
+            } else if (lambdaMax < 5) {
+                currentBand.innerText = "MWIR";
+                recSensor.innerText = "InSb / HgCdTe (Cooled)";
+                currentBand.style.color = "#ffdd00";
+            } else {
+                currentBand.innerText = "LWIR";
+                recSensor.innerText = "Microbolometer / HgCdTe";
+                currentBand.style.color = "#ff3c00";
+            }
+
+            // Visual Updates
+            drawCurve(T, lambdaMax);
+            updateGlow(T, R, intensityRatio);
+        }
+
+        function drawCurve(T, lambdaMax) {
+            const width = curveCanvas.width = curveCanvas.parentElement.clientWidth;
+            const height = curveCanvas.height = curveCanvas.parentElement.clientHeight;
+            ctx.clearRect(0, 0, width, height);
+
+            const padding = 50;
+            const graphWidth = width - 2 * padding;
+            const graphHeight = height - 2 * padding;
+
+            // X-axis: 0 to 20 micrometers
+            const xMax = 20;
+
+            // Draw Windows
+            const windows = [[1, 3], [3, 5], [8, 14]];
+            ctx.fillStyle = 'rgba(0, 242, 255, 0.05)';
+            windows.forEach(w => {
+                const xStart = padding + (w[0] / xMax) * graphWidth;
+                const xEnd = padding + (w[1] / xMax) * graphWidth;
+                ctx.fillRect(xStart, padding, xEnd - xStart, graphHeight);
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.3)';
+                ctx.font = '10px Orbitron';
+                ctx.fillText(`${w[0]}-${w[1]}μm`, xStart + 5, padding - 10);
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.05)';
+            });
+
+            // Draw Base Lines
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#888';
+            ctx.font = '12px Inter';
+            ctx.fillText('Wavelength (μm)', width / 2 - 40, height - 15);
+            ctx.save();
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Relative Intensity', -height / 2 - 40, 20);
+            ctx.restore();
+
+            // The Curve
+            ctx.beginPath();
+            ctx.strokeStyle = '#ff3c00';
+            ctx.lineWidth = 3;
+
+            // Normalize curve height for display
+            // We want the peak of the current curve to be at 80% height
+            const peakIntensity = planck(lambdaMax, T);
+
+            for (let x = 0; x <= graphWidth; x++) {
+                const lambda = (x / graphWidth) * xMax;
+                if (lambda < 0.1) continue;
+
+                const intensity = planck(lambda, T);
+                const y = padding + graphHeight - (intensity / peakIntensity) * graphHeight * 0.8;
+
+                if (x === 0) ctx.moveTo(padding + x, y);
+                else ctx.lineTo(padding + x, y);
+            }
+            ctx.stroke();
+
+            // Peak Marker
+            const peakX = padding + (lambdaMax / xMax) * graphWidth;
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.beginPath();
+            ctx.moveTo(peakX, padding);
+            ctx.lineTo(peakX, height - padding);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function updateGlow(T, R, intensity) {
+            // Map temperature to color
+            let color;
+            const temp = parseFloat(T);
+            if (temp < 1000) color = [255, 60, 0]; // Deep IR Red
+            else if (temp < 2500) color = [255, 120, 0]; // Orange
+            else if (temp < 4000) color = [255, 200, 50]; // Yellowish
+            else color = [255, 255, 255]; // White
+
+            // Brightness based on intensity
+            // Log scale for glow to handle enormous dynamic range
+            const logIntensity = Math.log10(intensity + 1);
+            const scale = Math.min(2, Math.max(0.1, logIntensity / 5));
+            const brightness = Math.min(255, 50 + logIntensity * 20);
+
+            targetGlow.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            targetGlow.style.boxShadow = `0 0 ${20 * scale}px rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            targetGlow.style.transform = `scale(${scale})`;
+
+            // Distance effect - make smaller
+            const distScale = Math.max(0.05, 100 / R);
+            targetGlow.style.transform += ` scale(${distScale})`;
+        }
+
+        tempSlider.oninput = update;
+        distSlider.oninput = update;
+        window.onresize = update;
+
+        update();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMI Episode 10: Anatomy of a Packet</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0c;
+            --accent-blue: #00f2ff;
+            --accent-purple: #7000ff;
+            --accent-red: #ff0055;
+            --text-main: #e0e0e0;
+            --text-dim: #888;
+            --panel-bg: rgba(20, 20, 25, 0.8);
+            --border-glow: 0 0 15px rgba(0, 242, 255, 0.3);
+        }
+
+        @font-face {
+            font-family: 'Orbitron';
+            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+            background: radial-gradient(circle at center, #15151a 0%, #0a0a0c 100%);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+        }
+
+        .hud-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-blue);
+            margin-bottom: 5px;
+            text-shadow: var(--border-glow);
+        }
+
+        .hud-value {
+            font-family: 'monospace';
+            font-size: 24px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 20px;
+            background: var(--panel-bg);
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .control-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 120px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-blue);
+        }
+
+        #overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .paradox-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .paradox-subtitle {
+            font-size: 18px;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-blue);
+            color: black;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+        }
+
+        .btn.active {
+            background: var(--accent-blue);
+            color: black;
+        }
+
+        #math-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-purple);
+            width: 250px;
+            backdrop-filter: blur(5px);
+        }
+
+        .math-expr {
+            font-family: 'serif';
+            font-style: italic;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .info-panel {
+            position: absolute;
+            bottom: 100px;
+            width: 400px;
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 2px solid var(--accent-blue);
+            text-align: left;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="hud">
+        <div class="hud-label">Network Status</div>
+        <div id="status-val" class="hud-value">DISTRIBUTED: ACTIVE</div>
+
+        <div class="hud-label">Survivability Margin</div>
+        <div id="survival-val" class="hud-value">98.4%</div>
+
+        <div class="hud-label">Queuing Delay (T = L/R)</div>
+        <div id="delay-val" class="hud-value">0.02ms</div>
+    </div>
+
+    <div id="math-panel">
+        <div class="hud-label" style="font-size: 10px">The Packet Switching Equation</div>
+        <div class="math-expr">T = L / R</div>
+        <p style="font-size: 11px; color: var(--text-dim); line-height: 1.4;">
+            As packet size (L) decreases, the granularity of travel increases, allowing the "Ghost" to flow around
+            failures.
+        </p>
+        <div class="hud-label" style="font-size: 10px; margin-top: 15px;">Reliability Paradox</div>
+        <div class="math-expr">R_sys = 1 - (1 - p)^n</div>
+        <p style="font-size: 11px; color: var(--text-dim); line-height: 1.4;">
+            Adding redundant nodes (n) reduces the probability of total silence (1 - R_sys) even with unreliable links
+            (p).
+        </p>
+    </div>
+
+    <div id="overlay">
+        <h1 id="main-title" class="paradox-title">THE DIGITAL WEB</h1>
+        <div id="sub-title" class="paradox-subtitle">SHATTERED BY DESIGN</div>
+    </div>
+
+    <div id="info" class="info-panel">
+        <div class="hud-label" id="info-header">BARAN'S DISTRIBUTED NETWORK</div>
+        <p id="info-body" style="font-size: 14px; color: white; margin-top: 10px; line-height: 1.6;">
+            In a centralized network, a single hit destroys the system. In a distributed web, the packets find a way
+            around the void.
+        </p>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="controls">
+        <div class="control-group">
+            <span class="control-label">Topology</span>
+            <div style="display: flex; gap: 5px;">
+                <button id="btn-central" class="btn">CENTRAL</button>
+                <button id="btn-dist" class="btn active">DISTRIBUTED</button>
+            </div>
+        </div>
+        <div class="control-group">
+            <span class="control-label">Packet Size (L)</span>
+            <input type="range" id="packet-slider" min="1" max="10" value="5">
+        </div>
+        <div class="control-group">
+            <span class="control-label">Nuclear Strike</span>
+            <button id="btn-strike" class="btn"
+                style="border-color: var(--accent-red); color: var(--accent-red);">SIMULATE HIT</button>
+        </div>
+        <div class="control-group">
+            <span class="control-label">Reset</span>
+            <button id="btn-reset" class="btn">RESET WEB</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const statusVal = document.getElementById('status-val');
+        const survivalVal = document.getElementById('survival-val');
+        const delayVal = document.getElementById('delay-val');
+        const packetSlider = document.getElementById('packet-slider');
+        const mainTitle = document.getElementById('main-title');
+        const subTitle = document.getElementById('sub-title');
+        const infoPanel = document.getElementById('info');
+        const infoHeader = document.getElementById('info-header');
+        const infoBody = document.getElementById('info-body');
+
+        // State
+        let width, height;
+        let nodes = [];
+        let links = [];
+        let packets = [];
+        let mode = 'distributed'; // 'central' or 'distributed'
+        let time = 0;
+        let strikeInProgress = false;
+        let survivalChance = 98.4;
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initNetwork();
+        }
+
+        class Node {
+            constructor(id, x, y, isHub = false) {
+                this.id = id;
+                this.x = x;
+                this.y = y;
+                this.isHub = isHub;
+                this.radius = isHub ? 12 : 6;
+                this.alive = true;
+                this.pulse = 0;
+                this.destX = x;
+                this.destY = y;
+            }
+
+            draw() {
+                if (!this.alive) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#333';
+                    ctx.setLineDash([2, 4]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    return;
+                }
+
+                this.pulse += 0.05;
+                const glow = Math.sin(this.pulse) * 5 + 10;
+
+                ctx.shadowBlur = glow;
+                ctx.shadowColor = this.isHub ? '#ff0055' : '#00f2ff';
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.isHub ? '#ff0055' : '#00f2ff';
+                ctx.fill();
+
+                // IMP ID Label
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                ctx.font = "8px 'Orbitron'";
+                ctx.textAlign = "center";
+                ctx.fillText(`IMP ${this.id}`, this.x, this.y + this.radius + 12);
+
+                if (this.isHub) {
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        class Packet {
+            constructor(source, targetNode, dataSize) {
+                this.source = source;
+                this.targetNode = targetNode;
+                this.path = this.calculatePath(source, targetNode);
+                this.pathIndex = 0;
+                this.x = source.x;
+                this.y = source.y;
+                this.progress = 0;
+                this.speed = 0.05 + (1 / dataSize) * 0.1;
+                this.alive = true;
+                this.dataSize = dataSize;
+                this.color = source.isHub ? '#ff0055' : '#00f2ff';
+            }
+
+            calculatePath(source, dest) {
+                // Simplified A* or just random walk for viz
+                let current = source;
+                let path = [source];
+                let visited = new Set([source.id]);
+
+                for (let i = 0; i < 10; i++) {
+                    if (current === dest) break;
+                    let possibleNext = links.filter(l =>
+                        (l.a === current || l.b === current) &&
+                        l.a.alive && l.b.alive
+                    ).map(l => l.a === current ? l.b : l.a);
+
+                    if (possibleNext.length === 0) break;
+
+                    // Greedily pick node closer to dest
+                    possibleNext.sort((a, b) => {
+                        let distA = Math.hypot(a.x - dest.x, a.y - dest.y);
+                        let distB = Math.hypot(b.x - dest.x, b.y - dest.y);
+                        return distA - distB;
+                    });
+
+                    current = possibleNext[0];
+                    path.push(current);
+                    if (current === dest) break;
+                }
+                return path;
+            }
+
+            update() {
+                if (this.pathIndex >= this.path.length - 1) {
+                    this.alive = false;
+                    return;
+                }
+
+                let start = this.path[this.pathIndex];
+                let end = this.path[this.pathIndex + 1];
+
+                if (!start.alive || !end.alive) {
+                    // Packet Lost or try to reroute
+                    this.alive = false;
+                    return;
+                }
+
+                this.progress += this.speed;
+                if (this.progress >= 1) {
+                    this.progress = 0;
+                    this.pathIndex++;
+                    this.source = end;
+                }
+
+                this.x = start.x + (end.x - start.x) * this.progress;
+                this.y = start.y + (end.y - start.y) * this.progress;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.rect(this.x - 3, this.y - 3, 6, 6);
+                ctx.fill();
+
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.strokeRect(this.x - 3, this.y - 3, 6, 6);
+
+                // Destination Header (Numeric Ghost)
+                if (parseInt(packetSlider.value) > 3) {
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.font = "6px monospace";
+                    ctx.fillText(`DEST: ${this.targetNode.id}`, this.x, this.y - 8);
+                }
+
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function initNetwork() {
+            nodes = [];
+            links = [];
+            packets = [];
+
+            if (mode === 'central') {
+                const hub = new Node(0, width / 2, height / 2, true);
+                nodes.push(hub);
+                for (let i = 0; i < 20; i++) {
+                    const angle = (i / 20) * Math.PI * 2;
+                    const r = 250;
+                    const node = new Node(i + 1, width / 2 + Math.cos(angle) * r, height / 2 + Math.sin(angle) * r);
+                    nodes.push(node);
+                    links.push({ a: hub, b: node });
+                }
+            } else {
+                // Grid/Mesh
+                const cols = 8;
+                const rows = 5;
+                const spacingX = width / (cols + 1);
+                const spacingY = height / (rows + 1);
+
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const id = r * cols + c;
+                        const jitterX = (Math.random() - 0.5) * 50;
+                        const jitterY = (Math.random() - 0.5) * 50;
+                        nodes.push(new Node(id, spacingX * (c + 1) + jitterX, spacingY * (r + 1) + jitterY));
+                    }
+                }
+
+                // Mesh Links
+                nodes.forEach(n => {
+                    nodes.forEach(m => {
+                        if (n === m) return;
+                        const dist = Math.hypot(n.x - m.x, n.y - m.y);
+                        if (dist < spacingX * 1.5) {
+                            if (!links.some(l => (l.a === n && l.b === m) || (l.a === m && l.b === n))) {
+                                links.push({ a: n, b: m });
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
+        function spawnPackets() {
+            if (nodes.length < 2) return;
+            const source = nodes[Math.floor(Math.random() * nodes.length)];
+            const target = nodes[Math.floor(Math.random() * nodes.length)];
+            if (source !== target && source.alive && target.alive) {
+                packets.push(new Packet(source, target, parseInt(packetSlider.value)));
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Links
+            ctx.lineWidth = 1;
+            links.forEach(l => {
+                const active = l.a.alive && l.b.alive;
+                ctx.strokeStyle = active ? 'rgba(0, 242, 255, 0.2)' : 'rgba(100, 100, 100, 0.1)';
+                ctx.beginPath();
+                ctx.moveTo(l.a.x, l.a.y);
+                ctx.lineTo(l.b.x, l.b.y);
+                ctx.stroke();
+            });
+
+            // Draw Nodes
+            nodes.forEach(n => n.draw());
+
+            // Update & Draw Packets
+            packets = packets.filter(p => p.alive);
+            packets.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            if (time % 20 === 0) spawnPackets();
+            time++;
+
+            // Update HUD
+            const aliveRatio = nodes.filter(n => n.alive).length / nodes.length;
+            const networkStrength = mode === 'central' ? (nodes[0].alive ? 100 : 0) : aliveRatio * 100;
+            survivalChance = Math.max(0, networkStrength);
+            survivalVal.innerText = survivalChance.toFixed(1) + '%';
+
+            const delay = (packetSlider.value / 100).toFixed(2);
+            delayVal.innerText = delay + 'ms';
+
+            if (mode === 'central' && !nodes[0].alive) {
+                statusVal.innerText = "LINK LOST: SYSTEM SILENT";
+                statusVal.style.color = "var(--accent-red)";
+            } else if (survivalChance < 40) {
+                statusVal.innerText = "CRITICAL FAILURES: REROUTING";
+                statusVal.style.color = "var(--accent-red)";
+            } else {
+                statusVal.innerText = mode.toUpperCase() + ": ACTIVE";
+                statusVal.style.color = "var(--accent-blue)";
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        // Controls
+        document.getElementById('btn-central').addEventListener('click', () => {
+            mode = 'central';
+            document.getElementById('btn-central').classList.add('active');
+            document.getElementById('btn-dist').classList.remove('active');
+            infoHeader.innerText = "CENTRALIZED STAR (THE TARGET)";
+            infoBody.innerText = "Standard telephone networks radiated from a central hub. If the heart is struck, the entire perimeter dies instantly. It is efficient, but fragile.";
+            infoPanel.style.opacity = 1;
+            initNetwork();
+        });
+
+        document.getElementById('btn-dist').addEventListener('click', () => {
+            mode = 'distributed';
+            document.getElementById('btn-dist').classList.add('active');
+            document.getElementById('btn-central').classList.remove('active');
+            infoHeader.innerText = "BARAN'S DISTRIBUTED WEB";
+            infoBody.innerText = "By connecting every node to multiple neighbors, Paul Baran created a 'Ghost' that could survive localized destruction. The data routes around the void.";
+            infoPanel.style.opacity = 1;
+            initNetwork();
+        });
+
+        document.getElementById('btn-strike').addEventListener('click', () => {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = 200;
+
+            // Flash effect
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+
+            nodes.forEach(n => {
+                const dist = Math.hypot(n.x - centerX, n.y - centerY);
+                if (dist < radius) n.alive = false;
+                if (mode === 'central' && n.isHub) n.alive = false;
+            });
+
+            infoHeader.innerText = "NUCLEAR SURVIVABILITY TEST";
+            infoBody.innerText = mode === 'central'
+                ? "Total System Collapse. Communication ceases instantly when the center is destroyed."
+                : "Partial Degradation. The distributed web experiences latency, but packets still reach their destination by finding alternate paths.";
+            infoPanel.style.opacity = 1;
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            initNetwork();
+            infoPanel.style.opacity = 0;
+        });
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Intro
+        setTimeout(() => {
+            mainTitle.style.opacity = 1;
+            setTimeout(() => {
+                subTitle.style.opacity = 1;
+                setTimeout(() => {
+                    mainTitle.style.opacity = 0;
+                    subTitle.style.opacity = 0;
+                }, 3000);
+            }, 500);
+        }, 500);
+
+        requestAnimationFrame(draw);
+
+    </script>
+</body>
+
+</html>

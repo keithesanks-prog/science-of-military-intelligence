@@ -1,0 +1,80 @@
+Episode 7: The Digital Sentry
+
+### COLD OPEN: The Falling Glass
+(Visual: A slow-motion, high-frame-rate shot of a kitchen counter. A hand accidentally brushes against a tall glass of water. The glass tilts, slides off the edge, and begins its descent.)
+
+Narrator (urgent, quickening): "Think about the last time you did this. You didn't 'decide' to catch the glass. You didn't calculate the velocity, the weight, or the angle of impact. Your brain didn't甚至 have time to form the word 'accident'."
+
+(Visual: Before the narrator even finishes the sentence, the hand shoots out and snatches the glass mid-air, inches from the tile floor.)
+
+Narrator: "That is a reflex. It’s a specialized circuit—a shortcut in your nervous system that bypasses your conscious mind because 'thinking' takes too long. You caught it before you even knew it was falling."
+
+(Visual: Transition to a high-speed video of an anti-ship missile skimming the surface of the ocean, moving at Mach 3. On a nearby ship, a computer screen flashes with red data.)
+
+Narrator: "This is the reality of modern warfare. When a missile is screaming toward you at twice the speed of sound, a human decision is a luxury you cannot afford. To survive, we had to build a 'Digital Reflex'—a system that doesn't wait for permission to act. Welcome to the era of the Digital Sentry."
+
+(Visual: Cut to BLACK. A sharp, rhythmic digital 'beep' like a heart monitor. White text: **THE SCIENCE OF MILITARY INTELLIGENCE**)
+
+---
+
+Act 1: The "Slick-32" (The Integrated Brain)
+
+Narrator: "To understand how we got here, we had to learn to see the invisible. From Maxwell’s math to the 'Stolen Ear' of the 1940s—every lesson we’ve covered so far has been leading to this."
+
+(Note: On-screen graphics point to Ep. 1, 2, and 3 for context.)
+
+Narrator: "By the 1970s, the 'Sledgehammer' had evolved. Anti-ship missiles were now fast, low-flying, and smart. To survive, the Navy needed more than just a listener; it needed a brain that could think at the speed of light. This was the birth of the AN/SLQ-32—the 'Slick-32.'"
+
+### Mathematical Ghost Deep Dive: The Width of a Blink
+(Visual: An animation of two planes flying very close together. A long, red radar pulse heads toward them. The pulse is so long it covers both planes at once. As it returns, the two echoes merge into one big, messy blob on the screen.)
+
+Narrator: "In Episode 3, we learned how to find distance. But how do we find *Accuracy*? How do we know if we’re looking at one big ship or ten small missiles? This is **Range Resolution**, and it depends on a single factor: the length of your shout."
+
+(Visual: A graphic appears: **ΔR = (c × τ) / 2**. The long pulse is replaced by a series of tiny, sharp 'clicks'—very short pulses.)
+
+Narrator: "A radar pulse isn't a point; it’s a physical object made of waves. If your pulse is 1 microsecond long, it is physically 300 meters wide. If two targets are closer than half that distance—150 meters—their echoes will overlap. To the 'Radio Eye,' they are one single ghost."
+
+(Visual: The tiny clicks hit the two planes. They return as two distinct, sharp pips.)
+
+Narrator: "To see the detail, the 'Digital Sentry' has to send a shorter blink. The shorter the pulse ($\tau$), the higher the resolution ($\Delta R$). This is the science of precision. It’s why modern radar doesn't just see 'something' in the air—it can tell the difference between a bird's wing and a missile's fin by shrinking the width of its blink."
+
+Act 2: The Extended Reach (The Army and the Air)
+(Visual: A split screen. Left: A Navy SH-60 Seahawk dipping a sonar ball, but we zoom into its ALQ-210 ESM pods. Right: An Army AN/MLQ-34 'TACJAM' truck on a ridgeline, its antennas extending.)
+
+Narrator: "But the Ghost wasn't tied to the deck of a ship. On land, the Army was learning the same hard lessons. They developed systems like the TACJAM, turning the battlefield into a digital grid. If the enemy spoke over a radio or pulsed a ground-radar, the Army’s 'Electronic Shield' was there to map it, move it, or mute it."
+
+Narrator: "In the air, the SH-60 Seahawk became the fleet's 'High-Altitude Ear' using the ALQ-210. It snatches signals from over the horizon—well before the ship's hull is even visible—and feeds that data back to the Conductor. This is Electronic Support (ES): the act of knowing who is in the room before they even know you're there."
+
+Act 3: The ESM vs. EA Dance
+(Visual: A schematic animation. A red 'Interrogation' beam from an enemy hits the ship. The SLQ-32 recognizes the 'Fingerprint' and the screen flashes: 'SOVIET SURFACE RADAR IDENTIFIED.')
+
+Narrator: "Modern warfare is a dance. Once the Seahawk or the Slick-32 identifies the threat, the Sentry strikes back. This is Electronic Attack (EA)."
+
+Narrator: "Whether it’s the ship’s onboard transmitters or the ALQ-99 pods on a passing Growler, the response is a 'Digital Spotlight.' We use the enemy's own frequency against them, shining a light so bright their missiles are left staring into a white-out. It is the computerized application of the Russian Sledgehammer from 1904—refined to a surgical strike."
+
+The Object Lesson: The "Conductor"
+(The Visual Demo)
+
+The Setup: A small orchestra (The Spectrum). We have a Scout (Seahawk), a Conductor (SLQ-32/Ship), and a Sledgehammer (Army TACJAM/Navy Growler).
+
+The Individual Signals: Point to the Violin (Discovery), the Drum (Identity), and the Flute (Deception).
+
+The Scout: Stands on a chair. "I hear a violin starting in the hallway!"
+
+The Conductor: Checks the 'Library' notebook. "That’s a specific Soviet-rhythm. Don't just listen—counter-play."
+
+The Sledgehammer: Turns on a high-powered bullhorn, playing a dissonant note that breaks the violin's rhythm.
+
+Narrator: "The Slick-32 is the Conductor. It takes the physics, the rhythm, and the mirages, and turns them into a unified defense. It doesn't just listen to the music; it finds the flaw in the rhythm and plays back the one note that makes the whole enemy system fall apart."
+
+Act 4: The Human Element (Learning to Trust)
+(Visual: Archival footage of Naval and Army commanders in high-stakes exercises. We see the transition from confusion to confidence as automated systems begin to correctly identify threats.)
+
+Narrator: "The real evolution wasn't just in the copper and silicon. It was in the human mind. Nations had to learn to trust the science of the invisible. They had to fail, lose ships, and misread the air to realize that the spectrum is the ultimate high ground."
+
+Narrator: "We moved from guessing what the enemy was doing to knowing what they were thinking. The 'Mathematical Ghost' had finally become the commander's most trusted advisor. From the pier to the cockpit, the lesson remains: If you can control the frequency, you can control the war."
+
+### The Predator’s Eye (Bonus Segment)
+Narrator: "To put a 'Radio Eye' inside a kinetic weapon, we had to solve a physics problem that, until 1940, seemed impossible: How do you fit a power plant's worth of radar energy into something the size of a dinner plate? The answer arrived in a black trunk from Birmingham—the Cavity Magnetron. It took radar off the English cliffs and shoved it into the nose of a plane—and eventually, into the brain of a missile."
+
+Narrator: "By the 1950s, the Navy gave the weapon its own sight. It evolved from 'Shared Vision' (Semi-Active Homing) to the hunter's ultimate form: Active Radar Homing. Today, the missile carries its own 'flashlight.' In the final miles of flight, it goes 'Active,' screaming into the dark and listening for its own echo. It is now a self-contained predator."

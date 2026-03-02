@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Duplexing & Basics Training</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050810;
+            --panel-bg: rgba(10, 15, 30, 0.95);
+            --accent: #00d2ff;
+            --tx-color: #ff3333;
+            --rx-color: #33ff33;
+            --antenna-color: #ffcc00;
+            --text: #e0f2f1;
+            --border: rgba(0, 210, 255, 0.2);
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Orbitron', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #0a1128 0%, #050810 100%);
+        }
+
+        header {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+
+        .brand h1 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            position: relative;
+            min-height: 0;
+        }
+
+        .control-panel {
+            width: 320px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #aaa;
+        }
+
+        .vis-container {
+            flex: 1;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+        }
+
+        #duplexCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .status-hud {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border);
+            padding: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .oscilloscope {
+            flex: 1;
+            background: rgba(0, 20, 0, 0.5);
+            border: 1px solid #113311;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .oscilloscope::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 49%, rgba(0, 255, 0, 0.05) 50%, transparent 51%);
+            background-size: 40px 100%;
+        }
+
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>Radar Architecture Training</h1>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.6;">
+            MODULE: TX/RX-DUPLEXER-DESIGN-V1
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="control-panel">
+            <div class="section">
+                <span class="section-title">Select Operation Mode</span>
+                <button id="halfDuplexBtn" class="mode-btn active" onclick="setMode('half')">HALF DUPLEX
+                    (Switching)</button>
+                <button id="fullDuplexBtn" class="mode-btn" onclick="setMode('full')">FULL DUPLEX
+                    (Simultaneous)</button>
+            </div>
+
+            <div class="section">
+                <span class="section-title">Concept Overview</span>
+                <div class="concept-card" id="description">
+                    <strong>Half-Duplex:</strong> Traditional radars use a single antenna to both Transmit and Receive.
+                    To protect the sensitive Receiver from the high-power Transmitter, a <strong>Duplexer</strong> acts
+                    as a microsecond switch, isolating the RX during the TX pulse.
+                </div>
+            </div>
+
+            <div class="section" style="margin-top: auto;">
+                <div class="concept-card" style="border-color: var(--tx-color); color: var(--text);">
+                    <small style="text-transform: uppercase; font-weight: 700; opacity: 0.6;">Current State</small><br>
+                    <span id="systemStatus"
+                        style="font-family: var(--font-mono); font-size: 1rem;">TRANSMITTING...</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="vis-container">
+            <canvas id="duplexCanvas"></canvas>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="dot" style="background: var(--tx-color)"></div> Transmitter (High Power)
+                </div>
+                <div class="legend-item">
+                    <div class="dot" style="background: var(--rx-color)"></div> Receiver (Sensitive)
+                </div>
+                <div class="legend-item">
+                    <div class="dot" style="background: var(--antenna-color)"></div> Antenna
+                </div>
+            </div>
+
+            <div class="status-hud">
+                <div
+                    style="width: 150px; display: flex; flex-direction: column; justify-content: center; font-family: var(--font-mono); font-size: 0.7rem;">
+                    <div>TIMING ANALYSIS</div>
+                    <div style="color: var(--tx-color)" id="txIndicator">TX: ON</div>
+                    <div style="color: var(--rx-color)" id="rxIndicator">RX: OFF</div>
+                </div>
+                <div class="oscilloscope">
+                    <canvas id="oscCanvas"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('duplexCanvas');
+        const ctx = canvas.getContext('2d');
+        const oscCanvas = document.getElementById('oscCanvas');
+        const oscCtx = oscCanvas.getContext('2d');
+
+        let state = {
+            mode: 'half', // 'half' or 'full'
+            phase: 0, // 0 to 1 for cycle
+            txActive: false,
+            rxActive: false,
+            pulses: [],
+            echoes: [],
+            oscData: [],
+            lastTime: 0
+        };
+
+        function setMode(m) {
+            state.mode = m;
+            document.getElementById('halfDuplexBtn').classList.toggle('active', m === 'half');
+            document.getElementById('fullDuplexBtn').classList.toggle('active', m === 'full');
+
+            const desc = document.getElementById('description');
+            if (m === 'half') {
+                desc.innerHTML = `<strong>Half-Duplex:</strong> Traditional radars share one antenna. The <strong>Duplexer</strong> switches at high speeds. <em>Limitation:</em> The radar is "blind" to very close targets while the TX pulse is firing.`;
+            } else {
+                desc.innerHTML = `<strong>Full-Duplex:</strong> Modern or specialized systems can transmit and receive at the same time. This usually requires separate RX/TX antennas or advanced interference cancellation.`;
+            }
+            state.pulses = [];
+            state.echoes = [];
+        }
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+            requestAnimationFrame(animate);
+        }
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            oscCanvas.width = oscCanvas.parentElement.clientWidth;
+            oscCanvas.height = oscCanvas.parentElement.clientHeight;
+        }
+
+        function drawSystem(W, H) {
+            const centerX = W * 0.35;
+            const centerY = H * 0.45;
+
+            // Transmitter (Top Left)
+            const txX = centerX - 150;
+            const txY = centerY - 100;
+            drawBox(txX, txY, 100, 60, "TRANSMITTER", state.txActive ? varColor('--tx-color') : '#222');
+
+            // Receiver (Bottom Left)
+            const rxX = centerX - 150;
+            const rxY = centerY + 40;
+            drawBox(rxX, rxY, 100, 60, "RECEIVER", state.rxActive ? varColor('--rx-color') : '#222');
+
+            // Duplexer (Middle)
+            const dupX = centerX;
+            const dupY = centerY - 30;
+            drawBox(dupX, dupY, 80, 60, "DUPLEXER", '#333');
+
+            // Antenna (Right)
+            const antX = centerX + 180;
+            const antY = centerY - 30;
+            drawAntenna(antX, antY);
+
+            // Wiring
+            ctx.lineWidth = 4;
+            // TX to Duplexer
+            ctx.beginPath();
+            ctx.moveTo(txX + 100, txY + 30);
+            ctx.lineTo(dupX, dupY + 15);
+            ctx.strokeStyle = state.txActive ? varColor('--tx-color') : '#222';
+            ctx.stroke();
+
+            // RX to Duplexer
+            ctx.beginPath();
+            ctx.moveTo(rxX + 100, rxY + 30);
+            ctx.lineTo(dupX, dupY + 45);
+            ctx.strokeStyle = state.rxActive ? varColor('--rx-color') : '#222';
+            ctx.stroke();
+
+            // Duplexer to Antenna
+            ctx.beginPath();
+            ctx.moveTo(dupX + 80, dupY + 30);
+            ctx.lineTo(antX, antY + 30);
+            ctx.strokeStyle = (state.txActive || state.rxActive) ? varColor('--antenna-color') : '#222';
+            ctx.stroke();
+
+            // Switch Logic inside Duplexer (Visual representation)
+            if (state.mode === 'half') {
+                ctx.beginPath();
+                ctx.moveTo(dupX + 10, dupY + 30);
+                if (state.txActive) {
+                    ctx.lineTo(dupX + 30, dupY + 15);
+                    ctx.strokeStyle = varColor('--tx-color');
+                } else if (state.rxActive) {
+                    ctx.lineTo(dupX + 30, dupY + 45);
+                    ctx.strokeStyle = varColor('--rx-color');
+                } else {
+                    ctx.lineTo(dupX + 30, dupY + 30);
+                    ctx.strokeStyle = '#444';
+                }
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            } else {
+                // Full Duplex shows both active paths
+                ctx.strokeStyle = '#555';
+                ctx.strokeRect(dupX + 10, dupY + 10, 60, 40);
+                ctx.fillStyle = '#fff'; ctx.font = '700 8px Orbitron'; ctx.textAlign = 'center';
+                ctx.fillText("SIMULTANEOUS", dupX + 40, dupY + 35);
+            }
+
+            return { antX, antY };
+        }
+
+        function drawBox(x, y, w, h, label, color) {
+            ctx.fillStyle = 'rgba(0,0,0,0.8)';
+            ctx.fillRect(x, y, w, h);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, w, h);
+
+            if (color !== '#222' && color !== '#333') {
+                ctx.shadowBlur = 10; ctx.shadowColor = color;
+                ctx.strokeRect(x, y, w, h);
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.fillStyle = color;
+            ctx.font = '700 10px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, x + w / 2, y + h / 2 + 4);
+        }
+
+        function drawAntenna(x, y) {
+            ctx.strokeStyle = varColor('--antenna-color');
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(x, y + 60);
+            ctx.lineTo(x, y);
+            ctx.lineTo(x - 20, y - 20);
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 20, y - 20);
+            ctx.stroke();
+
+            ctx.fillStyle = varColor('--antenna-color');
+            ctx.font = '700 10px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText("ANTENNA", x, y + 75);
+        }
+
+        function drawTarget(W, H) {
+            const tx = W * 0.85;
+            const ty = H * 0.45;
+
+            ctx.fillStyle = '#444';
+            ctx.beginPath();
+            ctx.moveTo(tx - 30, ty); ctx.lineTo(tx + 30, ty); ctx.lineTo(tx, ty - 20);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#666'; ctx.stroke();
+
+            ctx.fillStyle = '#fff'; ctx.font = '700 10px Orbitron'; ctx.textAlign = 'center';
+            ctx.fillText("TARGET", tx, ty + 20);
+
+            return { tx, ty };
+        }
+
+        function processOscilloscope() {
+            oscCtx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
+
+            const step = 2;
+            state.oscData.push({
+                tx: state.txActive ? 0.8 : 0,
+                rx: state.rxActive ? 0.3 : 0
+            });
+            if (state.oscData.length > oscCanvas.width / step) state.oscData.shift();
+
+            oscCtx.lineWidth = 2;
+
+            // TX Wave
+            oscCtx.beginPath();
+            oscCtx.strokeStyle = varColor('--tx-color');
+            state.oscData.forEach((d, i) => {
+                const y = oscCanvas.height - (d.tx * 80) - 20;
+                if (i === 0) oscCtx.moveTo(i * step, y);
+                else oscCtx.lineTo(i * step, y);
+            });
+            oscCtx.stroke();
+
+            // RX Wave
+            oscCtx.beginPath();
+            oscCtx.strokeStyle = varColor('--rx-color');
+            state.oscData.forEach((d, i) => {
+                const y = oscCanvas.height - (d.rx * 80) - 20;
+                if (i === 0) oscCtx.moveTo(i * step, y);
+                else oscCtx.lineTo(i * step, y);
+            });
+            oscCtx.stroke();
+        }
+
+        function animate(time) {
+            const dt = time - (state.lastTime || time);
+            state.lastTime = time;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const sysPos = drawSystem(canvas.width, canvas.height);
+            const targetPos = drawTarget(canvas.width, canvas.height);
+
+            // Cycle Logic
+            state.phase = (time % 4000) / 4000;
+
+            if (state.mode === 'half') {
+                // 0.0 to 0.2 -> TX
+                // 0.2 to 0.3 -> Switching/Dead time
+                // 0.3 to 0.9 -> RX
+                // 0.9 to 1.0 -> Setup
+                state.txActive = state.phase < 0.2;
+                state.rxActive = state.phase > 0.3 && state.phase < 0.9;
+
+                document.getElementById('systemStatus').innerText = state.txActive ? "TRANSMITTING..." : (state.rxActive ? "LISTENING..." : "IDLE/SWITCHING");
+                document.getElementById('systemStatus').style.color = state.txActive ? varColor('--tx-color') : (state.rxActive ? varColor('--rx-color') : '#666');
+            } else {
+                state.txActive = true;
+                state.rxActive = true;
+                document.getElementById('systemStatus').innerText = "SIMULTANEOUS TX/RX";
+                document.getElementById('systemStatus').style.color = varColor('--accent');
+            }
+
+            document.getElementById('txIndicator').innerText = `TX: ${state.txActive ? 'ON' : 'OFF'}`;
+            document.getElementById('rxIndicator').innerText = `RX: ${state.rxActive ? 'ON' : 'OFF'}`;
+
+            // Emit Pulses
+            if (state.txActive && (time % 800) < 20) {
+                state.pulses.push({ x: sysPos.antX, y: sysPos.antY, r: 0, o: 1 });
+            }
+
+            // Update & Draw pulses
+            for (let i = state.pulses.length - 1; i >= 0; i--) {
+                const p = state.pulses[i];
+                p.x += 5;
+                p.o -= 0.005;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y + 30, 20, -Math.PI / 4, Math.PI / 4);
+                ctx.strokeStyle = `rgba(255, 51, 51, ${p.o})`;
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // Hit target
+                if (p.x > targetPos.tx - 30 && p.x < targetPos.tx + 30) {
+                    state.echoes.push({ x: p.x, y: p.y, o: 0.8 });
+                    state.pulses.splice(i, 1);
+                } else if (p.o <= 0 || p.x > canvas.width) {
+                    state.pulses.splice(i, 1);
+                }
+            }
+
+            // Update & Draw echoes
+            for (let i = state.echoes.length - 1; i >= 0; i--) {
+                const e = state.echoes[i];
+                e.x -= 3; // Echoes are slower usually? No, but for visual distinction
+                e.o -= 0.003;
+
+                ctx.beginPath();
+                ctx.arc(e.x, e.y + 30, 15, Math.PI * 0.75, Math.PI * 1.25);
+                ctx.strokeStyle = state.rxActive ? `rgba(51, 255, 51, ${e.o})` : `rgba(100, 100, 100, ${e.o})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                if (e.x < sysPos.antX) {
+                    if (state.rxActive) {
+                        // Success intercept
+                        ctx.save();
+                        ctx.shadowBlur = 15; ctx.shadowColor = varColor('--rx-color');
+                        ctx.fillStyle = varColor('--rx-color');
+                        ctx.beginPath();
+                        ctx.arc(sysPos.antX, sysPos.antY + 30, 10, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    state.echoes.splice(i, 1);
+                } else if (e.o <= 0) {
+                    state.echoes.splice(i, 1);
+                }
+            }
+
+            processOscilloscope();
+            requestAnimationFrame(animate);
+        }
+
+        const varColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+        init();
+    </script>
+</body>
+
+</html>

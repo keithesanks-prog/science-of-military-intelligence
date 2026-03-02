@@ -1,0 +1,142 @@
+{
+    "SMI_CONCEPT_INDEX_V1.0": {
+        "Categories": {
+            "IN": "Inventions (Physical Hardware)",
+            "DI": "Discoveries (Scientific Breakthroughs)",
+            "EQ": "Equations (Mathematical Foundations)",
+            "ID": "Ideas & Tactics (Conceptual Breakthroughs)"
+        },
+        "Concepts": {
+            "SMI_EQ_MAXWELL": {
+                "ID": "SMI_EQ_MAXWELL",
+                "Name": "Maxwell's Equations",
+                "Category": "EQ",
+                "Related_Person_ID": "SMI_PI_MAXWELL",
+                "Description": "Four partial differential equations that describe how electric and magnetic fields are generated.",
+                "Visual_Tokens": [
+                    "Elegant calculus notation",
+                    "Chalkboard texture",
+                    "Intersecting E and M vectors"
+                ]
+            },
+            "SMI_DI_XRAY": {
+                "ID": "SMI_DI_XRAY",
+                "Name": "The X-Ray (The Ghost Leak)",
+                "Category": "DI",
+                "Related_Person_ID": "SMI_PI_RONTGEN",
+                "Description": "The discovery of high-energy electromagnetic radiation that passes through solid objects.",
+                "Visual_Tokens": [
+                    "Green fluorescence glow",
+                    "Skeletal hand holding a ring",
+                    "Glass vacuum tube silhouette"
+                ]
+            },
+            "SMI_IN_SPARKGAP": {
+                "ID": "SMI_IN_SPARKGAP",
+                "Name": "Hertz Spark-Gap Transmitter",
+                "Category": "IN",
+                "Related_Person_ID": "SMI_PI_HERTZ",
+                "Description": "First device to generate and detect radio waves.",
+                "Visual_Tokens": [
+                    "Brass spheres",
+                    "Leaping electric arc",
+                    "Parabolic reflector dish"
+                ]
+            },
+            "SMI_ID_FREQ_HOPPING": {
+                "ID": "SMI_ID_FREQ_HOPPING",
+                "Name": "Frequency Hopping (Secret Communication System)",
+                "Category": "ID",
+                "Related_Person_ID": "SMI_IV_LAMARR",
+                "Description": "A system for transmitting radio signals by rapidly switching a carrier among many frequency channels.",
+                "Visual_Tokens": [
+                    "Piano rolls",
+                    "Synchronized perforated tape",
+                    "Jumping spectral bars"
+                ]
+            },
+            "SMI_IN_MAGNETRON": {
+                "ID": "SMI_IN_MAGNETRON",
+                "Name": "Cavity Magnetron",
+                "Category": "IN",
+                "Related_Person_ID": "SMI_CX_TIZARD",
+                "Description": "High-powered vacuum tube that generates microwaves.",
+                "Visual_Tokens": [
+                    "Copper block cutaway",
+                    "Mechanical precision",
+                    "Blue electron mist"
+                ]
+            },
+            "SMI_IN_THE_THING": {
+                "ID": "SMI_IN_THE_THING",
+                "Name": "The Great Seal Bug / Passive Resonator",
+                "Category": "IN",
+                "Related_Person_ID": "SMI_IV_THEREMIN",
+                "Description": "A passive listening device hidden inside a wooden seal, requiring no batteries.",
+                "Visual_Tokens": [
+                    "Silver-plated copper cylinder",
+                    "9-inch thin antenna",
+                    "Vibrating diaphragm",
+                    "Hidden in wooden beak"
+                ]
+            },
+            "SMI_ID_PACKET_SWITCHING": {
+                "ID": "SMI_ID_PACKET_SWITCHING",
+                "Name": "Packet Switching",
+                "Category": "ID",
+                "Related_Person_ID": "SMI_IV_BARAN",
+                "Description": "Breaking data into small blocks (packets) for transmission over a network.",
+                "Visual_Tokens": [
+                    "Network nodes",
+                    "Mesh connectivity",
+                    "Moving data envelopes"
+                ]
+            },
+            "SMI_EQ_SNELL": {
+                "ID": "SMI_EQ_SNELL",
+                "Name": "Snell's Law (Refraction)",
+                "Category": "EQ",
+                "Description": "Describes the relationship between the angles of incidence and refraction.",
+                "Visual_Tokens": [
+                    "Bending light ray",
+                    "Medium interface line",
+                    "Mathematical ratio labels"
+                ]
+            },
+            "SMI_ID_ISAR": {
+                "ID": "SMI_ID_ISAR",
+                "Name": "Inverse Synthetic Aperture Radar",
+                "Category": "ID",
+                "Description": "Technique for creating high-res images of moving targets using their own motion.",
+                "Visual_Tokens": [
+                    "Pitching ship silhouette",
+                    "Doppler point cloud",
+                    "Phase history dots"
+                ]
+            },
+            "SMI_DI_IR": {
+                "ID": "SMI_DI_IR",
+                "Name": "Infrared Radiation",
+                "Category": "DI",
+                "Related_Person_ID": "SMI_PI_HERSCHEL",
+                "Description": "Invisible electromagnetic radiation with wavelengths longer than those of visible light.",
+                "Visual_Tokens": [
+                    "Thermometer array",
+                    "Prism spectrum",
+                    "Invisible heat rays visualized as deep red"
+                ]
+            },
+            "SMI_IN_ENIGMA": {
+                "ID": "SMI_IN_ENIGMA",
+                "Name": "Enigma Machine",
+                "Category": "IN",
+                "Description": "Electro-mechanical rotor cipher machine used for protecting sensitive communications.",
+                "Visual_Tokens": [
+                    "Rotor wheels",
+                    "Plugboard wiring",
+                    "Light-up lampboard"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,59 @@
+Act 1: The Primitive Lock (Modular Foundations)
+(Visual: 1917. A grainy animation of the Zimmermann Telegram. Overlay a simple alphabet-to-number line: A=0, B=1, ... Z=25.)
+
+Narrator: "To build a vault, you first need a language. In the world of the SMI, that language is modular arithmetic. In 1917, the Zimmermann Telegram was protected by a substitution cipher—the descendant of the Caesar Cipher."
+
+### Mathematical Ghost: The Shift Equation
+(Visual: The equation appears: **c = (m + k) mod 26**. We see the letter 'P' (15) shifted by a key 'K' (10) to become 'Z' (25).)
+
+Narrator: "The math is simple: take your message ($m$), add a secret key ($k$), and use the **mod 26** operator to keep the result within the alphabet. It’s like a clock that only has 26 hours. If you go past Z, you just start back at A."
+
+(Visual: The British 'Room 40' analyzing the code. The Vigenère square appears.)
+
+Narrator: "But a simple shift is easy to break with frequency analysis—the counting of the ghosts. To stop the British, we used a **Polyalphabetic Wall**. We used the **Vigenère Cipher**."
+
+### Mathematical Ghost: The Polyalphabetic Wall
+(Visual: The equation: **ci = (pi + ki) mod 26**. An animation shows a repeated keyword like 'SECRET' shifting each letter of the message differently.)
+
+Narrator: "Now, every letter ($p_i$) is shifted by its own unique key ($k_i$) from a repeating word. This flattened the 'ghosts' of frequency analysis, making a 'whisper' look like pure noise. For centuries, this was the 'Indecipherable Cipher.' Until the math of machines arrived."
+
+Act 2: The Standardization War (S-Box Math)
+(Visual: The 1970s. The transition from paper to silicon. The DES algorithm appears as a flow chart of XOR gates and 'S-Boxes'.)
+
+Narrator: "In 1973, we needed a lock for a digital world. IBM proposed the Data Encryption Standard (DES). It used a **Substitution-Permutation Network**."
+
+### Mathematical Ghost: The S-Box Mystery
+(Visual: 8 blocks of 6 bits entering a transformation table. They come out as 4 bits each.)
+
+Narrator: "The heart of the digital vault is the **S-Box**. It’s a non-linear look-up table. You put in one value, and you get out something completely different. It’s the mathematical equivalent of a blender. Even a tiny change in the input creates an explosion of change in the output—this is what we call **Diffusion**."
+
+Act 3: The Public Key Revolution (1976)
+(Visual: Whitfield Diffie and Martin Hellman. Animation of a box that is easy to lock but impossible to unlock without the name of a trapdoor.)
+
+Narrator: "The problem with DES was the key. Both sides had to share it. In 1976, we found the **Asymmetric Paradox**: The math of the One-Way Function."
+
+### Mathematical Ghost: The Prime Fortress (RSA)
+(Visual: Two massive prime numbers, **p** and **q**, multiplying to form **N**. A clock appears representing **mod N**.)
+
+Narrator: "This is **RSA**. It’s built on the **Prime Factorization Paradox**. It is computationally easy to multiply two massive primes to get a huge number ($N$). But it is nearly impossible for a computer to work backwards and find those primes."
+
+(Visual: The encryption equation: **c = m^e mod N**. The decryption: **m = m^d mod N**.)
+
+Narrator: "We share the **Public Key** ($e$, $N$) with the world. Anyone can lock a message using modular exponentiation. But only the person with the **Private Key** ($d$) can undo the math. This 'Trapdoor' is what allows you to buy a coffee or send an encrypted text without ever meeting the recipient."
+
+Act 4: The Squeamish Ossifrage Challenge
+(Visual: The 1994 map of 1,600 computers solving the RSA-129 challenge. The phrase appears: **THE MAGIC WORDS ARE SQUEAMISH OSSIFRAGE**.)
+
+Narrator: "In 1994, the 'Mathematical Vault' of the 70s was cracked by a mob of volunteers. It proved that in the digital era, the only defense against a crowd is even more complex math. This led to the ultimate sentry... AES."
+
+Act 5: The Digital Sentry (Advanced Encryption Standard)
+(Visual: The Rijndael algorithm. A 4x4 matrix of bytes rotating and transforming.)
+
+Narrator: "Today, we use **AES-256**. It doesn't just shuffle data; it transforms it into a 4x4 matrix and performs four layers of mathematical surgery: **SubBytes**, **ShiftRows**, **MixColumns**, and **AddRoundKey**."
+
+(Visual: The columns of the matrix being mixed via a linear transformation.)
+
+Narrator: "By mixing the columns with a specialized polynomial, we ensure that every single bit of your data is influenced by every single bit of the key. It is the most robust vault ever built by human logic. It is the silence that keeps the world running."
+
+The Conclusion:
+Narrator: "We began with a spark. We end with a vault. In the world of Military Intelligence, the loudest voice is often the one that can say everything... without saying a word. The SMI isn't just about hearing the ghosts; it's about making sure your ghosts are the only ones left standing."

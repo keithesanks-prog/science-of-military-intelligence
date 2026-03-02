@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Antenna Shapes — Coverage Training</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #020810;
+            --panel: rgba(5, 12, 28, 0.97);
+            --accent: #00d4ff;
+            --green: #00ff88;
+            --amber: #ffcc00;
+            --magenta: #ff00ff;
+            --danger: #ff4455;
+            --border: rgba(0, 212, 255, 0.22);
+            --text: #d8eef2;
+            --sub: #6a9aac;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 11px 26px;
+            background: rgba(0, 0, 0, 0.88);
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: var(--accent);
+            text-shadow: 0 0 16px rgba(0, 212, 255, 0.4);
+        }
+
+        header .badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            opacity: 0.4;
+            letter-spacing: 2px;
+        }
+
+        .layout {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .sidebar {
+            width: 330px;
+            flex-shrink: 0;
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 15px;
+            gap: 13px;
+        }
+
+        .sec {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.58rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+        }
+
+        .tab-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .tab {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--sub);
+            padding: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.57rem;
+            letter-spacing: 0.5px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all.15s;
+            line-height: 1.5;
+        }
+
+        .tab:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--text);
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .concept {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 3px solid var(--accent);
+            padding: 11px 13px;
+            border-radius: 3px;
+            font-size: 0.77rem;
+            line-height: 1.7;
+            color: #a8ccd5;
+        }
+
+        .ctrl-block {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ctrl-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ctrl-hdr {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ctrl-name {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .ctrl-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.66rem;
+            color: var(--accent);
+        }
+
+        .ctrl-hint {
+            font-size: 0.64rem;
+            color: var(--sub);
+            margin-top: 2px;
+        }
+
+        .track-wrap {
+            position: relative;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.07);
+            cursor: ew-resize;
+            user-select: none;
+        }
+
+        .track-fill {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border-radius: 4px;
+            transition: background.2s;
+        }
+
+        .track-limit {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: rgba(255, 68, 85, 0.3);
+            border-radius: 4px;
+        }
+
+        .track-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid #000;
+            box-shadow: 0 0 8px var(--accent);
+            transition: background.2s, box-shadow.2s;
+        }
+
+        .limit-tick {
+            position: absolute;
+            top: -3px;
+            width: 2px;
+            height: 14px;
+            background: var(--danger);
+            border-radius: 1px;
+        }
+
+        .facts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .fact {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 7px 9px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .fact .fl {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.5rem;
+            color: var(--sub);
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .fact .fv {
+            font-size: 0.72rem;
+            color: var(--text);
+        }
+
+        #warn-box {
+            background: rgba(255, 68, 85, 0.12);
+            border: 1px solid var(--danger);
+            padding: 7px 11px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            color: var(--danger);
+            display: none;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .vis {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #020c14;
+        }
+
+        canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #overlay-label {
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--accent);
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        #range-badge {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            text-align: right;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            color: var(--sub);
+            background: rgba(0, 0, 0, 0.65);
+            padding: 9px 13px;
+            border: 1px solid var(--border);
+            line-height: 2;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>RADAR ANTENNA SHAPES — COVERAGE &amp; CAPABILITY</h1>
+        <span class="badge">MODULE: ANT-COV-01</span>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div>
+                <div class="sec">Antenna Type</div>
+                <div class="tab-row">
+                    <button class="tab active" onclick="pick('dish',this)">01<br>PARABOLIC<br>DISH</button>
+                    <button class="tab" onclick="pick('array',this)">02<br>PHASED<br>ARRAY</button>
+                    <button class="tab" onclick="pick('horn',this)">03<br>HORN<br>ANTENNA</button>
+                    <button class="tab" onclick="pick('dipole',this)">04<br>DIPOLE<br>ARRAY</button>
+                </div>
+            </div>
+            <div class="concept" id="concept"></div>
+            <div>
+                <div class="sec">Adjust &amp; Explore</div>
+                <div class="ctrl-block" id="ctrls"></div>
+            </div>
+            <div id="warn-box"></div>
+            <div>
+                <div class="sec">Quick Facts</div>
+                <div class="facts">
+                    <div class="fact">
+                        <div class="fl">COVERAGE</div>
+                        <div class="fv" id="f-cov">—</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fl">RANGE</div>
+                        <div class="fv" id="f-rng">—</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fl">STEERING</div>
+                        <div class="fv" id="f-str">—</div>
+                    </div>
+                    <div class="fact">
+                        <div class="fl">BEST FOR</div>
+                        <div class="fv" id="f-use">—</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="vis">
+            <canvas id="c"></canvas>
+            <div id="overlay-label"></div>
+            <div id="range-badge"></div>
+        </div>
+    </div>
+
+    <script>
+        // ── ANTENNA DATA ──────────────────────────────────────────────────────────────
+        const DEFS = {
+            dish: {
+                label: 'PARABOLIC DISH',
+                concept: 'The dish at center is just a few meters wide — see how it compares to the football field for scale.\n\nIts beam is extremely narrow (like a laser) and powerful, but it can only look at one spot at a time. Rotate the azimuth and watch the beam sweep. Tilt past ±65° and the mount hits a hard mechanical stop.',
+                color: '#00d4ff',
+                ctrls: [
+                    { id: 'az', name: 'Pointing Direction', unit: '°', min: 0, max: 360, val: 60, lMin: null, lMax: null },
+                    { id: 'el', name: 'Elevation Tilt', unit: '°', min: -90, max: 90, val: 0, lMin: -65, lMax: 65, hint: 'Mechanical hard stop at ±65°. Mount damage risk beyond this.' },
+                    { id: 'rng', name: 'Effective Range', unit: 'km', min: 20, max: 500, val: 180, lMin: null, lMax: null },
+                ],
+                facts: { cov: 'Narrow pencil beam', rng: 'Up to 500 km', str: 'Mechanical rotation', use: 'Aircraft tracking' },
+            },
+            array: {
+                label: 'PHASED ARRAY (AESA)',
+                concept: 'The flat array panel sits on a pad — about the size of a car door. No moving parts.\n\nThe beam steers electronically across the sector instantly. The shaded zone is everything it CAN reach without moving. Drag the steering slider to steer the beam inside that zone. Past ±60°, beam quality drops.',
+                color: '#ff00ff',
+                ctrls: [
+                    { id: 'az', name: 'Panel Facing Direction', unit: '°', min: 0, max: 360, val: 45, lMin: null, lMax: null },
+                    { id: 'steer', name: 'Beam Steering Offset', unit: '°', min: -90, max: 90, val: 0, lMin: -60, lMax: 60, hint: 'Electronic limit ±60°. Past this, beam degrades significantly.' },
+                    { id: 'rng', name: 'Effective Range', unit: 'km', min: 20, max: 400, val: 140, lMin: null, lMax: null },
+                ],
+                facts: { cov: '120° sector (no move)', rng: 'Up to 400 km', str: 'Electronic (μs)', use: 'Multi-target tracking' },
+            },
+            horn: {
+                label: 'HORN ANTENNA',
+                concept: 'The horn is like a megaphone for radio waves — roughly the size of a trash can. It produces a broad, spreading beam.\n\nSee how it floods a wide area compared to the dish. Great for early warning coverage across a large angle, but weaker signal at long range. Adjust aperture to trade off width vs. precision.',
+                color: '#ffcc00',
+                ctrls: [
+                    { id: 'az', name: 'Facing Direction', unit: '°', min: 0, max: 360, val: 60, lMin: null, lMax: null },
+                    { id: 'spread', name: 'Beam Spread Width', unit: '°', min: 20, max: 80, val: 40, lMin: null, lMax: null },
+                    { id: 'rng', name: 'Effective Range', unit: 'km', min: 5, max: 80, val: 35, lMin: null, lMax: null },
+                ],
+                facts: { cov: 'Wide sector beam', rng: 'Up to 80 km', str: 'Fixed or manual', use: 'Search, calibration feed' },
+            },
+            dipole: {
+                label: 'DIPOLE / YAGI ARRAY',
+                concept: 'A Yagi is just metal rods — each element is about half a wavelength long. The whole thing might be a few feet to a few meters.\n\nThe forward lobe shows where it transmits well. The back lobe is unavoidable signal leaking behind. More director elements = narrower, longer forward lobe. Fewer = broader but shorter.',
+                color: '#00ff88',
+                ctrls: [
+                    { id: 'az', name: 'Pointing Direction', unit: '°', min: 0, max: 360, val: 75, lMin: null, lMax: null },
+                    { id: 'elem', name: 'Director Elements (1–10)', unit: '', min: 1, max: 10, val: 4, lMin: null, lMax: null },
+                    { id: 'rng', name: 'Effective Range', unit: 'km', min: 10, max: 200, val: 80, lMin: null, lMax: null },
+                ],
+                facts: { cov: 'Directional + back lobe', rng: 'Up to 200 km', str: 'Mechanical', use: 'OTH radar, comms' },
+            },
+        };
+
+        // ── STATE ─────────────────────────────────────────────────────────────────────
+        let cur = 'dish', vals = {}, dragging = null, t = 0;
+
+        // ── SLIDER ENGINE ─────────────────────────────────────────────────────────────
+        function makeSlider(def) {
+            const col = DEFS[cur].color, { id, name, unit, min, max, val, lMin, lMax, hint } = def;
+            const n = v => (v - min) / (max - min);
+            return `<div class="ctrl-row" id="crow-${id}">
+    <div class="ctrl-hdr"><span class="ctrl-name">${name}</span><span class="ctrl-val" id="cv-${id}">${Math.round(val)}${unit}</span></div>
+    <div class="track-wrap" id="tr-${id}" data-id="${id}">
+      ${lMin != null ? `<div class="track-limit" style="left:0;width:${(n(lMin) * 100).toFixed(1)}%"></div><div class="limit-tick" style="left:${(n(lMin) * 100).toFixed(1)}%"></div>` : ''}
+      ${lMax != null ? `<div class="track-limit" style="right:0;width:${((1 - n(lMax)) * 100).toFixed(1)}%"></div><div class="limit-tick" style="left:${(n(lMax) * 100).toFixed(1)}%"></div>` : ''}
+      <div class="track-fill" id="tf-${id}" style="width:${(n(val) * 100).toFixed(1)}%;background:${col}"></div>
+      <div class="track-thumb" id="tt-${id}" style="left:${(n(val) * 100).toFixed(1)}%;background:${col};box-shadow:0 0 8px ${col}"></div>
+    </div>
+    ${hint ? `<div class="ctrl-hint" id="ch-${id}">${hint}</div>` : ''}
+  </div>`;
+        }
+        function wireSliders() {
+            document.querySelectorAll('.track-wrap').forEach(el => {
+                el.addEventListener('mousedown', e => startDrag(e, el));
+                el.addEventListener('touchstart', e => startDrag(e, el), { passive: true });
+            });
+        }
+        function startDrag(e, trackEl) {
+            e.preventDefault();
+            const id = trackEl.dataset.id, def = DEFS[cur].ctrls.find(c => c.id === id);
+            dragging = { trackEl, def }; moveDrag(e);
+            document.addEventListener('mousemove', moveDrag);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchmove', moveDrag, { passive: true });
+            document.addEventListener('touchend', endDrag);
+        }
+        function moveDrag(e) {
+            if (!dragging) return;
+            const { trackEl, def } = dragging;
+            const rect = trackEl.getBoundingClientRect();
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            let pct = Math.max(0, Math.min(1, (cx - rect.left) / rect.width));
+            let v = def.min + pct * (def.max - def.min);
+            v = Math.max(def.min, Math.min(def.max, v));
+            vals[def.id] = v;
+            const norm = (def.max - def.min) === 0 ? 0 : (v - def.min) / (def.max - def.min);
+            const limited = (def.lMin != null && v < def.lMin) || (def.lMax != null && v > def.lMax);
+            const col = limited ? '#ff4455' : DEFS[cur].color;
+            const tt = document.getElementById(`tt-${def.id}`);
+            const tf = document.getElementById(`tf-${def.id}`);
+            const cv = document.getElementById(`cv-${def.id}`);
+            const ch = document.getElementById(`ch-${def.id}`);
+            if (tt) { tt.style.left = `${(norm * 100).toFixed(1)}%`; tt.style.background = col; tt.style.boxShadow = `0 0 8px ${col}`; }
+            if (tf) { tf.style.width = `${(norm * 100).toFixed(1)}%`; tf.style.background = col; }
+            if (cv) cv.innerText = Math.round(v) + (def.unit || '');
+            if (ch) ch.style.color = limited ? 'var(--danger)' : 'var(--sub)';
+            const wb = document.getElementById('warn-box');
+            if (limited) { wb.style.display = 'block'; wb.innerText = `⚠ HARD LIMIT: ${def.lMin ?? ''}° to ${def.lMax ?? ''}° — ${def.hint || ''}`; }
+            else wb.style.display = 'none';
+        }
+        function endDrag() {
+            document.removeEventListener('mousemove', moveDrag);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchmove', moveDrag);
+            document.removeEventListener('touchend', endDrag);
+            dragging = null;
+        }
+
+        function pick(key, btn) {
+            cur = key;
+            document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const d = DEFS[key];
+            document.getElementById('concept').innerText = d.concept;
+            document.getElementById('overlay-label').innerText = d.label;
+            document.getElementById('f-cov').innerText = d.facts.cov;
+            document.getElementById('f-rng').innerText = d.facts.rng;
+            document.getElementById('f-str').innerText = d.facts.str;
+            document.getElementById('f-use').innerText = d.facts.use;
+            document.getElementById('warn-box').style.display = 'none';
+            vals = {};
+            d.ctrls.forEach(c => vals[c.id] = c.val);
+            document.getElementById('ctrls').innerHTML = d.ctrls.map(makeSlider).join('');
+            wireSliders();
+        }
+
+        // ── CANVAS ────────────────────────────────────────────────────────────────────
+        const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+        function resize() { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        function hex2rgba(hex, a) { const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16); return `rgba(${r},${g},${b},${a})`; }
+
+        // Scale: how many pixels = 1 real metre
+        // Football field = 91.44m long × 48.76m wide
+        // We'll draw it ~280px long on screen → 1px ≈ 0.327m
+        const FIELD_LEN_M = 91.44;
+        const FIELD_WID_M = 48.76;
+
+        function getScale() {
+            // Field drawn as ~32% of canvas width
+            return (canvas.width * 0.32) / FIELD_LEN_M;  // px per metre
+        }
+        function kmToPx(km) { return km * 1000 * getScale(); }
+        function mToPx(m) { return m * getScale(); }
+
+        // ── DRAW FOOTBALL FIELD ───────────────────────────────────────────────────────
+        function drawField(cx, cy, px, py) {
+            // cx,cy = field CENTER in canvas pixels
+            const W = canvas.width, H = canvas.height;
+            const S = getScale();
+            const fw = FIELD_LEN_M * S, fh = FIELD_WID_M * S;
+            const fx = cx - fw / 2, fy = cy - fh / 2;
+
+            // Field fill
+            ctx.save();
+            const fg = ctx.createLinearGradient(fx, fy, fx, fy + fh);
+            fg.addColorStop(0, '#0a2a0a'); fg.addColorStop(1, '#082008');
+            ctx.fillStyle = fg;
+            ctx.fillRect(fx, fy, fw, fh);
+
+            // Yard lines every 10 yards
+            ctx.strokeStyle = 'rgba(100,180,100,0.35)'; ctx.lineWidth = 1;
+            for (let y = 0; y <= 10; y++) {
+                const x = fx + y * (fw / 10);
+                ctx.beginPath(); ctx.moveTo(x, fy); ctx.lineTo(x, fy + fh); ctx.stroke();
+            }
+
+            // Mid field line (50 yd)
+            ctx.strokeStyle = 'rgba(150,220,150,0.5)'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(cx, fy); ctx.lineTo(cx, fy + fh); ctx.stroke();
+
+            // End zone fills
+            ctx.fillStyle = 'rgba(0,80,0,0.35)';
+            ctx.fillRect(fx, fy, fw * 0.1, fh);
+            ctx.fillRect(fx + fw * 0.9, fy, fw * 0.1, fh);
+
+            // Field border
+            ctx.strokeStyle = 'rgba(100,200,100,0.6)'; ctx.lineWidth = 2;
+            ctx.strokeRect(fx, fy, fw, fh);
+
+            // Hash marks
+            ctx.strokeStyle = 'rgba(120,200,120,0.4)'; ctx.lineWidth = 1;
+            for (let y = 1; y <= 9; y++) {
+                const x = fx + y * (fw / 10);
+                [fy + fh * 0.3, fy + fh * 0.7].forEach(hy => {
+                    ctx.beginPath(); ctx.moveTo(x, hy - 4); ctx.lineTo(x, hy + 4); ctx.stroke();
+                });
+            }
+
+            // Labels
+            ctx.fillStyle = 'rgba(150,220,150,0.65)'; ctx.font = `${Math.max(9, S * 3)}px Inter,sans-serif`;
+            ctx.fillText('← 100 yds (91m) →', fx + fw * 0.25, fy - 8);
+            ctx.save(); ctx.translate(fx - 10, cy); ctx.rotate(-Math.PI / 2);
+            ctx.fillText('53 yds', -22, 4);
+            ctx.restore();
+
+            // Scale note
+            ctx.fillStyle = 'rgba(100,180,100,0.55)'; ctx.font = '10px Orbitron,monospace';
+            ctx.fillText('FOOTBALL FIELD FOR SCALE', fx, fy + fh + 16);
+
+            ctx.restore();
+            return { fx, fy, fw, fh };
+        }
+
+        // ── ANTENNA SHAPES ────────────────────────────────────────────────────────────
+        // Drawn top-down, centered at (ax,ay), rotated to face 'az' (deg, 0=North=up)
+
+        function drawDishShape(ax, ay, azDeg, col) {
+            const a = (azDeg - 90) * Math.PI / 180, S = getScale();
+            const dishR = mToPx(3.5); // ~7m diameter dish, visible but to scale
+            ctx.save();
+            ctx.translate(ax, ay); ctx.rotate(a);
+
+            // Shadow/glow
+            ctx.shadowColor = col; ctx.shadowBlur = 20;
+
+            // Dish body (circular aperture from above)
+            ctx.strokeStyle = col; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.arc(0, 0, dishR, 0, Math.PI * 2); ctx.stroke();
+
+            // Interior ribs (shows it's a reflector not a solid disc)
+            ctx.strokeStyle = hex2rgba(col, 0.35); ctx.lineWidth = 1;
+            for (let a2 = 0; a2 < Math.PI * 2; a2 += Math.PI / 4) {
+                ctx.beginPath(); ctx.moveTo(0, 0);
+                ctx.lineTo(Math.cos(a2) * dishR, Math.sin(a2) * dishR); ctx.stroke();
+            }
+
+            // Dish fill (shallow bowl look)
+            ctx.fillStyle = hex2rgba(col, 0.08);
+            ctx.beginPath(); ctx.arc(0, 0, dishR, 0, Math.PI * 2); ctx.fill();
+
+            // Feed arm extending forward
+            ctx.strokeStyle = hex2rgba(col, 0.8); ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, -dishR * 0.15); ctx.lineTo(dishR * 0.55, 0); ctx.stroke();
+
+            // Feed point dot
+            ctx.fillStyle = col; ctx.shadowBlur = 18;
+            ctx.beginPath(); ctx.arc(dishR * 0.55, 0, 4, 0, Math.PI * 2); ctx.fill();
+
+            // Pointing arrow on rim
+            ctx.fillStyle = col; ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.moveTo(dishR + 8, 0);
+            ctx.lineTo(dishR + 1, -5);
+            ctx.lineTo(dishR + 1, 5);
+            ctx.closePath(); ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawArrayShape(ax, ay, azDeg, col) {
+            const a = (azDeg - 90) * Math.PI / 180, S = getScale();
+            const pw = mToPx(5), ph = mToPx(0.5); // flat panel: 5m wide, 0.5m deep (from above, looks like a rectangle)
+            ctx.save();
+            ctx.translate(ax, ay); ctx.rotate(a);
+
+            ctx.shadowColor = col; ctx.shadowBlur = 18;
+
+            // Panel body
+            ctx.fillStyle = 'rgba(30,0,50,0.85)';
+            ctx.strokeStyle = col; ctx.lineWidth = 2;
+            ctx.fillRect(-pw / 2, -ph / 2, pw, ph);
+            ctx.strokeRect(-pw / 2, -ph / 2, pw, ph);
+
+            // Element dots along panel face
+            const n = 9;
+            for (let i = 0; i < n; i++) {
+                const ex = -pw / 2 + (i + 0.5) * (pw / n);
+                ctx.fillStyle = hex2rgba(col, 0.9);
+                ctx.shadowColor = col; ctx.shadowBlur = 8;
+                ctx.beginPath(); ctx.arc(ex, -ph / 2 - 2, 2.5, 0, Math.PI * 2); ctx.fill();
+            }
+
+            // Forward arrow
+            ctx.fillStyle = col; ctx.shadowBlur = 12;
+            ctx.beginPath(); ctx.moveTo(0, -ph / 2 - 9); ctx.lineTo(-5, -ph / 2 - 2); ctx.lineTo(5, -ph / 2 - 2); ctx.closePath(); ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawHornShape(ax, ay, azDeg, col) {
+            const a = (azDeg - 90) * Math.PI / 180, S = getScale();
+            const throatW = mToPx(0.3), apertW = mToPx(1.2), hornLen = mToPx(1.5);
+            ctx.save();
+            ctx.translate(ax, ay); ctx.rotate(a);
+            ctx.shadowColor = col; ctx.shadowBlur = 16;
+
+            // Waveguide body behind
+            ctx.fillStyle = 'rgba(40,30,0,0.8)';
+            ctx.strokeStyle = hex2rgba(col, 0.5); ctx.lineWidth = 1.5;
+            ctx.fillRect(-mToPx(2), -throatW / 2, mToPx(1.8), throatW);
+            ctx.strokeRect(-mToPx(2), -throatW / 2, mToPx(1.8), throatW);
+
+            // Horn flare (top-down: trapezoid widening forward)
+            ctx.beginPath();
+            ctx.moveTo(-throatW * 0.5, -throatW / 2);
+            ctx.lineTo(hornLen, -apertW / 2);
+            ctx.lineTo(hornLen, apertW / 2);
+            ctx.lineTo(-throatW * 0.5, throatW / 2);
+            ctx.closePath();
+            ctx.fillStyle = hex2rgba(col, 0.12);
+            ctx.fill();
+            ctx.strokeStyle = col; ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Aperture cap line
+            ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.moveTo(hornLen, -apertW / 2); ctx.lineTo(hornLen, apertW / 2); ctx.stroke();
+
+            // Forward arrow
+            ctx.fillStyle = col;
+            ctx.beginPath(); ctx.moveTo(hornLen + 6, 0); ctx.lineTo(hornLen + 1, -4); ctx.lineTo(hornLen + 1, 4); ctx.closePath(); ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawDipoleShape(ax, ay, azDeg, col, nEl) {
+            const a = (azDeg - 90) * Math.PI / 180, S = getScale();
+            nEl = Math.round(nEl || 4);
+            const elemLen = mToPx(2.0);  // half-wave element visual length
+            const spacing = mToPx(0.8);
+            ctx.save();
+            ctx.translate(ax, ay); ctx.rotate(a);
+            ctx.shadowColor = col; ctx.shadowBlur = 12;
+
+            // Boom (horizontal axis)
+            const boomLen = spacing * (nEl + 1) + mToPx(0.5);
+            ctx.strokeStyle = 'rgba(150,200,170,0.4)'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(-spacing, 0); ctx.lineTo(boomLen, 0); ctx.stroke();
+
+            // Reflector (behind driven, slightly longer)
+            ctx.strokeStyle = '#6688aa'; ctx.lineWidth = 2.5; ctx.shadowBlur = 8;
+            ctx.beginPath(); ctx.moveTo(0, -elemLen * 0.55); ctx.lineTo(0, elemLen * 0.55); ctx.stroke();
+
+            // Driven element (fed, highlighted)
+            ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.shadowColor = col; ctx.shadowBlur = 18;
+            ctx.beginPath(); ctx.moveTo(spacing, -elemLen / 2); ctx.lineTo(spacing, elemLen / 2); ctx.stroke();
+            ctx.fillStyle = col; ctx.beginPath(); ctx.arc(spacing, 0, 4, 0, Math.PI * 2); ctx.fill();
+
+            // Directors (progressively shorter, marching forward)
+            ctx.strokeStyle = hex2rgba(col, 0.75); ctx.lineWidth = 2; ctx.shadowBlur = 8;
+            for (let i = 0; i < nEl; i++) {
+                const ex = spacing * (i + 2);
+                const len = elemLen * (0.95 - i * 0.03); // each director slightly shorter
+                ctx.beginPath(); ctx.moveTo(ex, -len / 2); ctx.lineTo(ex, len / 2); ctx.stroke();
+            }
+
+            // Forward arrow
+            const frontX = spacing * (nEl + 2) + 2;
+            ctx.fillStyle = col; ctx.shadowBlur = 12;
+            ctx.beginPath(); ctx.moveTo(frontX, 0); ctx.lineTo(frontX - 5, -4); ctx.lineTo(frontX - 5, 4); ctx.closePath(); ctx.fill();
+
+            ctx.restore();
+        }
+
+        // ── ENVIRONMENT ───────────────────────────────────────────────────────────────
+        function drawBackground() {
+            const W = canvas.width, H = canvas.height;
+            const g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.max(W, H) * 0.75);
+            g.addColorStop(0, '#03111e'); g.addColorStop(1, '#010710');
+            ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+            ctx.strokeStyle = 'rgba(0,60,90,0.15)'; ctx.lineWidth = 1;
+            for (let x = 0; x < W; x += 70) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+            for (let y = 0; y < H; y += 70) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+            // Compass
+            ctx.fillStyle = 'rgba(0,100,140,0.35)'; ctx.font = '11px Orbitron,monospace';
+            ctx.fillText('N', W / 2 - 4, 24); ctx.fillText('S', W / 2 - 4, H - 10);
+            ctx.fillText('W', 13, H / 2 + 4); ctx.fillText('E', W - 22, H / 2 + 4);
+        }
+
+        // ── MAIN DRAW FUNCTIONS ───────────────────────────────────────────────────────
+        // Antenna sits at a fixed point (slightly left of center, at center-Y)
+        function antPt() { return { ax: canvas.width * 0.38, ay: canvas.height * 0.5 }; }
+
+        function drawDish() {
+            const W = canvas.width, H = canvas.height;
+            drawBackground();
+            const { ax, ay } = antPt();
+            // Field is offset — show it near the antenna for scale
+            const fieldResult = drawField(ax, ay, ax, ay);
+            const col = DEFS.dish.color;
+            const az = vals.az ?? 60, rng = kmToPx(vals.rng ?? 180);
+            const el = vals.el ?? 0, isLim = Math.abs(el) > 65;
+            const beamCol = isLim ? '#ff4455' : col;
+
+            // Coverage cone (very narrow)
+            const halfAng = 0.025;
+            const azR = (az - 90) * Math.PI / 180;
+            ctx.save();
+            ctx.beginPath(); ctx.moveTo(ax, ay);
+            ctx.arc(ax, ay, rng, azR - halfAng, azR + halfAng);
+            ctx.closePath();
+            ctx.fillStyle = hex2rgba(beamCol, 0.14); ctx.shadowColor = beamCol; ctx.shadowBlur = 24;
+            ctx.fill(); ctx.shadowBlur = 0;
+            ctx.strokeStyle = hex2rgba(beamCol, 0.6); ctx.lineWidth = 1.5; ctx.setLineDash([8, 6]);
+            ctx.stroke(); ctx.setLineDash([]);
+            ctx.restore();
+
+            // Beam line
+            ctx.save();
+            ctx.strokeStyle = hex2rgba(beamCol, 0.9); ctx.lineWidth = 2;
+            ctx.shadowColor = beamCol; ctx.shadowBlur = 18;
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(ax + Math.cos(azR) * rng, ay + Math.sin(azR) * rng);
+            ctx.stroke(); ctx.shadowBlur = 0; ctx.restore();
+
+            // Pulses
+            for (let i = 0; i < 4; i++) {
+                const fr = ((t * 0.5 + i * 0.25) % 1);
+                const px = ax + Math.cos(azR) * rng * fr, py = ay + Math.sin(azR) * rng * fr;
+                ctx.save(); ctx.globalAlpha = (1 - fr) * 0.8;
+                ctx.strokeStyle = beamCol; ctx.shadowColor = beamCol; ctx.shadowBlur = 10; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.arc(px, py, 5 + fr * 10, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+            }
+
+            // Limit arcs
+            const lim = 65 * Math.PI / 180;
+            ctx.save(); ctx.strokeStyle = 'rgba(255,68,85,0.3)'; ctx.lineWidth = 2; ctx.setLineDash([5, 8]);
+            ctx.beginPath(); ctx.arc(ax, ay, 80, azR - lim, azR + lim); ctx.stroke();
+            ctx.setLineDash([]); ctx.restore();
+
+            // Range label
+            ctx.save(); ctx.fillStyle = hex2rgba(col, 0.55); ctx.font = '10px Orbitron,monospace';
+            const tx = ax + Math.cos(azR) * rng + 8, ty = ay + Math.sin(azR) * rng + 4;
+            ctx.fillText(`${Math.round(vals.rng ?? 180)} km`, tx, ty); ctx.restore();
+
+            drawDishShape(ax, ay, az, col);
+            updateBadge();
+        }
+
+        function drawArray() {
+            const W = canvas.width, H = canvas.height;
+            drawBackground();
+            const { ax, ay } = antPt();
+            drawField(ax, ay, ax, ay);
+            const col = DEFS.array.color;
+            const az = vals.az ?? 45, steer = vals.steer ?? 0, rng = kmToPx(vals.rng ?? 140);
+            const azR = (az - 90) * Math.PI / 180;
+            const beamAzR = ((az + steer) - 90) * Math.PI / 180;
+            const sectorH = 60 * Math.PI / 180;
+            const degraded = Math.abs(steer) > 60;
+            const beamCol = degraded ? '#ff4455' : col;
+
+            // Whole coverage sector (gray zone)
+            ctx.save();
+            ctx.beginPath(); ctx.moveTo(ax, ay);
+            ctx.arc(ax, ay, rng, azR - sectorH, azR + sectorH);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(80,0,100,0.07)';
+            ctx.strokeStyle = 'rgba(255,0,255,0.18)'; ctx.lineWidth = 1; ctx.setLineDash([6, 10]);
+            ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+            ctx.restore();
+
+            // Limit boundary lines
+            ctx.save(); ctx.strokeStyle = 'rgba(255,68,85,0.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 7]);
+            [azR - sectorH, azR + sectorH].forEach(a => {
+                ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + Math.cos(a) * rng, ay + Math.sin(a) * rng); ctx.stroke();
+            });
+            ctx.setLineDash([]); ctx.restore();
+
+            // Active beam
+            const bSpread = degraded ? 0.18 : 0.06;
+            ctx.save();
+            ctx.beginPath(); ctx.moveTo(ax, ay);
+            ctx.arc(ax, ay, rng * 0.88, beamAzR - bSpread, beamAzR + bSpread);
+            ctx.closePath();
+            ctx.fillStyle = hex2rgba(beamCol, 0.22); ctx.shadowColor = beamCol; ctx.shadowBlur = 28;
+            ctx.fill(); ctx.shadowBlur = 0;
+            ctx.strokeStyle = hex2rgba(beamCol, 0.7); ctx.lineWidth = 2; ctx.stroke();
+            ctx.restore();
+
+            // Beam center line
+            ctx.save(); ctx.strokeStyle = hex2rgba(beamCol, 0.9); ctx.lineWidth = 2;
+            ctx.shadowColor = beamCol; ctx.shadowBlur = 18;
+            ctx.beginPath(); ctx.moveTo(ax, ay);
+            ctx.lineTo(ax + Math.cos(beamAzR) * rng, ay + Math.sin(beamAzR) * rng);
+            ctx.stroke(); ctx.restore();
+
+            // Pulses
+            for (let i = 0; i < 4; i++) {
+                const fr = ((t * 0.7 + i * 0.25) % 1);
+                const px = ax + Math.cos(beamAzR) * rng * fr, py = ay + Math.sin(beamAzR) * rng * fr;
+                ctx.save(); ctx.globalAlpha = (1 - fr) * 0.85;
+                ctx.strokeStyle = beamCol; ctx.shadowColor = beamCol; ctx.shadowBlur = 10; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.arc(px, py, 5 + fr * 12, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+            }
+
+            if (degraded) {
+                ctx.save(); ctx.fillStyle = '#ff4455'; ctx.font = '10px Orbitron,monospace';
+                ctx.fillText('⚠ BEAM DEGRADING PAST ±60°', ax - 80, ay - rng * 0.6); ctx.restore();
+            }
+
+            // Sector label
+            ctx.save(); ctx.fillStyle = 'rgba(255,0,255,0.45)'; ctx.font = '10px Orbitron,monospace';
+            ctx.fillText('120° COVERAGE SECTOR', ax + Math.cos(azR) * rng * 0.5 - 50, ay + Math.sin(azR) * rng * 0.5 + 20);
+            ctx.restore();
+
+            drawArrayShape(ax, ay, az, col);
+            updateBadge();
+        }
+
+        function drawHorn() {
+            const W = canvas.width, H = canvas.height;
+            drawBackground();
+            const { ax, ay } = antPt();
+            drawField(ax, ay, ax, ay);
+            const col = DEFS.horn.color;
+            const az = vals.az ?? 60, spd = (vals.spread ?? 40) * Math.PI / 180, rng = kmToPx(vals.rng ?? 35);
+            const azR = (az - 90) * Math.PI / 180;
+
+            ctx.save();
+            ctx.beginPath(); ctx.moveTo(ax, ay);
+            ctx.arc(ax, ay, rng, azR - spd / 2, azR + spd / 2);
+            ctx.closePath();
+            const g = ctx.createRadialGradient(ax, ay, 0, ax, ay, rng);
+            g.addColorStop(0, hex2rgba(col, 0.30)); g.addColorStop(1, hex2rgba(col, 0.03));
+            ctx.fillStyle = g; ctx.shadowColor = col; ctx.shadowBlur = 36;
+            ctx.fill(); ctx.shadowBlur = 0;
+            ctx.strokeStyle = hex2rgba(col, 0.5); ctx.lineWidth = 1.5; ctx.setLineDash([6, 8]);
+            ctx.stroke(); ctx.setLineDash([]);
+            ctx.restore();
+
+            for (let i = 0; i < 4; i++) {
+                const fr = ((t * 0.4 + i * 0.25) % 1);
+                const r = fr * rng;
+                ctx.save(); ctx.globalAlpha = (1 - fr) * 0.55;
+                ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.shadowColor = col; ctx.shadowBlur = 10;
+                ctx.beginPath(); ctx.arc(ax, ay, r, azR - spd / 2, azR + spd / 2); ctx.stroke(); ctx.restore();
+            }
+
+            ctx.save(); ctx.fillStyle = hex2rgba(col, 0.65); ctx.font = '10px Orbitron,monospace';
+            ctx.fillText(`SPREAD: ${Math.round(vals.spread ?? 40)}°`, ax + Math.cos(azR) * rng * 0.55 + 8, ay + Math.sin(azR) * rng * 0.55);
+            ctx.restore();
+
+            drawHornShape(ax, ay, az, col);
+            updateBadge();
+        }
+
+        function drawDipole() {
+            const W = canvas.width, H = canvas.height;
+            drawBackground();
+            const { ax, ay } = antPt();
+            drawField(ax, ay, ax, ay);
+            const col = DEFS.dipole.color;
+            const az = vals.az ?? 75, nEl = Math.round(vals.elem ?? 4), rng = kmToPx(vals.rng ?? 80);
+            const azR = (az - 90) * Math.PI / 180;
+            const fwdH = Math.max(0.08, (0.55 - nEl * 0.045)) * Math.PI;
+
+            // Forward lobe
+            ctx.save();
+            ctx.beginPath(); ctx.moveTo(ax, ay);
+            ctx.arc(ax, ay, rng, azR - fwdH, azR + fwdH);
+            ctx.closePath();
+            const gf = ctx.createRadialGradient(ax, ay, 0, ax, ay, rng);
+            gf.addColorStop(0, hex2rgba(col, 0.28)); gf.addColorStop(1, hex2rgba(col, 0.03));
+            ctx.fillStyle = gf; ctx.shadowColor = col; ctx.shadowBlur = 28;
+            ctx.fill(); ctx.shadowBlur = 0;
+            ctx.strokeStyle = hex2rgba(col, 0.5); ctx.lineWidth = 1.5; ctx.setLineDash([6, 8]);
+            ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+
+            // Back lobe
+            const backH = 0.18, backR = rng * 0.2;
+            ctx.save();
+            ctx.beginPath(); ctx.moveTo(ax, ay);
+            ctx.arc(ax, ay, backR, azR + Math.PI - backH, azR + Math.PI + backH);
+            ctx.closePath();
+            ctx.fillStyle = hex2rgba(col, 0.1);
+            ctx.fill();
+            ctx.strokeStyle = hex2rgba(col, 0.25); ctx.lineWidth = 1; ctx.setLineDash([4, 8]);
+            ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+
+            // Pulses
+            for (let i = 0; i < 4; i++) {
+                const fr = ((t * 0.55 + i * 0.25) % 1);
+                const px = ax + Math.cos(azR) * rng * fr, py = ay + Math.sin(azR) * rng * fr;
+                ctx.save(); ctx.globalAlpha = (1 - fr) * 0.8;
+                ctx.strokeStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 10; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.arc(px, py, 4 + fr * 10, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+            }
+
+            // Back lobe label
+            ctx.save(); ctx.fillStyle = hex2rgba(col, 0.45); ctx.font = '10px Orbitron,monospace';
+            ctx.fillText('BACK LOBE', ax + Math.cos(azR + Math.PI) * backR * 1.3 - 25, ay + Math.sin(azR + Math.PI) * backR * 1.3 + 4);
+            ctx.restore();
+
+            drawDipoleShape(ax, ay, az, col, nEl);
+            updateBadge();
+        }
+
+        function updateBadge() {
+            const d = DEFS[cur];
+            const lines = d.ctrls.map(c => `${c.id.toUpperCase().padEnd(6)} ${Math.round(vals[c.id] ?? c.val)}${c.unit}`);
+            document.getElementById('range-badge').innerText = lines.join('\n');
+        }
+
+        // ── ANIMATE ───────────────────────────────────────────────────────────────────
+        function animate() {
+            t += 0.012; ctx.clearRect(0, 0, canvas.width, canvas.height);
+            switch (cur) {
+                case 'dish': drawDish(); break;
+                case 'array': drawArray(); break;
+                case 'horn': drawHorn(); break;
+                case 'dipole': drawDipole(); break;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        pick('dish', document.querySelector('.tab.active'));
+        animate();
+    </script>
+</body>
+
+</html>

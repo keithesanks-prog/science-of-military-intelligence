@@ -1,0 +1,21 @@
+{
+    "episode": "Episode 1",
+    "segments": [
+        {
+            "id": "ep1_act1_cold_open",
+            "name": "The 3:00 AM Notification",
+            "script": "Imagine looking at your phone right now. It’s a number you don’t recognize, but the message is for you. Behind that notification is a mathematical ghost born in 1865.",
+            "prompt_a": "SMI-Veritasium Style. 35mm Prime Lens, f/1.8. Macro close-up of a smartphone on a nightstand. Cinestill 800T lighting with cinematic blue halation. Screen is pitch black. Moody dark room. 4K.",
+            "prompt_b": "Anamorphic horizontal blue lens flare as the notification icon appears. Glowing neon-blue 'Kinetic Ripples' pulse through the volumetric dust in the air.",
+            "animation_desc": "Cinematic slow-motion pulse. The invisible radio waves ripple out with shimmering neon-blue plasma energy. Volumetric lighting and lens flares."
+        },
+        {
+            "id": "ep1_act2_hertz_spark",
+            "name": "The Hertz Resonance",
+            "script": "Wait... did you see that? That tiny spark is the proof that Hertz’s experiment proved Maxwell was right.",
+            "prompt_a": "SMI-Veritasium Style. Macro photography of micro-scratched brushed brass spheres. Orthographic side-view. Dark-grid background. Cinematic soft-box lighting.",
+            "prompt_b": "Identical frame. Jagged cobalt-blue plasma spark with horizontal blue lens flares. Concentric gold ripples representing the electromagnetic field.",
+            "animation_desc": "Extreme slow-motion. The golden waves hit the wire, causing the spark to fire with massive energy halation and plasma detail."
+        }
+    ]
+}

@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMI Project Manager | Science of Military Intelligence</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0c10;
+            --panel-bg: rgba(22, 27, 34, 0.8);
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-purple: #bc8cff;
+            --accent-orange: #f0883e;
+            --accent-red: #ff7b72;
+            --text-main: #c9d1d9;
+            --text-dim: #8b949e;
+            --border-color: rgba(240, 246, 252, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(88, 166, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(188, 140, 255, 0.05) 0%, transparent 40%);
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 280px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            z-index: 10;
+        }
+
+        .logo-section {
+            margin-bottom: 50px;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .logo-section h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fff;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-section p {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        .nav-items {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 14px 18px;
+            margin-bottom: 6px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+            border: 1px solid rgba(88, 166, 255, 0.2);
+        }
+
+        .nav-item i {
+            margin-right: 15px;
+            font-style: normal;
+            font-size: 1.1rem;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            padding: 40px 60px;
+            overflow-y: auto;
+            position: relative;
+            height: 100vh;
+        }
+
+        .page {
+            display: none;
+            animation: slideUp 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* --- Grid Layouts --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .card .subtitle {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .progress-section {
+            margin-top: 25px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--accent-blue);
+            transition: width 0.5s ease;
+        }
+
+        /* --- Tables --- */
+        .table-container {
+            background: var(--panel-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 20px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* --- Buttons & Inputs --- */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--text-dim);
+        }
+
+        .btn-danger {
+            background: rgba(255, 123, 114, 0.1);
+            color: var(--accent-red);
+            border: 1px solid rgba(255, 123, 114, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        /* --- Kanban Board --- */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 30px;
+            height: calc(100vh - 300px);
+            min-height: 500px;
+        }
+
+        .kanban-col {
+            background: var(--panel-bg);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+
+        .kanban-col-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .kanban-col-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .kanban-task-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+
+        .task-card:hover {
+            border-color: var(--accent-blue);
+            transform: scale(1.02);
+        }
+
+        .task-card p {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .task-btn {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        .task-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Controls --- */
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        select.custom-select {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            border-radius: 10px;
+            color: #fff;
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 250px;
+        }
+
+        /* --- Modals --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: #161b22;
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal h3 {
+            margin-bottom: 25px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 20px;
+            font-family: inherit;
+        }
+
+        .badge-count {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .folder-suggestion {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+            border-left: 3px solid var(--accent-blue);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            padding: 5px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .suggestion-item:hover {
+            color: var(--accent-blue);
+        }
+
+        /* --- Production Board --- */
+        .prod-section {
+            margin-bottom: 40px;
+        }
+
+        .prod-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .prod-section-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .prod-card {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .prod-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .prod-card .prod-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .prod-card .prod-meta {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .prod-card .prod-meta strong {
+            color: var(--text-main);
+        }
+
+        .element-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin: 2px;
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .element-tag.character {
+            background: rgba(188, 140, 255, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .element-tag.device {
+            background: rgba(240, 136, 62, 0.1);
+            color: var(--accent-orange);
+        }
+
+        .element-tag.concept {
+            background: rgba(63, 185, 80, 0.1);
+            color: var(--accent-green);
+        }
+
+        .element-tag.location {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .type-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .type-tag.diagram {
+            background: rgba(240, 136, 62, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .type-tag.scene {
+            background: rgba(188, 140, 255, 0.15);
+            color: var(--accent-purple);
+        }
+
+        .type-tag.portrait {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+        }
+
+        .type-tag.filming {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .diagram-spec {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-orange);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .diagram-spec strong {
+            color: var(--accent-orange);
+        }
+
+        .status-select {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.75rem;
+            font-family: inherit;
+            cursor: pointer;
+            margin: 0;
+            width: auto;
+        }
+
+        /* --- AI Pipeline --- */
+        .pipeline-stages {
+            display: flex;
+            gap: 4px;
+            margin: 8px 0;
+            align-items: center;
+        }
+
+        .pipeline-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .pipeline-dot.active {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+        }
+
+        .pipeline-dot.completed {
+            background: var(--accent-green);
+            color: #fff;
+            border-color: var(--accent-green);
+        }
+
+        .pipeline-connector {
+            flex: 1;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .pipeline-connector.completed {
+            background: var(--accent-green);
+        }
+
+        .pipeline-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+
+        .pipeline-dates {
+            display: flex;
+            gap: 15px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+        }
+
+        /* --- Equipment --- */
+        .equip-section {
+            margin-bottom: 30px;
+        }
+
+        .equip-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .equip-item:last-child {
+            border-bottom: none;
+        }
+
+        .equip-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-green);
+            cursor: pointer;
+        }
+
+        .equip-item.checked {
+            color: var(--text-dim);
+            text-decoration: line-through;
+        }
+
+        /* DEBUG MARKERS */
+        .debug-badge {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: #ff00ff;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            z-index: 1000;
+            font-weight: 800;
+            pointer-events: none;
+        }
+
+        #aipipeline {
+            background: rgba(88, 166, 255, 0.03);
+            /* Subtle blue tint to confirm load */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="debug-badge">v5.5 - FIXED LISTENERS</div>
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <h1>SMI Dashboard</h1>
+            <p>Project Maverick</p>
+        </div>
+        <ul class="nav-items">
+            <li class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')"><i>📊</i> Dashboard</li>
+            <li class="nav-item" data-page="episodes" onclick="showPage('episodes')"><i>🎬</i> Series Index</li>
+            <li class="nav-item" data-page="production" onclick="showPage('production')"><i>🎥</i> Production Board</li>
+            <li class="nav-item" data-page="aipipeline" onclick="showPage('aipipeline')"><i>🤖</i> AI Pipeline</li>
+            <li class="nav-item" data-page="equipment" onclick="showPage('equipment')"><i>🧰</i> Equipment</li>
+            <li class="nav-item" data-page="kanban" onclick="showPage('kanban')"><i>📋</i> Kanban Wall</li>
+            <li class="nav-item" data-page="outreach" onclick="showPage('outreach')"><i>🤝</i> Outreach</li>
+        </ul>
+        <div
+            style="font-size: 0.75rem; color: var(--text-dim); padding: 10px; border-top: 1px solid var(--border-color); margin-top: 20px;">
+            SMI Engine v5.5 [DEBUG]<br>
+            Production Tracking Active
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="page-header">
+                <div>
+                    <h2>Live Production</h2>
+                    <p style="color: var(--text-dim);">System status of in-flight chapters</p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid" id="active-episodes-grid">
+                <!-- Data-driven cards will be injected here -->
+            </div>
+
+            <div class="page-header" style="margin-top: 50px;">
+                <h2>Tactical Tasks</h2>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Objective</th>
+                            <th>Priority</th>
+                            <th>Deadline</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboard-task-list">
+                        <!-- Cross-project tasks summary -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Episodes Page -->
+        <section id="episodes" class="page">
+            <div class="page-header">
+                <div>
+                    <h2>The SMI Bible</h2>
+                    <p style="color: var(--text-dim);">Master archive of all episodes</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">+ Add New Chapter</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Arc</th>
+                            <th>Math</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="episode-list-body">
+                        <!-- Episodes -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Kanban Page -->
+        <section id="kanban" class="page">
+            <div class="page-header">
+                <div>
+                    <h2>Kanban Wall</h2>
+                    <p style="color: var(--text-dim);">Manage production tasks per episode</p>
+                </div>
+                <div class="controls-row">
+                    <label style="margin: 0;">Focus Section:</label>
+                    <select id="kanban-project-selector" class="custom-select" onchange="renderKanban()">
+                        <!-- Dynamic episode list -->
+                    </select>
+                    <button class="btn btn-primary" onclick="openAddTaskModal()">+ Add Task</button>
+                </div>
+            </div>
+
+            <div class="kanban-board">
+                <div class="kanban-col">
+                    <div class="kanban-col-header">
+                        <h3>To Do</h3>
+                        <span class="badge-count" id="count-todo">0</span>
+                    </div>
+                    <div class="kanban-task-list" id="col-todo"></div>
+                </div>
+                <div class="kanban-col">
+                    <div class="kanban-col-header">
+                        <h3>In Progress</h3>
+                        <span class="badge-count" id="count-inprogress">0</span>
+                    </div>
+                    <div class="kanban-task-list" id="col-inprogress"></div>
+                </div>
+                <div class="kanban-col">
+                    <div class="kanban-col-header">
+                        <h3>Done</h3>
+                        <span class="badge-count" id="count-done">0</span>
+                    </div>
+                    <div class="kanban-task-list" id="col-done"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Production Board Page -->
+        <section id="production" class="page">
+            <div class="page-header">
+                <div>
+                    <h2>Production Board</h2>
+                    <p style="color: var(--text-dim);">Script breakdown — filming tasks & AI visual tasks</p>
+                </div>
+                <div class="controls-row">
+                    <label style="margin: 0;">Episode:</label>
+                    <select id="prod-ep-selector" class="custom-select" onchange="renderProductionBoard()"></select>
+                </div>
+            </div>
+            <div id="prod-board-content">
+                <!-- Filming + AI tasks rendered here -->
+            </div>
+        </section>
+
+        <!-- AI Pipeline Page -->
+        <section id="aipipeline" class="page">
+            <div class="page-header">
+                <div>
+                    <h2>AI Content Pipeline</h2>
+                    <p style="color: var(--text-dim);">Track outsourced visual content from brief to final delivery</p>
+                </div>
+                <div class="controls-row">
+                    <label style="margin: 0;">Episode:</label>
+                    <select id="ai-ep-selector" class="custom-select" onchange="renderAIPipeline()"></select>
+                    <button class="btn btn-primary" onclick="exportAIPipeline()">💾 Export Pipeline (.md)</button>
+                </div>
+            </div>
+            <div id="ai-pipeline-content">
+                <!-- Pipeline cards rendered here -->
+            </div>
+        </section>
+
+        <!-- Equipment Page -->
+        <section id="equipment" class="page">
+            <div class="page-header">
+                <div>
+                    <h2>Equipment Tracker</h2>
+                    <p style="color: var(--text-dim);">Shoot-day gear checklist</p>
+                </div>
+                <div class="controls-row">
+                    <label style="margin: 0;">Episode:</label>
+                    <select id="equip-ep-selector" class="custom-select" onchange="renderEquipment()"></select>
+                </div>
+            </div>
+            <div id="equip-content">
+                <!-- Equipment checklist rendered here -->
+            </div>
+        </section>
+
+        <!-- Outreach Page -->
+        <section id="outreach" class="page">
+            <div class="page-header">
+                <h2>Field Outreach</h2>
+            </div>
+            <div class="card">
+                <p style="color: var(--text-dim);">Outreach module is undergoing maintenance.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Edit/Create -->
+    <div id="episode-modal" class="modal-overlay">
+        <div class="modal">
+            <h3 id="modal-title">Edit Episode</h3>
+
+            <!-- Folder Discovery Section -->
+            <div id="folder-discovery-section" style="display: none;">
+                <label>Discovered Workspaces:</label>
+                <div class="folder-suggestion" id="folder-suggestions">
+                    <!-- Suggestions will be injected here -->
+                </div>
+            </div>
+
+            <div id="modal-inputs">
+                <label>Episode ID (e.g. 1.1)</label>
+                <input type="text" id="ep-id" placeholder="1.1">
+                <label>Title</label>
+                <input type="text" id="ep-title" placeholder="The Mirror Mechanism">
+                <label>Arc</label>
+                <input type="text" id="ep-arc" placeholder="Invisible War">
+                <label>Math Foundation</label>
+                <input type="text" id="ep-math" placeholder="Snell's Law">
+                <label>Status</label>
+                <select id="ep-status">
+                    <option value="Planning">Planning</option>
+                    <option value="Active">Active</option>
+                    <option value="Scripting">Scripting</option>
+                    <option value="Production">Production</option>
+                    <option value="Post-Prod">Post-Prod</option>
+                    <option value="Final">Final</option>
+                </select>
+                <label>Progress (%)</label>
+                <input type="number" id="ep-progress" min="0" max="100">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveEpisode()">Save Chapter</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Task -->
+    <div id="task-modal" class="modal-overlay">
+        <div class="modal">
+            <h3>New Objective</h3>
+            <label>Task Description</label>
+            <textarea id="task-text" rows="3" placeholder="Identify side-lobe leak on X-band antenna..."></textarea>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveTask()">Add Objective</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeTaskModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let episodes = [];
+        let folderManifest = [];
+        let editingId = null;
+
+        // Embedded data fallbacks to bypass fetch() restrictions on local files
+        const DEFAULT_EPISODES = [
+            { "id": "1.0", "title": "The Spark That Changed the World", "arc": "The Electromagnetic Foundation", "status": "Final", "progress": 100, "math": "Maxwell's Equations", "tasks": [] },
+            { "id": "1.1", "title": "The Anatomy of the Pulse", "arc": "The Electromagnetic Foundation", "status": "Final", "progress": 100, "math": "Pulse Width/PRF", "tasks": [] },
+            { "id": "1.2", "title": "The Armor-Piercing Ghost", "arc": "The Electromagnetic Foundation", "status": "Active", "progress": 100, "math": "X-Ray Diffraction", "tasks": [] },
+            { "id": "1.8", "title": "The Shape of the Signal", "arc": "The Electromagnetic Foundation", "status": "Active", "progress": 100, "math": "Resonance/Polarization", "tasks": [] },
+            { "id": "2.0", "title": "Friend or Foe", "arc": "The Electromagnetic Foundation", "status": "Active", "progress": 100, "math": "Frequency Hopping", "tasks": [] },
+            { "id": "8.6", "title": "Thermodynamics as an Intelligence Tool", "arc": "The Invisible War", "status": "Active", "progress": 100, "math": "E=hf / Wien's Law", "tasks": [] },
+            { "id": "8.8", "title": "The Drone Boomerang", "arc": "The Invisible War", "status": "Active", "progress": 100, "math": "Attritional Logistics", "tasks": [] }
+        ];
+
+        const FOLDER_MANIFEST_DATA = [
+            { "folder": "Episode 1 - The Spark That Changed the World", "id": "1", "title": "The Spark That Changed the World" },
+            { "folder": "Episode 1.1 - The Anatomy of the Pulse", "id": "1.1", "title": "The Anatomy of the Pulse" },
+            { "folder": "Episode 1.2 - The Armor-Piercing Ghost", "id": "1.2", "title": "The Armor-Piercing Ghost" },
+            { "folder": "Episode 1.5 - The Inertia of the Old Guard", "id": "1.5", "title": "The Inertia of the Old Guard" },
+            { "folder": "Episode 1.7 - The Sound of Shadows", "id": "1.7", "title": "The Sound of Shadows" },
+            { "folder": "Episode 1.8 - The Shape of the Signal", "id": "1.8", "title": "The Shape of the Signal" },
+            { "folder": "Episode 1.9 - The Geometry of the Ghost", "id": "1.9", "title": "The Geometry of the Ghost" },
+            { "folder": "Episode 10 - The Digital Web", "id": "10", "title": "The Digital Web" },
+            { "folder": "Episode 11 - The Web as Weapon", "id": "11", "title": "The Web as Weapon" },
+            { "folder": "Episode 12 - Shadow Operations", "id": "12", "title": "Shadow Operations" },
+            { "folder": "Episode 13 - The Price of Betrayal", "id": "13", "title": "The Price of Betrayal" },
+            { "folder": "Episode 14 - Greatest Hits", "id": "14", "title": "Greatest Hits" },
+            { "folder": "Episode 14.5 - The Pulse of the Machine", "id": "14.5", "title": "The Pulse of the Machine" },
+            { "folder": "Episode 15 - Tactical Recon", "id": "15", "title": "Tactical Recon" },
+            { "folder": "Episode 15.5 - Asymmetric Warfare", "id": "15.5", "title": "Asymmetric Warfare" },
+            { "folder": "Episode 16 - Strategic Intel", "id": "16", "title": "Strategic Intel" },
+            { "folder": "Episode 16.5 - The Human Signal", "id": "16.5", "title": "The Human Signal" },
+            { "folder": "Episode 16.6 - The Echo of Error", "id": "16.6", "title": "The Echo of Error" },
+            { "folder": "Episode 16.7 - The Untouchables", "id": "16.7", "title": "The Untouchables" },
+            { "folder": "Episode 16.8 - The Phantom Signal", "id": "16.8", "title": "The Phantom Signal" },
+            { "folder": "Episode 17 - The Cloud Empire", "id": "17", "title": "The Cloud Empire" },
+            { "folder": "Episode 18 - The Life of a Data Point", "id": "18", "title": "The Life of a Data Point" },
+            { "folder": "Episode 2 - Friend or Foe", "id": "2", "title": "Friend or Foe" },
+            { "folder": "Episode 2.5 - The Digital Lighthouse", "id": "2.5", "title": "The Digital Lighthouse" },
+            { "folder": "Episode 3 - Digital Mirage", "id": "3", "title": "Digital Mirage" },
+            { "folder": "Episode 3.5 - Invisibility Paradox", "id": "3.5", "title": "Invisibility Paradox" },
+            { "folder": "Episode 4 - The Mathematical Vault", "id": "4", "title": "The Mathematical Vault" },
+            { "folder": "Episode 5 - The Gray Zone", "id": "5", "title": "The Gray Zone" },
+            { "folder": "Episode 5.5", "id": "5.5", "title": "Episode 5.5" },
+            { "folder": "Episode 6 - Digital Mirage", "id": "6", "title": "Digital Mirage" },
+            { "folder": "Episode 6.5 - The Vanishing Act", "id": "6.5", "title": "The Vanishing Act" },
+            { "folder": "Episode 7 - The Digital Sentry", "id": "7", "title": "The Digital Sentry" },
+            { "folder": "Episode 7.2 - The Sky as a Mirror", "id": "7.2", "title": "The Sky as a Mirror" },
+            { "folder": "Episode 7.3 - The Dark Grid", "id": "7.3", "title": "The Dark Grid" },
+            { "folder": "Episode 7.5 - The Invisible Wall", "id": "7.5", "title": "The Invisible Wall" },
+            { "folder": "Episode 8 - The Heat Signature", "id": "8", "title": "The Heat Signature" },
+            { "folder": "Episode 8.5 - The Eye in the Sky", "id": "8.5", "title": "The Eye in the Sky" },
+            { "folder": "Episode 8.6 - Thermodynamics as an Intelligence Tool", "id": "8.6", "title": "Thermodynamics as an Intelligence Tool" },
+            { "folder": "Episode 8.7 - The Precision Map", "id": "8.7", "title": "The Precision Map" },
+            { "folder": "Episode 8.8 - The Drone Boomerang", "id": "8.8", "title": "The Drone Boomerang" },
+            { "folder": "Episode 8.9 - Borrowing the Bodyguard's Eyes", "id": "8.9", "title": "Borrowing the Bodyguard's Eyes" },
+            { "folder": "Episode 9 - Imaging the Unseen", "id": "9", "title": "Imaging the Unseen" },
+            { "folder": "Episode 9.4 - The Taxonomy of Secrets", "id": "9.4", "title": "The Taxonomy of Secrets" },
+            { "folder": "Episode 9.5 - The Human Firewall", "id": "9.5", "title": "The Human Firewall" },
+            { "folder": "Episode 9.6 - The United States of Intelligence", "id": "9.6", "title": "The United States of Intelligence" },
+            { "folder": "Episode 9.7 - The Trigger and the Code", "id": "9.7", "title": "The Trigger and the Code" },
+            { "folder": "Episode 9.8 - The Engineering of Compliance", "id": "9.8", "title": "The Engineering of Compliance" }
+        ];
+
+        // Initialize App
+        async function init() {
+            console.log("=== APP INIT START ===");
+            // Load production & equipment data
+            loadProductionData();
+            loadEquipState();
+
+            // Migration: Ensure all production keys are normalized
+            console.log("Running ID Normalization Sync...");
+            Object.keys(productionData).forEach(key => {
+                const nid = normId(key);
+                if (nid !== key) {
+                    console.log(`Migrating key: ${key} -> ${nid}`);
+                    productionData[nid] = productionData[key];
+                    delete productionData[key];
+                }
+            });
+            saveProductionData();
+
+            // Load manifest
+            try {
+                const manifestRes = await fetch('Assets/References/SMI_Folder_Manifest.json');
+                folderManifest = await manifestRes.json();
+            } catch (e) {
+                console.warn("Fetch failed, using embedded manifest fallback.");
+                folderManifest = FOLDER_MANIFEST_DATA;
+            }
+
+            const savedData = localStorage.getItem('smi_episodes_v3_1');
+            if (savedData) {
+                episodes = JSON.parse(savedData);
+                console.log("Episodes loaded from cache:", episodes.length);
+                renderAll();
+            } else {
+                try {
+                    const response = await fetch('Assets/References/SMI_Episode_Index.json');
+                    episodes = await response.json();
+                    console.log("Episodes fetched from JSON:", episodes.length);
+                    saveState();
+                } catch (e) {
+                    console.warn("Fetch failed, using embedded index fallback.");
+                    episodes = DEFAULT_EPISODES;
+                    saveState();
+                }
+            }
+
+            // Sidebar navigation listeners
+            console.log("Binding Sidebar Listeners...");
+            document.querySelectorAll('.nav-item').forEach(item => {
+                const pg = item.dataset.page;
+                item.onclick = () => {
+                    console.log("Sidebar click:", pg);
+                    if (pg) showPage(pg);
+                };
+            });
+
+            console.log("Setting initial page: dashboard");
+            showPage('dashboard');
+        }
+
+        // Helper to normalize IDs for comparison (e.g. "1.0" -> "1")
+        function normId(id) {
+            return parseFloat(id).toString();
+        }
+
+        function saveState() {
+            localStorage.setItem('smi_episodes_v3_1', JSON.stringify(episodes));
+            renderAll();
+        }
+
+        function showPage(pageId) {
+            console.log("Showing Page:", pageId);
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+
+            const pg = document.getElementById(pageId);
+            if (!pg) {
+                console.error("Page not found:", pageId);
+                return;
+            }
+            pg.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.dataset.page === pageId) item.classList.add('active');
+            });
+
+            // Re-populate all selectors to ensure they exist and have values
+            populateAllSelectors();
+
+            if (pageId === 'dashboard') renderDashboard();
+            if (pageId === 'production') renderProductionBoard();
+            if (pageId === 'aipipeline') renderAIPipeline();
+            if (pageId === 'equipment') renderEquipment();
+            if (pageId === 'kanban') {
+                console.log("Triggering Kanban Render from showPage");
+                renderKanban();
+            }
+        }
+
+        function renderAll() {
+            renderDashboard();
+            renderEpisodeTable();
+            renderProjectSelector();
+            renderKanban();
+            populateAllSelectors();
+        }
+
+        function populateAllSelectors() {
+            ['prod-ep-selector', 'ai-ep-selector', 'equip-ep-selector', 'kanban-project-selector'].forEach(selId => {
+                const sel = document.getElementById(selId);
+                if (!sel) return;
+                const cur = sel.value;
+                sel.innerHTML = episodes.map(e => `<option value="${e.id}">${e.id} - ${e.title}</option>`).join('');
+                if (cur) sel.value = cur;
+            });
+        }
+
+        // =====================================================
+        // PRODUCTION DATA (localStorage-backed)
+        // =====================================================
+        let productionData = {};
+        const PROD_KEY = 'smi_production_v1';
+
+        const DEFAULT_PRODUCTION = {
+            "1.0": {
+                filmingTasks: [
+                    { id: "F1", scene: "Cold Open", type: "Object Lesson", desc: "Phone on nightstand, 3AM call recreation", status: "To Do" }
+                ],
+                aiTasks: [
+                    {
+                        id: "A1", scene: "Act 1 — Maxwell", year: "1865", visualFormat: "Portrait + Diagram",
+                        elements: { characters: ["James Clerk Maxwell"], locations: ["1865 study"], devices: ["Battery", "lightbulb", "wires"], concepts: ["Displacement Current", "Poynting Vector"] },
+                        diagram: { shape: "Battery → wires → lightbulb", flow: "Poynting Vector energy flows through air around wires", output: "Light produced at bulb" },
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A2", scene: "Act 2 — Hertz", year: "1887", visualFormat: "Diagram",
+                        elements: { characters: ["Heinrich Hertz", "students"], locations: ["Dimly lit lab"], devices: ["Leyden jars", "induction coils", "brass spheres", "spark gap", "receiver loop"], concepts: ["LC Resonance", "ionization"] },
+                        diagram: { shape: "Battery → transformer → inductor(L) + capacitor(C) → spark gap", flow: "Charge builds in LC circuit, voltage ionizes air at spark gap", output: "EM wave radiates to receiver loop, tiny spark at receiver gap" },
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A3", scene: "Act 3 — Marconi", year: "1896–1912", visualFormat: "Diagram",
+                        elements: { characters: ["Guglielmo Marconi"], locations: ["Coastal England"], devices: ["Spark gap", "antenna", "ground wire", "Coherer receiver"], concepts: ["Ground circuit", "signal range"] },
+                        diagram: { shape: "Battery → spark gap → vertical antenna (up) + ground wire (down)", flow: "Signal radiates from antenna using Earth as conductive plate", output: "Coherer filings stick together at receiver, ringing bell" },
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A4", scene: "Act 4 — Hülsmeyer", year: "1904", visualFormat: "Diagram",
+                        elements: { characters: ["Christian Hülsmeyer"], locations: ["Foggy harbor"], devices: ["Telemobiloskop", "parabolic dishes", "coherer"], concepts: ["Directional Beam", "Reflection"] },
+                        diagram: { shape: "Spark gap at focal point of parabolic dish", flow: "Radio beam focused by dish → hits ship hull → echo reflects back", output: "Echo detected at coherer, bell rings" },
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A5", scene: "Act 5 — Titanic", year: "1912", visualFormat: "Scene",
+                        elements: { characters: ["Cyril Evans", "Jack Phillips"], locations: ["Titanic wireless room", "SS Californian radio room"], devices: ["Spark-gap transmitter", "headphones"], concepts: ["Broadband/Jamming", "Spectrum Authority", "Signal Priority"] },
+                        diagram: null,
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A6", scene: "Act 6 — Echo Discovery", year: "1880s–1900s", visualFormat: "Diagram",
+                        elements: { characters: [], locations: ["Laboratory"], devices: ["Metal plate", "transmitter"], concepts: ["Metal surface reflection"] },
+                        diagram: { shape: "Transmitter → metal plate", flow: "Wave hits metal surface", output: "Faint echo wave returns to source" },
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A7", scene: "Act 7 — National Silos", year: "1930s", visualFormat: "Scene",
+                        elements: { characters: [], locations: ["UK coast", "Germany", "Potomac River"], devices: ["Antenna arrays"], concepts: ["Chain Home", "Freya", "Pulse-Echo"] },
+                        diagram: null,
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A8", scene: "Act 8 — Tizard Mission", year: "1940", visualFormat: "Diagram",
+                        elements: { characters: [], locations: ["American shores"], devices: ["Tizard Box", "Cavity Magnetron"], concepts: ["Microwave Power", "Resonance"] },
+                        diagram: { shape: "Central cathode surrounded by circular copper cavities", flow: "Electrons spiral past cavity openings, induce high-frequency waves", output: "Massive microwave energy, radar shrunk to cockpit size" },
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A9", scene: "Act 9 — Opana Point", year: "1941", visualFormat: "Diagram",
+                        elements: { characters: ["Joseph Lockard", "George Elliott"], locations: ["Opana Point, Oahu"], devices: ["SCR-270 antenna", "A-Scope oscilloscope"], concepts: ["Pulse-Echo Method"] },
+                        diagram: { shape: "SCR-270 'Bedspring' antenna → A-Scope display", flow: "Pulse transmitted → travels 132 mi → hits aircraft → echo returns", output: "Vertical spike on oscilloscope at 132-mile marker" },
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    },
+                    {
+                        id: "A10", scene: "Act 10 — Tyler Problem", year: "1941", visualFormat: "Scene",
+                        elements: { characters: ["Lieutenant Tyler"], locations: ["Information center, Oahu"], devices: ["Radar scope"], concepts: ["Information Silo", "Detection ≠ Intelligence"] },
+                        diagram: null,
+                        stage: "To Do", dateSent: "", dateReceived: "", notes: ""
+                    }
+                ],
+                equipment: [
+                    { item: "Smartphone + nightstand", scene: "Cold Open (F1)", packed: false }
+                ]
+            }
+        };
+
+        const STANDARD_KIT = [
+            "Camera body", "Camera batteries (x3)", "Memory cards (x4)",
+            "Tripod", "Lavalier mic", "Shotgun mic + boom",
+            "LED panel light", "Light stand", "ND filters",
+            "Lens kit (wide + telephoto)", "Camera bag", "Power bank"
+        ];
+
+        const AI_STAGES = ["Brief Sent", "Files Delivered", "In Processing", "Review", "Approved", "Final Received"];
+
+        function loadProductionData() {
+            const saved = localStorage.getItem(PROD_KEY);
+            if (saved) {
+                productionData = JSON.parse(saved);
+            } else {
+                productionData = JSON.parse(JSON.stringify(DEFAULT_PRODUCTION));
+                saveProductionData();
+            }
+        }
+
+        function saveProductionData() {
+            localStorage.setItem(PROD_KEY, JSON.stringify(productionData));
+        }
+
+        function getEpProd(epId) {
+            const nid = normId(epId);
+            if (!productionData[nid]) {
+                // Find if any existing key normalizes to this ID (e.g. "1.0" matches "1")
+                const existingKey = Object.keys(productionData).find(k => normId(k) === nid);
+                if (existingKey) {
+                    console.log(`Found existing data under alias: ${existingKey}. Mapping to normalized: ${nid}`);
+                    productionData[nid] = productionData[existingKey];
+                    // Keep original key only if it's identical to the normalized one
+                    if (nid !== existingKey) delete productionData[existingKey];
+                } else {
+                    console.log(`No data found for Episode ${epId} (normalized ${nid}). Creating new.`);
+                    productionData[nid] = { filmingTasks: [], aiTasks: [], equipment: [] };
+                }
+                saveProductionData();
+            }
+            return productionData[nid];
+        }
+
+        // =====================================================
+        // PRODUCTION BOARD RENDERING
+        // =====================================================
+        function renderProductionBoard() {
+            populateAllSelectors();
+            const epId = document.getElementById('prod-ep-selector').value;
+            if (!epId) return;
+            const data = getEpProd(epId);
+            const container = document.getElementById('prod-board-content');
+
+            let html = '';
+
+            // Filming Tasks
+            html += `<div class="prod-section">
+                <div class="prod-section-header">
+                    <h3>🎥 Filming Tasks</h3>
+                    <button class="btn btn-primary" onclick="addFilmingTask('${epId}')" style="padding: 6px 14px; font-size: 0.8rem;">+ Add</button>
+                </div>`;
+
+            if (data.filmingTasks.length === 0) {
+                html += `<div class="prod-card"><p style="color: var(--text-dim);">No filming tasks yet. Add interviews, field visits, or object lessons.</p></div>`;
+            } else {
+                data.filmingTasks.forEach((t, i) => {
+                    html += `<div class="prod-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div>
+                                <span class="type-tag filming">${t.type}</span>
+                                <span style="font-size: 0.75rem; color: var(--text-dim); margin-left: 8px;">${t.scene}</span>
+                            </div>
+                            <div style="display: flex; gap: 6px; align-items: center;">
+                                <select class="status-select" onchange="updateFilmStatus('${epId}',${i},this.value)">
+                                    <option value="To Do" ${t.status === 'To Do' ? 'selected' : ''}>To Do</option>
+                                    <option value="In Progress" ${t.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                    <option value="Done" ${t.status === 'Done' ? 'selected' : ''}>Done</option>
+                                </select>
+                                <button class="task-btn" onclick="removeFilmTask('${epId}',${i})">✕</button>
+                            </div>
+                        </div>
+                        <div class="prod-title">${t.desc}</div>
+                    </div>`;
+                });
+            }
+            html += `</div>`;
+
+            // AI Visual Tasks
+            html += `<div class="prod-section">
+                <div class="prod-section-header">
+                    <h3>🤖 AI Visual Tasks</h3>
+                    <span class="badge-count">${data.aiTasks.length}</span>
+                </div>`;
+
+            data.aiTasks.forEach((t, i) => {
+                const fmtClass = t.visualFormat.toLowerCase().includes('diagram') ? 'diagram' : (t.visualFormat.toLowerCase().includes('portrait') ? 'portrait' : 'scene');
+                html += `<div class="prod-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <div>
+                            <span class="type-tag ${fmtClass}">${t.visualFormat}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-dim); margin-left: 8px;">${t.scene} · ${t.year}</span>
+                        </div>
+                    </div>
+                    <div class="prod-meta">`;
+
+                // Element tags
+                if (t.elements.characters.length > 0) {
+                    html += `<div style="margin-bottom: 4px;"><strong>Characters:</strong> ${t.elements.characters.map(c => `<span class="element-tag character">${c}</span>`).join('')}</div>`;
+                }
+                if (t.elements.locations.length > 0) {
+                    html += `<div style="margin-bottom: 4px;"><strong>Locations:</strong> ${t.elements.locations.map(l => `<span class="element-tag location">${l}</span>`).join('')}</div>`;
+                }
+                if (t.elements.devices.length > 0) {
+                    html += `<div style="margin-bottom: 4px;"><strong>Devices:</strong> ${t.elements.devices.map(d => `<span class="element-tag device">${d}</span>`).join('')}</div>`;
+                }
+                if (t.elements.concepts.length > 0) {
+                    html += `<div style="margin-bottom: 4px;"><strong>Concepts:</strong> ${t.elements.concepts.map(c => `<span class="element-tag concept">${c}</span>`).join('')}</div>`;
+                }
+
+                html += `</div>`;
+
+                // Diagram spec
+                if (t.diagram) {
+                    html += `<div class="diagram-spec">
+                        <strong>Shape:</strong> ${t.diagram.shape}<br>
+                        <strong>Flow:</strong> ${t.diagram.flow}<br>
+                        <strong>Output:</strong> ${t.diagram.output}
+                    </div>`;
+                }
+
+                html += `</div>`;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function addFilmingTask(epId) {
+            const types = ['Object Lesson', 'Interview', 'Field Visit', 'Public Questions'];
+            const type = prompt('Task type:\\n1. Object Lesson\\n2. Interview\\n3. Field Visit\\n4. Public Questions\\n\\nEnter number:');
+            const typeIdx = parseInt(type) - 1;
+            if (typeIdx < 0 || typeIdx > 3) return;
+            const scene = prompt('Scene reference (e.g. "Cold Open", "Act 3"):');
+            const desc = prompt('Description:');
+            if (!scene || !desc) return;
+
+            const data = getEpProd(epId);
+            data.filmingTasks.push({
+                id: 'F' + Date.now(), scene, type: types[typeIdx], desc, status: 'To Do'
+            });
+            saveProductionData();
+            renderProductionBoard();
+        }
+
+        function updateFilmStatus(epId, idx, val) {
+            getEpProd(epId).filmingTasks[idx].status = val;
+            saveProductionData();
+        }
+
+        function removeFilmTask(epId, idx) {
+            if (!confirm('Remove this filming task?')) return;
+            getEpProd(epId).filmingTasks.splice(idx, 1);
+            saveProductionData();
+            renderProductionBoard();
+        }
+
+        // =====================================================
+        // AI PIPELINE RENDERING
+        // =====================================================
+        function renderAIPipeline() {
+            populateAllSelectors();
+            const epId = document.getElementById('ai-ep-selector').value;
+            if (!epId) return;
+            const data = getEpProd(epId);
+            const container = document.getElementById('ai-pipeline-content');
+
+            if (data.aiTasks.length === 0) {
+                container.innerHTML = `<div class="card"><p style="color: var(--text-dim);">No AI tasks for this episode. Add them via the Production Board.</p></div>`;
+                return;
+            }
+
+            let html = '';
+            data.aiTasks.forEach((t, i) => {
+                const stageIdx = AI_STAGES.indexOf(t.stage);
+                html += `<div class="prod-card" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <div class="prod-title" style="margin: 0;">${t.id} · ${t.scene} <span style="color: var(--text-dim); font-weight: 400;">(${t.year})</span></div>
+                        <span class="type-tag ${t.visualFormat.toLowerCase().includes('diagram') ? 'diagram' : 'scene'}">${t.visualFormat}</span>
+                    </div>
+                    <div class="pipeline-stages">`;
+
+                AI_STAGES.forEach((s, si) => {
+                    const cls = si < stageIdx ? 'completed' : (si === stageIdx ? 'active' : '');
+                    html += `<div class="pipeline-dot ${cls}" title="${s}" onclick="setAIStage('${epId}',${i},${si})">${si + 1}</div>`;
+                    if (si < AI_STAGES.length - 1) {
+                        html += `<div class="pipeline-connector ${si < stageIdx ? 'completed' : ''}"></div>`;
+                    }
+                });
+
+                html += `</div>
+                    <div style="display: flex; gap: 2px; justify-content: space-between; padding: 0 2px;">`;
+                AI_STAGES.forEach(s => {
+                    html += `<div class="pipeline-label" style="flex: 1;">${s}</div>`;
+                });
+                html += `</div>
+                    <div class="pipeline-dates">
+                        <span>📤 Sent: <input type="date" value="${t.dateSent || ''}" onchange="setAIDate('${epId}',${i},'dateSent',this.value)" style="width: auto; margin: 0; padding: 2px 6px; font-size: 0.75rem;"></span>
+                        <span>📥 Received: <input type="date" value="${t.dateReceived || ''}" onchange="setAIDate('${epId}',${i},'dateReceived',this.value)" style="width: auto; margin: 0; padding: 2px 6px; font-size: 0.75rem;"></span>
+                    </div>`;
+
+                // Element tags summary
+                const allElements = [
+                    ...t.elements.characters.map(c => `<span class="element-tag character">${c}</span>`),
+                    ...t.elements.devices.map(d => `<span class="element-tag device">${d}</span>`),
+                    ...t.elements.concepts.map(c => `<span class="element-tag concept">${c}</span>`)
+                ].join('');
+                if (allElements) html += `<div style="margin-top: 8px;">${allElements}</div>`;
+
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function exportAIPipeline() {
+            const sel = document.getElementById('ai-ep-selector');
+            if (!sel) return;
+            const epId = sel.value;
+            const nid = normId(epId);
+            const data = getEpProd(nid);
+            const ep = episodes.find(e => normId(e.id) === nid);
+            const epTitle = ep ? ep.title : epId;
+
+            console.log("Exporting AI Pipeline for:", epId, "nid:", nid, "tasks:", data.aiTasks.length);
+
+            let md = `# AI Content Pipeline — Episode ${epId}: ${epTitle}\n\n`;
+            md += `Generated: ${new Date().toLocaleString()}\n\n`;
+
+            if (data.aiTasks.length === 0) {
+                md += "_No AI tasks defined for this episode._\n";
+            } else {
+                data.aiTasks.forEach(t => {
+                    md += `## ${t.id}: ${t.scene} (${t.year})\n`;
+                    md += `- **Format**: ${t.visualFormat}\n`;
+                    md += `- **Stage**: ${t.stage}\n`;
+                    if (t.dateSent) md += `- **Sent**: ${t.dateSent}\n`;
+                    if (t.dateReceived) md += `- **Received**: ${t.dateReceived}\n`;
+
+                    md += `\n### Element Breakdown\n`;
+                    if (t.elements.characters.length) md += `- **Characters**: ${t.elements.characters.join(', ')}\n`;
+                    if (t.elements.locations.length) md += `- **Locations**: ${t.elements.locations.join(', ')}\n`;
+                    if (t.elements.devices.length) md += `- **Devices**: ${t.elements.devices.join(', ')}\n`;
+                    if (t.elements.concepts.length) md += `- **Concepts**: ${t.elements.concepts.join(', ')}\n`;
+
+                    if (t.diagram) {
+                        md += `\n### Diagram Specification\n`;
+                        md += `- **Shape**: ${t.diagram.shape}\n`;
+                        md += `- **Flow**: ${t.diagram.flow}\n`;
+                        md += `- **Output**: ${t.diagram.output}\n`;
+                    }
+                    if (t.notes) md += `\n**Notes**: ${t.notes}\n`;
+                    md += `\n---\n\n`;
+                });
+            }
+
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SMI_AI_Pipeline_Ep_${epId.replace('.', '_')}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function setAIStage(epId, taskIdx, stageIdx) {
+            getEpProd(epId).aiTasks[taskIdx].stage = AI_STAGES[stageIdx];
+            saveProductionData();
+            renderAIPipeline();
+        }
+
+        function setAIDate(epId, taskIdx, field, val) {
+            getEpProd(epId).aiTasks[taskIdx][field] = val;
+            saveProductionData();
+        }
+
+        // =====================================================
+        // EQUIPMENT RENDERING
+        // =====================================================
+        let equipState = {};
+        const EQUIP_KEY = 'smi_equipment_v1';
+
+        function loadEquipState() {
+            const saved = localStorage.getItem(EQUIP_KEY);
+            equipState = saved ? JSON.parse(saved) : {};
+        }
+
+        function saveEquipState() {
+            localStorage.setItem(EQUIP_KEY, JSON.stringify(equipState));
+        }
+
+        function renderEquipment() {
+            populateAllSelectors();
+            const epId = document.getElementById('equip-ep-selector').value;
+            if (!epId) return;
+            const data = getEpProd(epId);
+            const container = document.getElementById('equip-content');
+            if (!equipState[epId]) equipState[epId] = {};
+
+            let html = '';
+
+            // Standard Kit
+            html += `<div class="equip-section">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px;">📷 Standard Kit</h3>`;
+            STANDARD_KIT.forEach((item, i) => {
+                const key = `std_${i}`;
+                const checked = equipState[epId][key] || false;
+                html += `<div class="equip-item ${checked ? 'checked' : ''}">
+                    <input type="checkbox" class="equip-checkbox" ${checked ? 'checked' : ''} onchange="toggleEquip('${epId}','${key}',this.checked)">
+                    <span>${item}</span>
+                </div>`;
+            });
+            html += `</div></div>`;
+
+            // Episode-specific equipment
+            html += `<div class="equip-section">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px;">🧪 Object Lesson Props — Episode ${epId}</h3>`;
+            if (data.equipment.length === 0) {
+                html += `<p style="color: var(--text-dim); padding: 10px;">No episode-specific equipment.</p>`;
+            } else {
+                data.equipment.forEach((item, i) => {
+                    const key = `ep_${i}`;
+                    const checked = equipState[epId][key] || false;
+                    html += `<div class="equip-item ${checked ? 'checked' : ''}">
+                        <input type="checkbox" class="equip-checkbox" ${checked ? 'checked' : ''} onchange="toggleEquip('${epId}','${key}',this.checked)">
+                        <span>${item.item} <span style="color: var(--text-dim); font-size: 0.8rem;">— ${item.scene}</span></span>
+                    </div>`;
+                });
+            }
+            html += `</div></div>`;
+
+            container.innerHTML = html;
+        }
+
+        function toggleEquip(epId, key, val) {
+            if (!equipState[epId]) equipState[epId] = {};
+            equipState[epId][key] = val;
+            saveEquipState();
+            renderEquipment();
+        }
+
+        // --- DASHBOARD ---
+        function renderDashboard() {
+            const grid = document.getElementById('active-episodes-grid');
+            const active = episodes.filter(e => e.status !== 'Final').slice(0, 6);
+
+            grid.innerHTML = active.map(e => `
+                <div class="card" onclick="goToKanban('${e.id}')" style="cursor: pointer;">
+                    <div class="card-header">
+                        <span class="subtitle">Unit ${e.id}</span>
+                        <span class="tag">${e.status}</span>
+                    </div>
+                    <h3>${e.title}</h3>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Status</span>
+                            <span>${e.progress}%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${e.progress}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Dashboard Tasks Summary
+            const taskTable = document.getElementById('dashboard-task-list');
+            let allTasks = [];
+            episodes.forEach(e => {
+                if (e.tasks) {
+                    e.tasks.forEach(t => {
+                        if (t.status !== 'Done') allTasks.push({ ep: e.id, text: t.text, status: t.status });
+                    });
+                }
+            });
+
+            taskTable.innerHTML = allTasks.slice(0, 5).map(t => `
+                <tr>
+                    <td>${t.ep}</td>
+                    <td>${t.text}</td>
+                    <td><span class="tag" style="background: rgba(240,136,62,0.1); color: var(--accent-orange);">${t.status}</span></td>
+                    <td>ASAP</td>
+                </tr>
+            `).join('') || '<tr><td colspan="4" style="text-align: center; color: var(--text-dim);">No active combat objectives.</td></tr>';
+        }
+
+        // --- EPISODES CRUD ---
+        function renderEpisodeTable() {
+            const body = document.getElementById('episode-list-body');
+            body.innerHTML = episodes.map(e => `
+                <tr>
+                    <td>${e.id}</td>
+                    <td><strong>${e.title}</strong></td>
+                    <td>${e.arc}</td>
+                    <td style="font-family: monospace; font-size: 0.8rem;">${e.math}</td>
+                    <td><span class="tag" style="${getStatusColor(e.status)}">${e.status}</span></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="progress-bar-bg" style="width: 50px;">
+                                <div class="progress-bar-fill" style="width: ${e.progress}%"></div>
+                            </div>
+                            <span>${e.progress}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-outline" style="padding: 4px 8px;" onclick="openEditModal('${e.id}')">Edit</button>
+                            <button class="btn btn-danger" style="padding: 4px 8px;" onclick="deleteEpisode('${e.id}')">Kill</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openCreateModal() {
+            editingId = null;
+            document.getElementById('modal-title').textContent = "New Chapter Discovery";
+            document.getElementById('ep-id').value = "";
+            document.getElementById('ep-title').value = "";
+            document.getElementById('ep-arc').value = "";
+            document.getElementById('ep-math').value = "";
+            document.getElementById('ep-status').value = "Planning";
+            document.getElementById('ep-progress').value = 0;
+
+            // Show Suggestions
+            document.getElementById('folder-discovery-section').style.display = 'block';
+            renderSuggestions();
+
+            document.getElementById('episode-modal').style.display = 'flex';
+        }
+
+        function renderSuggestions() {
+            const container = document.getElementById('folder-suggestions');
+            const existingIds = episodes.map(e => normId(e.id));
+            const suggestions = folderManifest.filter(f => !existingIds.includes(normId(f.id)));
+
+            if (suggestions.length === 0) {
+                container.innerHTML = "No new episode folders found in workspace.";
+            } else {
+                container.innerHTML = suggestions.map(s => `
+                    <div class="suggestion-item" onclick="applySuggestion('${s.id}', '${s.title}')">
+                        ⚡ Discovered: ${s.folder}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function applySuggestion(id, title) {
+            document.getElementById('ep-id').value = id;
+            document.getElementById('ep-title').value = title;
+        }
+
+        function openEditModal(id) {
+            editingId = id;
+            const e = episodes.find(ep => ep.id === id);
+            document.getElementById('modal-title').textContent = `Sync Details: ${e.title}`;
+            document.getElementById('ep-id').value = e.id;
+            document.getElementById('ep-title').value = e.title;
+            document.getElementById('ep-arc').value = e.arc;
+            document.getElementById('ep-math').value = e.math;
+            document.getElementById('ep-status').value = e.status;
+            document.getElementById('ep-progress').value = e.progress;
+
+            document.getElementById('folder-discovery-section').style.display = 'none';
+            document.getElementById('episode-modal').style.display = 'flex';
+        }
+
+        function saveEpisode() {
+            const id = document.getElementById('ep-id').value;
+            const title = document.getElementById('ep-title').value;
+            const arc = document.getElementById('ep-arc').value;
+            const math = document.getElementById('ep-math').value;
+            const status = document.getElementById('ep-status').value;
+            const progress = document.getElementById('ep-progress').value;
+
+            if (!id || !title) return alert("ID and Title required.");
+
+            if (editingId) {
+                const idx = episodes.findIndex(e => e.id === editingId);
+                episodes[idx] = { ...episodes[idx], id, title, arc, math, status, progress };
+            } else {
+                episodes.push({ id, title, arc, math, status, progress, tasks: [] });
+            }
+            saveState();
+            closeModal();
+        }
+
+        function deleteEpisode(id) {
+            if (confirm(`Terminate Unit ${id}? All task data will be lost.`)) {
+                episodes = episodes.filter(e => e.id !== id);
+                saveState();
+            }
+        }
+
+        function closeModal() { document.getElementById('episode-modal').style.display = 'none'; }
+
+        function getStatusColor(status) {
+            if (status === 'Final') return 'color: var(--accent-green); background: rgba(63, 185, 80, 0.1);';
+            if (status === 'Production') return 'color: var(--accent-purple); background: rgba(188, 140, 255, 0.1);';
+            if (status === 'Scripting') return 'color: var(--accent-orange); background: rgba(240, 136, 62, 0.1);';
+            return '';
+        }
+
+        // --- KANBAN LOGIC ---
+        function renderProjectSelector() {
+            const select = document.getElementById('kanban-project-selector');
+            const current = select.value;
+            select.innerHTML = episodes.map(e => `<option value="${e.id}">${e.id} - ${e.title}</option>`).join('');
+            if (current) select.value = current;
+        }
+
+        function goToKanban(id) {
+            document.getElementById('kanban-project-selector').value = id;
+            showPage('kanban');
+            renderKanban();
+        }
+
+        function renderKanban() {
+            const sel = document.getElementById('kanban-project-selector');
+            if (!sel) {
+                console.error("Kanban selector NOT FOUND in DOM");
+                return;
+            }
+            const epId = sel.value;
+            console.log("renderKanban triggered for epId:", epId);
+            if (!epId) {
+                console.warn("No epId selected in Kanban selector");
+                return;
+            }
+
+            const ep = episodes.find(e => normId(e.id) === normId(epId));
+            console.log("Found episode for Kanban:", ep ? ep.title : "NULL");
+            if (!ep) return;
+
+            const nid = normId(epId);
+            const todoList = document.getElementById('col-todo');
+            const inprogressList = document.getElementById('col-inprogress');
+            const doneList = document.getElementById('col-done');
+
+            if (!todoList || !inprogressList || !doneList) {
+                console.error("Kanban columns NOT FOUND in DOM");
+                return;
+            }
+
+            todoList.innerHTML = ''; inprogressList.innerHTML = ''; doneList.innerHTML = '';
+            let counts = { todo: 0, inprogress: 0, done: 0 };
+
+            // 1. General Tasks
+            if (!ep.tasks) ep.tasks = [];
+            ep.tasks.forEach((t, idx) => {
+                const card = createKanbanCard(t.text, 'general', ep.id, idx, t.status);
+                addCardToCol(card, t.status, todoList, inprogressList, doneList, counts);
+            });
+
+            // 2. Production Filming Tasks (Normalized ID)
+            const prod = getEpProd(nid);
+            console.log("Kanban - Prod Data:", prod.filmingTasks.length, "filming tasks,", prod.aiTasks.length, "AI tasks");
+
+            prod.filmingTasks.forEach((t, idx) => {
+                const label = `[FILM] ${t.type}: ${t.desc}`;
+                const card = createKanbanCard(label, 'filming', ep.id, idx, t.status);
+                addCardToCol(card, t.status, todoList, inprogressList, doneList, counts);
+            });
+
+            // 3. AI Visual Tasks
+            prod.aiTasks.forEach((t, idx) => {
+                const label = `[AI] ${t.scene} (${t.visualFormat})`;
+                let status = 'To Do';
+                if (["Brief Sent", "Files Delivered", "In Processing", "Review"].includes(t.stage)) status = 'In Progress';
+                if (["Approved", "Final Received"].includes(t.stage)) status = 'Done';
+
+                const card = createKanbanCard(label, 'ai', ep.id, idx, status, t.stage);
+                addCardToCol(card, status, todoList, inprogressList, doneList, counts);
+            });
+
+            document.getElementById('count-todo').textContent = counts.todo;
+            document.getElementById('count-inprogress').textContent = counts.inprogress;
+            document.getElementById('count-done').textContent = counts.done;
+            console.log("Kanban Render Complete. Total tasks:", counts.todo + counts.inprogress + counts.done);
+        }
+
+        function createKanbanCard(text, type, epId, idx, status, subtext = '') {
+            return `
+                <div class="task-card">
+                    <div style="font-size: 0.85rem; margin-bottom: 8px;">${text}</div>
+                    ${subtext ? `<div style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 8px;">Stage: ${subtext}</div>` : ''}
+                    <div class="task-actions">
+                        ${status !== 'To Do' ? `<button class="task-btn" onclick="moveTaskUnified('${type}', '${epId}', ${idx}, 'prev')">←</button>` : ''}
+                        <button class="task-btn" onclick="removeTaskUnified('${type}', '${epId}', ${idx})">Delete</button>
+                        ${status !== 'Done' ? `<button class="task-btn" onclick="moveTaskUnified('${type}', '${epId}', ${idx}, 'next')">→</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function addCardToCol(card, status, todo, inprog, done, counts) {
+            if (status === 'To Do') { todo.innerHTML += card; counts.todo++; }
+            else if (status === 'In Progress') { inprog.innerHTML += card; counts.inprogress++; }
+            else if (status === 'Done') { done.innerHTML += card; counts.done++; }
+        }
+
+        function moveTaskUnified(type, epId, idx, dir) {
+            const ep = episodes.find(e => e.id === epId);
+            const states = ['To Do', 'In Progress', 'Done'];
+
+            if (type === 'general') {
+                const task = ep.tasks[idx];
+                let currentIdx = states.indexOf(task.status);
+                if (dir === 'next' && currentIdx < 2) task.status = states[currentIdx + 1];
+                if (dir === 'prev' && currentIdx > 0) task.status = states[currentIdx - 1];
+                saveState();
+            } else if (type === 'filming') {
+                const prod = getEpProd(epId);
+                const task = prod.filmingTasks[idx];
+                let currentIdx = states.indexOf(task.status);
+                if (dir === 'next' && currentIdx < 2) task.status = states[currentIdx + 1];
+                if (dir === 'prev' && currentIdx > 0) task.status = states[currentIdx - 1];
+                saveProductionData();
+                renderAll();
+            } else if (type === 'ai') {
+                const prod = getEpProd(epId);
+                const task = prod.aiTasks[idx];
+                // AI Stages: AI_STAGES = ["Brief Sent","Files Delivered","In Processing","Review","Approved","Final Received"];
+                // Custom mapping for Kanban "cols"
+                if (dir === 'next') {
+                    if (task.stage === 'To Do') task.stage = 'Brief Sent';
+                    else {
+                        let sIdx = AI_STAGES.indexOf(task.stage);
+                        if (sIdx < AI_STAGES.length - 1) task.stage = AI_STAGES[sIdx + 1];
+                    }
+                } else if (dir === 'prev') {
+                    let sIdx = AI_STAGES.indexOf(task.stage);
+                    if (sIdx === 0) task.stage = 'To Do';
+                    else if (sIdx > 0) task.stage = AI_STAGES[sIdx - 1];
+                }
+                saveProductionData();
+                renderAll();
+            }
+        }
+
+        function removeTaskUnified(type, epId, idx) {
+            if (!confirm(`Delete this ${type} task?`)) return;
+            if (type === 'general') {
+                const ep = episodes.find(e => e.id === epId);
+                ep.tasks.splice(idx, 1);
+                saveState();
+            } else if (type === 'filming') {
+                const prod = getEpProd(epId);
+                prod.filmingTasks.splice(idx, 1);
+                saveProductionData();
+                renderAll();
+            } else if (type === 'ai') {
+                const prod = getEpProd(epId);
+                prod.aiTasks.splice(idx, 1);
+                saveProductionData();
+                renderAll();
+            }
+        }
+
+        function openAddTaskModal() { document.getElementById('task-modal').style.display = 'flex'; }
+        function closeTaskModal() { document.getElementById('task-modal').style.display = 'none'; }
+
+        function saveTask() {
+            const text = document.getElementById('task-text').value;
+            const epId = document.getElementById('kanban-project-selector').value;
+            if (!text || !epId) return;
+
+            const ep = episodes.find(e => e.id === epId);
+            if (!ep.tasks) ep.tasks = [];
+            ep.tasks.push({ id: Date.now().toString(), text, status: 'To Do' });
+
+            saveState();
+            document.getElementById('task-text').value = '';
+            closeTaskModal();
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

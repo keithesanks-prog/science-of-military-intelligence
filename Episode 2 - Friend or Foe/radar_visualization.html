@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Component Visualizer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050a14;
+            --panel-bg: rgba(10, 20, 40, 0.92);
+            --accent: #00d4ff;
+            --accent2: #00ff88;
+            --accent3: #ff6b35;
+            --accent-ram: #b366ff;
+            --border: rgba(0, 212, 255, 0.25);
+            --text: #c8e0f0;
+            --glow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        header {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.08), transparent, rgba(0, 212, 255, 0.08));
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .radar-icon {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: var(--glow);
+            flex-shrink: 0;
+        }
+
+        .radar-icon::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background: var(--accent);
+            top: 50%;
+            left: 50%;
+            transform-origin: left center;
+            animation: radarSpin 2s linear infinite;
+        }
+
+        @keyframes radarSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1300px;
+            flex: 1;
+        }
+
+        .controls-panel {
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.72rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mode-btn {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .mode-btn.active {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--accent);
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+            font-weight: 600;
+        }
+
+        .mode-btn.active.ram {
+            border-color: var(--accent-ram);
+            color: var(--accent-ram);
+            background: rgba(179, 102, 255, 0.12);
+            box-shadow: 0 0 12px rgba(179, 102, 255, 0.3);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: currentColor;
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .slider-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .slider-val {
+            color: var(--accent);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.7);
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.78rem;
+            opacity: 0.9;
+        }
+
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .canvas-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .canvas-container {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 520px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .canvas-label {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            opacity: 0.6;
+            letter-spacing: 2px;
+        }
+
+        .hint-bar {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 0.78rem;
+            color: var(--text);
+            opacity: 0.75;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .hint-bar span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .status-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+            border: 1px solid;
+        }
+
+        .status-tag.cyan {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .status-tag.green {
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .status-tag.orange {
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .status-tag.purple {
+            border-color: var(--accent-ram);
+            color: var(--accent-ram);
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                flex-direction: column;
+            }
+
+            .controls-panel {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .panel {
+                flex: 1;
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="radar-icon"></div>
+        <h1>RADAR COMPONENT VISUALIZER</h1>
+    </header>
+
+    <div class="main-layout">
+        <!-- Controls -->
+        <div class="controls-panel">
+
+            <div class="panel">
+                <h3>Deployment</h3>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn-none" onclick="sim.toggleShield(false)">
+                        <div class="dot"></div> Retract Shield
+                    </button>
+                    <button class="mode-btn ram" id="btn-shield" onclick="sim.toggleShield(true)">
+                        <div class="dot"></div> Deploy RAM Shield
+                    </button>
+                    <button class="mode-btn" id="btn-lock" onclick="sim.toggleLock()"
+                        style="margin-top:4px; opacity:0.6; display:none;">
+                        <div class="dot"></div> Lock Shield to Ship
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>System Parameters</h3>
+                <div class="slider-group">
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Wave Speed</span><span class="slider-val"
+                                id="val-speed">5</span></div>
+                        <input type="range" id="sl-speed" min="1" max="10" value="5"
+                            oninput="sim.updateParam('speed', this.value)">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Frequency</span><span class="slider-val" id="val-freq">3</span>
+                        </div>
+                        <input type="range" id="sl-freq" min="1" max="8" value="3"
+                            oninput="sim.updateParam('freq', this.value)">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Lobe Width</span><span class="slider-val"
+                                id="val-lobe">18</span>°</div>
+                        <input type="range" id="sl-lobe" min="8" max="35" value="18"
+                            oninput="sim.updateParam('lobe', this.value)">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Beam Pivot</span><span class="slider-val"
+                                id="val-angle">0</span>°</div>
+                        <input type="range" id="sl-angle" min="-60" max="60" value="0"
+                            oninput="sim.updateParam('angle', this.value)">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>RAM Effectiveness</span><span class="slider-val"
+                                id="val-absorb">70</span>%</div>
+                        <input type="range" id="sl-absorb" min="10" max="100" value="70"
+                            oninput="sim.updateParam('absorb', this.value)">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Ship Rotation</span><span class="slider-val"
+                                id="val-shipRot">0</span>°</div>
+                        <input type="range" id="sl-shipRot" min="-180" max="180" value="0"
+                            oninput="sim.updateParam('shipRot', this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Object Keys</h3>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#00d4ff;"></div><span>Transmitter Waves</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#ff6b35;"></div><span>Return Waves</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#00ff88; opacity:0.3"></div><span>Lobe
+                            Evelopes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#b366ff; opacity:0.6"></div><span>Stealth
+                            Shield</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background:#888;"></div><span>Target Surface</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="canvas-wrap">
+            <div class="canvas-container" id="canvas-container">
+                <div class="canvas-label">COMPONENT-BASED SIMULATION</div>
+                <canvas id="radarCanvas"></canvas>
+            </div>
+            <div class="hint-bar">
+                <span>Drag</span> components to reposition &nbsp;|&nbsp; <span>Pivot</span> the dish with the slider
+                &nbsp;|&nbsp; <span>Place</span> RAM in shadow to reduce RCS
+            </div>
+            <div class="status-bar">
+                <div class="status-tag cyan" id="tag-mode">SHIELD: READY</div>
+                <div class="status-tag green" id="tag-freq">FREQ: 3 GHz</div>
+                <div class="status-tag orange" id="tag-signal">SIGNAL: 100%</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ─── Mathematical Helpers ───────────────────────────────────────────────────
+        const deg2rad = d => d * Math.PI / 180;
+        const rad2deg = r => r * 180 / Math.PI;
+
+        class Vector2 {
+            constructor(x, y) { this.x = x; this.y = y; }
+            dist(v) { return Math.sqrt((this.x - v.x) ** 2 + (this.y - v.y) ** 2); }
+            angleTo(v) { return Math.atan2(v.y - this.y, v.x - this.x); }
+        }
+
+        // ─── Base Entity ────────────────────────────────────────────────────────────
+        class Entity {
+            constructor(name, x, y, w, h) {
+                this.name = name;
+                this.pos = new Vector2(x, y);
+                this.w = w;
+                this.h = h;
+                this.isDragging = false;
+            }
+
+            contains(x, y) {
+                return x >= this.pos.x - this.w / 2 && x <= this.pos.x + this.w / 2 &&
+                    y >= this.pos.y - this.h / 2 && y <= this.pos.y + this.h / 2;
+            }
+
+            render(ctx) { /* Override */ }
+        }
+
+        // ─── Component: Transmitter Dish ──────────────────────────────────────────────
+        class Transmitter extends Entity {
+            constructor(x, y) {
+                super('Transmitter', x, y, 60, 60);
+                this.heading = 0; // degrees
+            }
+
+            render(ctx) {
+                const { x, y } = this.pos;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(deg2rad(this.heading));
+
+                // 1. Dish Reflector
+                ctx.beginPath();
+                ctx.arc(0, 0, 30, -Math.PI * 0.7, Math.PI * 0.7);
+                ctx.strokeStyle = '#00d4ff';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+
+                // 2. Dish Body Support
+                ctx.beginPath();
+                ctx.moveTo(-10, -5);
+                ctx.lineTo(-20, -15);
+                ctx.lineTo(-20, 15);
+                ctx.lineTo(-10, 5);
+                ctx.fillStyle = 'rgba(0,212,255,0.2)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(0,212,255,0.5)';
+                ctx.stroke();
+
+                // 3. Feed Horn
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(18, 0);
+                ctx.strokeStyle = '#00d4ff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(18, 0, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.shadowColor = '#00d4ff';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.restore();
+
+                // Label
+                ctx.fillStyle = 'rgba(0,212,255,0.7)';
+                ctx.font = '700 10px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('RADAR DISH', x, y + 50);
+            }
+        }
+
+        // ─── Component: Lobe System ──────────────────────────────────────────────────
+        class LobeSystem {
+            constructor(owner) {
+                this.owner = owner; // Attached to a Transmitter
+            }
+
+            render(ctx, lobeHalf) {
+                const { x, y } = this.owner.pos;
+                const bdir = deg2rad(this.owner.heading);
+                const sideOffset = deg2rad(lobeHalf * 2.8);
+
+                const drawLobe = (centerAngle, halfA, color, maxR) => {
+                    ctx.save();
+                    ctx.beginPath();
+                    const steps = 60;
+                    for (let i = 0; i <= steps; i++) {
+                        const a = centerAngle - deg2rad(halfA) + (i / steps) * deg2rad(halfA * 2);
+                        const diff = (a - centerAngle);
+                        const g = Math.cos(diff * (Math.PI / deg2rad(halfA * 2.2))); // cosine lobe approx
+                        const r = maxR * Math.max(0, g);
+                        const px = x + r * Math.cos(a);
+                        const py = y + r * Math.sin(a);
+                        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(px, py);
+                    }
+                    ctx.lineTo(x, y);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.restore();
+                };
+
+                // Main Lobe
+                drawLobe(bdir, lobeHalf, 'rgba(0,212,255,0.06)', 600);
+                // Side Lobes
+                drawLobe(bdir + sideOffset, lobeHalf * 0.6, 'rgba(0,255,136,0.03)', 250);
+                drawLobe(bdir - sideOffset, lobeHalf * 0.6, 'rgba(0,255,136,0.03)', 250);
+            }
+        }
+
+        // ─── Component: Wave Manager ────────────────────────────────────────────────
+        class WaveManager {
+            constructor() {
+                this.incident = [];
+                this.reflected = [];
+                this.lastSpawn = 0;
+            }
+
+            update(t, sim) {
+                const interval = 1000 / sim.params.freq;
+                if (t - this.lastSpawn > interval) {
+                    this.incident.push({ r: 0, born: t, opacity: 1 });
+                    this.lastSpawn = t;
+                }
+
+                const speed = sim.params.speed * 60;
+                this.incident.forEach(w => {
+                    w.r = (t - w.born) / 1000 * speed;
+                    w.opacity = Math.max(0, 1 - w.r / 900);
+                });
+                this.reflected.forEach(w => {
+                    const age = (t - w.born) / 1000;
+                    w.r = age * speed * 0.7;
+                    w.opacity = Math.max(0, (0.85 * w.strength) - w.r / 400);
+                });
+
+                this.incident = this.incident.filter(w => w.opacity > 0.01);
+                this.reflected = this.reflected.filter(w => w.opacity > 0.01);
+            }
+
+            render(ctx, sim) {
+                const { x: tx, y: ty } = sim.transmitter.pos;
+                const bdir = deg2rad(sim.transmitter.heading);
+                const hw = deg2rad(sim.params.lobeHalf);
+
+                // Incident waves
+                this.incident.forEach(w => {
+                    this.drawWaveArc(ctx, tx, ty, w.r, bdir - hw, bdir + hw, '#00d4ff', w.opacity, sim);
+                });
+
+                // Reflected waves
+                this.reflected.forEach(rw => {
+                    ctx.save();
+                    ctx.globalAlpha = rw.opacity;
+                    ctx.beginPath();
+
+                    // Specular reflection: The wave front now has a direction
+                    // rw.dir is the center angle of the reflected wave
+                    const ang = rw.dir;
+                    const spread = 1.0;
+                    ctx.arc(rw.cx, rw.cy, rw.r, ang - spread, ang + spread);
+
+                    ctx.strokeStyle = rw.strength > 0.5 ? '#ff6b35' : '#b366ff';
+                    ctx.lineWidth = rw.strength > 0.5 ? 2 : 1.2;
+                    ctx.stroke();
+
+                    // Optional return arrow pointing towards receiver if aimed that way
+                    const distToTX = Math.sqrt((sim.transmitter.pos.x - rw.cx) ** 2 + (sim.transmitter.pos.y - rw.cy) ** 2);
+                    if (rw.r < distToTX * 0.4 && rw.r > 20) {
+                        this.drawDirectionArrow(ctx, rw.cx, rw.cy, rw.dir, rw.opacity * 0.6);
+                    }
+
+                    ctx.restore();
+                });
+            }
+
+            drawDirectionArrow(ctx, x, y, angle, alpha) {
+                const len = 30;
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                ctx.beginPath();
+                ctx.moveTo(10, 0);
+                ctx.lineTo(10 + len, 0);
+                ctx.lineTo(10 + len - 6, -4);
+                ctx.moveTo(10 + len, 0);
+                ctx.lineTo(10 + len - 6, 4);
+                ctx.strokeStyle = '#ff6b35';
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            drawWaveArc(ctx, tx, ty, r, startA, endA, color, opacity, sim) {
+                const steps = 60;
+                ctx.beginPath();
+                let first = true;
+
+                for (let i = 0; i <= steps; i++) {
+                    const a = startA + (i / steps) * (endA - startA);
+                    const mx = tx + r * Math.cos(a);
+                    const my = ty + r * Math.sin(a);
+
+                    let alpha = opacity;
+
+                    // Interaction: Shield Check
+                    if (sim.shieldActive && sim.inShadow(mx, my, sim.shield)) {
+                        alpha *= (1 - sim.params.absorb / 100);
+                    }
+
+                    // Interaction: Target Hit/Shadow
+                    if (sim.inShadow(mx, my, sim.target)) {
+                        alpha *= 0.05;
+                    }
+
+                    // Check if hitting target front face to spawn reflection
+                    if (sim.target.contains(mx, my)) {
+                        alpha = 0;
+                        const key = Math.floor(r); // unique-ish key for this wave hit
+                        if (!this.reflected.find(rf => Math.abs(rf.r - 0) < 5 && rf.cx === sim.target.pos.x)) {
+                            // Determine strength based on incident alpha
+                            const strength = (sim.shieldActive && sim.inShadow(sim.target.pos.x, sim.target.pos.y, sim.shield))
+                                ? (1 - sim.params.absorb / 100) : 1.0;
+
+                            // Specular Reflection Calculation
+                            const incidentAngle = Math.atan2(my - ty, mx - tx);
+                            const normal = sim.target.getNormalAt({ x: mx, y: my });
+                            const normalAngle = Math.atan2(normal.y, normal.x);
+
+                            // Reflection relative to normal: reflected = normal + (normal - incident)
+                            // Reflected angle = 2*normal - incident - PI
+                            const reflectedAngle = 2 * normalAngle - incidentAngle + Math.PI;
+
+                            this.reflected.push({
+                                cx: mx, cy: my,
+                                r: 0, born: sim.time, strength: strength, opacity: 0.85,
+                                dir: reflectedAngle
+                            });
+                        }
+                    }
+
+                    if (alpha < 0.01) { first = true; continue; }
+
+                    ctx.globalAlpha = alpha;
+                    if (first) { ctx.moveTo(mx, my); first = false; }
+                    else ctx.lineTo(mx, my);
+                }
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // ─── Component: Interactive Actors ──────────────────────────────────────────
+        class Ship extends Entity {
+            constructor(name, x, y, w, h) {
+                super(name, x, y, w, h);
+                this.rotation = 0; // degrees
+            }
+
+            getVertices() {
+                const { x, y } = this.pos;
+                const hw = this.w / 2;
+                const hh = this.h / 2;
+                const rad = deg2rad(this.rotation);
+                const cos = Math.cos(rad);
+                const sin = Math.sin(rad);
+
+                // Ship polygon points (local coordinates)
+                const pts = [
+                    { x: 0, y: -hh },    // Bow (Pointed top)
+                    { x: hw, y: -hh * 0.4 }, // Mid-right
+                    { x: hw, y: hh },    // Stern-right
+                    { x: -hw, y: hh },   // Stern-left
+                    { x: -hw, y: -hh * 0.4 } // Mid-left
+                ];
+
+                return pts.map(p => ({
+                    x: x + (p.x * cos - p.y * sin),
+                    y: y + (p.x * sin + p.y * cos)
+                }));
+            }
+
+            getNormalAt(p) {
+                const verts = this.getVertices();
+                let closestDist = Infinity;
+                let normal = { x: 0, y: -1 };
+
+                for (let i = 0; i < verts.length; i++) {
+                    const p1 = verts[i];
+                    const p2 = verts[(i + 1) % verts.length];
+
+                    // Edge center
+                    const centerX = (p1.x + p2.x) / 2;
+                    const centerY = (p1.y + p2.y) / 2;
+
+                    const d = Math.sqrt((p.x - centerX) ** 2 + (p.y - centerY) ** 2);
+                    if (d < closestDist) {
+                        closestDist = d;
+                        const edgeDx = p2.x - p1.x;
+                        const edgeDy = p2.y - p1.y;
+                        const mag = Math.sqrt(edgeDx * edgeDx + edgeDy * edgeDy);
+                        normal = { x: edgeDy / mag, y: -edgeDx / mag };
+                    }
+                }
+                return normal;
+            }
+
+            contains(px, py) {
+                const verts = this.getVertices();
+                let inside = false;
+                for (let i = 0, j = verts.length - 1; i < verts.length; j = i++) {
+                    const xi = verts[i].x, yi = verts[i].y;
+                    const xj = verts[j].x, yj = verts[j].y;
+                    const intersect = ((yi > py) !== (yj > py)) &&
+                        (px < (xj - xi) * (py - yi) / (yj - yi) + xi);
+                    if (intersect) inside = !inside;
+                }
+                return inside;
+            }
+
+            render(ctx) {
+                const verts = this.getVertices();
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(verts[0].x, verts[0].y);
+                for (let i = 1; i < verts.length; i++) ctx.lineTo(verts[i].x, verts[i].y);
+                ctx.closePath();
+
+                const grad = ctx.createLinearGradient(this.pos.x - this.w / 2, 0, this.pos.x + this.w / 2, 0);
+                grad.addColorStop(0, '#3a4a5a');
+                grad.addColorStop(0.5, '#8aa4b8');
+                grad.addColorStop(1, '#3a4a5a');
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                ctx.strokeStyle = '#c8d8e8';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#c8d8e8';
+                ctx.font = '700 9px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('TARGET SHIP', this.pos.x, this.pos.y + this.h / 2 + 20);
+                ctx.restore();
+            }
+        }
+
+        class Shield extends Entity {
+            constructor(name, x, y, w, h) {
+                super(name, x, y, w, h);
+                this.rotation = 0; // degrees
+            }
+
+            render(ctx) {
+                const { x, y } = this.pos;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(deg2rad(this.rotation));
+
+                // Hex-like pattern or simple panel
+                ctx.fillStyle = 'rgba(179, 102, 255, 0.4)';
+                ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+
+                ctx.strokeStyle = '#b366ff';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 2]);
+                ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+
+                ctx.fillStyle = '#b366ff';
+                ctx.font = '700 9px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('RAM PANEL', 0, -this.h / 2 - 8);
+                ctx.restore();
+            }
+        }
+
+        // ─── Simulation Engine ──────────────────────────────────────────────────────
+        class Simulation {
+            constructor() {
+                this.canvas = document.getElementById('radarCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.container = document.getElementById('canvas-container');
+
+                this.transmitter = new Transmitter(100, 250);
+                this.lobes = new LobeSystem(this.transmitter);
+                this.waves = new WaveManager();
+                this.target = new Ship('Target Ship', 600, 250, 70, 130);
+                this.shield = new Shield('', 350, 250, 15, 120);
+
+                this.shieldActive = false;
+                this.shieldLocked = false;
+                this.relOffset = { x: 0, y: 0, rot: 0 };
+                this.draggingEntity = null;
+                this.dragOffset = new Vector2(0, 0);
+                this.time = 0;
+
+                this.params = { speed: 5, freq: 3, lobeHalf: 18, absorb: 70 };
+
+                this.init();
+            }
+
+            init() {
+                window.addEventListener('resize', () => this.resize());
+                this.resize();
+
+                const handleStart = e => {
+                    const p = this.getMousePos(e);
+                    const items = [this.shield, this.target, this.transmitter];
+                    for (const item of items) {
+                        if (item === this.shield && !this.shieldActive) continue;
+                        if (item.contains(p.x, p.y)) {
+                            this.draggingEntity = item;
+                            this.dragOffset = new Vector2(p.x - item.pos.x, p.y - item.pos.y);
+                            return;
+                        }
+                    }
+                };
+
+                const handleMove = e => {
+                    const p = this.getMousePos(e);
+                    if (this.draggingEntity) {
+                        this.draggingEntity.pos.x = p.x - this.dragOffset.x;
+                        this.draggingEntity.pos.y = p.y - this.dragOffset.y;
+
+                        // Sync if locked
+                        if (this.shieldLocked && this.draggingEntity === this.target) {
+                            this.syncShield();
+                        } else if (this.shieldLocked && this.draggingEntity === this.shield) {
+                            this.updateRelOffset(); // Update offset if dragging shield while locked
+                        }
+                    }
+                    this.canvas.style.cursor = (this.shield.contains(p.x, p.y) && this.shieldActive) ||
+                        this.target.contains(p.x, p.y) ||
+                        this.transmitter.contains(p.x, p.y) ? 'move' : 'crosshair';
+                };
+
+                const handleEnd = () => this.draggingEntity = null;
+
+                this.canvas.addEventListener('mousedown', handleStart);
+                window.addEventListener('mousemove', handleMove);
+                window.addEventListener('mouseup', handleEnd);
+
+                this.animate(0);
+            }
+
+            resize() {
+                const r = this.container.getBoundingClientRect();
+                this.canvas.width = r.width;
+                this.canvas.height = r.height;
+                this.transmitter.pos.y = this.canvas.height / 2;
+                this.target.pos.y = this.canvas.height / 2;
+                this.shield.pos.y = this.canvas.height / 2;
+            }
+
+            getMousePos(e) {
+                const r = this.canvas.getBoundingClientRect();
+                return { x: (e.clientX || e.touches?.[0].clientX) - r.left, y: (e.clientY || e.touches?.[0].clientY) - r.top };
+            }
+
+            updateParam(key, val) {
+                val = parseFloat(val);
+                document.getElementById('val-' + key).textContent = val;
+                if (key === 'speed') this.params.speed = val;
+                if (key === 'freq') { this.params.freq = val; document.getElementById('tag-freq').textContent = 'FREQ: ' + val + ' GHz'; }
+                if (key === 'lobe') this.params.lobeHalf = val;
+                if (key === 'angle') this.transmitter.heading = val;
+                if (key === 'shipRot') {
+                    this.target.rotation = val;
+                    if (this.shieldLocked) this.syncShield();
+                }
+                if (key === 'absorb') this.params.absorb = val;
+            }
+
+            toggleLock() {
+                this.shieldLocked = !this.shieldLocked;
+                const btn = document.getElementById('btn-lock');
+                btn.classList.toggle('active', this.shieldLocked);
+                btn.style.opacity = this.shieldLocked ? '1' : '0.6';
+                if (this.shieldLocked) this.updateRelOffset();
+            }
+
+            updateRelOffset() {
+                // Calculate position of shield relative to ship
+                const dx = this.shield.pos.x - this.target.pos.x;
+                const dy = this.shield.pos.y - this.target.pos.y;
+                const shipRad = deg2rad(-this.target.rotation);
+
+                // Inverse rotate the offset to get local coordinates
+                this.relOffset.x = dx * Math.cos(shipRad) - dy * Math.sin(shipRad);
+                this.relOffset.y = dx * Math.sin(shipRad) + dy * Math.cos(shipRad);
+                this.relOffset.rot = this.shield.rotation - this.target.rotation;
+            }
+
+            syncShield() {
+                const shipRad = deg2rad(this.target.rotation);
+                const cos = Math.cos(shipRad);
+                const sin = Math.sin(shipRad);
+
+                // Transform local offset back to global
+                this.shield.pos.x = this.target.pos.x + (this.relOffset.x * cos - this.relOffset.y * sin);
+                this.shield.pos.y = this.target.pos.y + (this.relOffset.x * sin + this.relOffset.y * cos);
+                this.shield.rotation = this.target.rotation + this.relOffset.rot;
+            }
+
+            toggleShield(active) {
+                this.shieldActive = active;
+                document.getElementById('btn-none').classList.toggle('active', !active);
+                document.getElementById('btn-shield').classList.toggle('active', active);
+                document.getElementById('btn-lock').style.display = active ? 'block' : 'none';
+                document.getElementById('tag-mode').textContent = active ? 'SHIELD: DEPLOYED' : 'SHIELD: READY';
+                if (active && !this.shieldLocked) {
+                    this.shield.pos.x = this.target.pos.x - 150;
+                    this.shield.pos.y = this.target.pos.y;
+                }
+            }
+
+            inShadow(x, y, obj) {
+                if (!obj) return false;
+                const tx = this.transmitter.pos.x, ty = this.transmitter.pos.y;
+                const distP = Math.sqrt((x - tx) ** 2 + (y - ty) ** 2);
+                const distO = Math.sqrt((obj.pos.x - tx) ** 2 + (obj.pos.y - ty) ** 2);
+                if (distP < distO - obj.w / 2) return false;
+
+                const angP = Math.atan2(y - ty, x - tx);
+                const angO = Math.atan2(obj.pos.y - ty, obj.pos.x - tx);
+                const angHalfWidth = Math.atan2(obj.h * 0.55, distO);
+                return Math.abs(angP - angO) < angHalfWidth;
+            }
+
+            drawBackground() {
+                this.ctx.fillStyle = '#050a14';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = 'rgba(0,212,255,0.05)';
+                for (let i = 40; i < this.canvas.width; i += 40) {
+                    for (let j = 40; j < this.canvas.height; j += 40) {
+                        this.ctx.beginPath(); this.ctx.arc(i, j, 1, 0, 7); this.ctx.fill();
+                    }
+                }
+            }
+
+            updateReturnSignal() {
+                let strength = 1.0;
+                if (this.shieldActive && this.inShadow(this.target.pos.x, this.target.pos.y, this.shield)) {
+                    strength = 1 - (this.params.absorb / 100);
+                }
+                const pct = Math.round(strength * 100);
+                document.getElementById('tag-signal').textContent = `SIGNAL: ${pct}%`;
+                document.getElementById('tag-signal').className = strength < 0.5 ? 'status-tag purple' : 'status-tag orange';
+            }
+
+            animate(t) {
+                this.time = t;
+                this.drawBackground();
+
+                this.lobes.render(this.ctx, this.params.lobeHalf);
+                this.waves.update(t, this);
+                this.waves.render(this.ctx, this);
+
+                this.target.render(this.ctx);
+                if (this.shieldActive) this.shield.render(this.ctx);
+
+                this.transmitter.render(this.ctx);
+                this.updateReturnSignal();
+
+                requestAnimationFrame(t => this.animate(t));
+            }
+        }
+
+        const sim = new Simulation();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+Episode 11: The Web as Weapon
+
+### Cold Open: The Burned Secret
+(Visual: July 1943. A British Lancaster bomber flying over Hamburg. The crew begins throwing bundles of aluminum-coated paper strips—'Window'—out of the plane. On the ground, German radar screens turn into a solid wall of white noise.)
+
+Narrator: "To save a fleet, you have to burn a secret. In WWII, the British discovered 'Window'—simple strips of foil that could blinded an entire radar network. But they waited nearly a year to use it. Why? Because they knew that the second those strips hit the air, the secret was gone. The enemy would see it, study it, and eventually, neutralize it."
+
+Narrator: "In the 21st century, the 'foil' is made of code. It's called a **Zero-Day**. A flaw in a system that no one—not even the creator—knows exists. Like the 'Window' of 1943, a zero-day is a one-shot weapon. Once you fire it, the world sees it. The exploit is 'burned.' And in 2010, the most expensive 'burn' in history changed the nature of war forever."
+
+(Visual: Title Card: **Episode 11: The Web as Weapon**)
+
+---
+
+### Act 1: The Morris Legacy (The Birth of the Cyber Army)
+(Visual: 1988. A student, Robert Morris, sits at a glowing green terminal. He types a command. We see a simple piece of code begin to replicate across the embryonic internet.)
+
+Narrator: "The first cyber weapon wasn't a bomb; it was a mistake. In 1988, the **Morris Worm** was designed to gauge the size of the internet. But a bug in its replication logic caused it to crash 10,000 computers. It was the world's first wake-up call."
+
+Narrator: "The response was immediate. We built the first **CERTs (Computer Emergency Response Teams)** to treat the internet like a patient. But military planners saw something else. They saw a domain where a single person could bypass borders and oceans. Over the next twenty years, the 'incident response' model evolved into 'offensive capability.' Israel's **Unit 8200**, the UK's **NCSC**, and China's **PLA Unit 61398** were born. The digital playground had become a battlefield."
+
+---
+
+### Act 2: The Stuxnet Precision (The First Kinetic Cyber Weapon)
+(Visual: A digital vault opening. Inside are four glowing USB drives. Each one is labeled with a dollar sign exceeding $1M.)
+
+Narrator: "Cyber warfare is the only battlefield where the ammunition disappears the moment you use it. To cross the **Air-Gap**—the physical disconnect between the public internet and a secured nuclear facility—you need more than code. You need a hammer."
+
+#### Practical Explainer: The Silent Sabotage
+(Visual: A cross-section of a Siemens S7-300 Programmable Logic Controller (PLC). We see the internal circuitry and the 'Step7' code running in a loop.)
+
+Narrator: "This is a PLC. It is the 'brain' of the modern factory. In 2010, a joint U.S.-Israeli project codenamed **Operation Olympic Games** launched **Stuxnet**. It didn't attack the building; it attacked the math inside the brain. It used **four zero-days**—an unprecedented 'burn' of millions of dollars of secrets—just to get inside."
+
+#### Mathematical Deep Dive: The Frequency of Failure
+(Visual: A graph showing the rotational frequency of a centrifuge. A steady line at **1,064 Hz**. Suddenly, the line spikes to **1,410 Hz**, then dives to **2 Hz**.)
+
+Narrator: "It performed a **Man-in-the-Middle** attack on the hardware. It would speed up the centrifuges to 1,410 Hz to stress them, then suddenly drop it to 2 Hz. While the machines were vibrating themselves to pieces, the PLC fed 'Ghost Data' back to the operators. On the screens, everything looked normal. This was the first time code caused physical, kinetic destruction on a strategic scale—with **Zero Human Casualties.**"
+
+---
+
+### Act 3: The Weaponized Infrastructure (SCADA and the Grid)
+(Visual: A map of the world with red 'strike' indicators appearing: Turkey (2008), Germany (2014), Ukraine (2015).)
+
+Narrator: "Stuxnet proved it could be done. And once the ghost was out of the bottle, it didn't stay in nuclear labs. It moved to the pipes and wires that run our world. This is the **SCADA** vulnerability—**Supervisory Control and Data Acquisition**."
+
+Narrator: "In 2008, the **Baku-Tbilisi-Ceyhan pipeline** exploded in Turkey—reportedly after a cyber strike on its alarm systems. In 2015, the **Ukraine Power Grid** was systematically shut down, leaving 230,000 people in the dark during winter. These are **Advanced Persistent Threats (APTs)**—organized, state-sponsored teams that stay hidden in your network for months, waiting for the perfect moment to pull the trigger."
+
+---
+
+### Act 4: The Fifth Domain (Cyber Command & CISA)
+(Visual: A military seal appears: **U.S. CYBER COMMAND (2009)**. Beside it, the CISA shield (2018).)
+
+Narrator: "By 2009, the Pentagon declared Cyberspace the **Fifth Domain** of warfare—joining land, sea, air, and space. We moved from 'Protect' to 'Defend Forward.' **CISA** now guards our water, our hospitals, and our schools, while Cyber Command prepares for full-spectrum internet warfare."
+
+Narrator: "But this raises a profound legal question: **The Tallinn Manual.** How do you apply the laws of war to a domain with no borders? At what point does a cyber attack become an 'Act of War'? If a hospital patient dies because of a ransomware attack, is that a casualty of war?"
+
+---
+
+### Act 5: The Surveillance Mirror (The Double Edge)
+(Visual: A digital 'X-ray' of a TCP/IP packet. We see the data payload and the routing headers.)
+
+Narrator: "The same TCP/IP architecture that allows us to connect also allows us to be cataloged. As we saw in Episode 9, SIGINT didn't stop with radio towers. In 2013, the **Snowden Revelations** showed that the internet itself is the ultimate surveillance machine. The 'Web as Weapon' isn't just about breaking things—it's about the **Digital Panopticon**."
+
+---
+
+### Act 6: The Object Lesson (The Strongest Network)
+(Visual: A montage of the series: The Titanic signal, the Enigma rotors, the SAR satellites, and finally, a single smartphone screen.)
+
+Narrator: "The internet was built to survive a nuclear strike by assuming it would be broken. Today, we've turned that strength into a weakness. We have mapped the invisible and solved the math of the intersection. But in a world where every device is a signal, the greatest weapon in your hand... is also the one pointed at your head."
+
+Narrator: "We have spent eleven episodes following the Mathematical Ghost. From the first spark to the global net, information has become the only weapon that never misses. The era of hiding is over. The era of the Transparent World has begun."
+
+(Visual: Fade to BLACK. A flickering cursor: **_**)
+
+(Visual: White text: **INFORMATION IS THE ONLY WEAPON THAT NEVER MISSES**)
+
+### Practical Engineering Key Concepts:
+1.  **SCADA (Supervisory Control and Data Acquisition)**: The industrial control systems that run everything from power plants to assembly lines.
+2.  **Zero-Day**: A software vulnerability known to the attacker but not the vendor.
+3.  **APT (Advanced Persistent Threat)**: A state-sponsored group that maintains a long-term presence in a network.
+4.  **Air-Gap**: A security measure where a network is physically isolated from the public internet.
+5.  **Attribution**: The process of identifying the actor responsible for a cyber attack (the hardest part of cyber war).
+6.  **Tallinn Manual**: The definitive guide on how international law applies to cyber warfare.

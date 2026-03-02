@@ -1,0 +1,237 @@
+[
+    {
+        "folder": "Episode 1 - The Spark That Changed the World",
+        "id": "1",
+        "title": "The Spark That Changed the World"
+    },
+    {
+        "folder": "Episode 1.1 - The Anatomy of the Pulse",
+        "id": "1.1",
+        "title": "The Anatomy of the Pulse"
+    },
+    {
+        "folder": "Episode 1.2 - The Armor-Piercing Ghost",
+        "id": "1.2",
+        "title": "The Armor-Piercing Ghost"
+    },
+    {
+        "folder": "Episode 1.5 - The Inertia of the Old Guard",
+        "id": "1.5",
+        "title": "The Inertia of the Old Guard"
+    },
+    {
+        "folder": "Episode 1.7 - The Sound of Shadows",
+        "id": "1.7",
+        "title": "The Sound of Shadows"
+    },
+    {
+        "folder": "Episode 1.8 - The Shape of the Signal",
+        "id": "1.8",
+        "title": "The Shape of the Signal"
+    },
+    {
+        "folder": "Episode 1.9 - The Geometry of the Ghost",
+        "id": "1.9",
+        "title": "The Geometry of the Ghost"
+    },
+    {
+        "folder": "Episode 10 - The Digital Web",
+        "id": "10",
+        "title": "The Digital Web"
+    },
+    {
+        "folder": "Episode 11 - The Web as Weapon",
+        "id": "11",
+        "title": "The Web as Weapon"
+    },
+    {
+        "folder": "Episode 12 - Shadow Operations",
+        "id": "12",
+        "title": "Shadow Operations"
+    },
+    {
+        "folder": "Episode 13 - The Price of Betrayal",
+        "id": "13",
+        "title": "The Price of Betrayal"
+    },
+    {
+        "folder": "Episode 14 - Greatest Hits",
+        "id": "14",
+        "title": "Greatest Hits"
+    },
+    {
+        "folder": "Episode 14.5 - The Pulse of the Machine",
+        "id": "14.5",
+        "title": "The Pulse of the Machine"
+    },
+    {
+        "folder": "Episode 15 - Tactical Recon",
+        "id": "15",
+        "title": "Tactical Recon"
+    },
+    {
+        "folder": "Episode 15.5 - Asymmetric Warfare",
+        "id": "15.5",
+        "title": "Asymmetric Warfare"
+    },
+    {
+        "folder": "Episode 16 - Strategic Intel",
+        "id": "16",
+        "title": "Strategic Intel"
+    },
+    {
+        "folder": "Episode 16.5 - The Human Signal",
+        "id": "16.5",
+        "title": "The Human Signal"
+    },
+    {
+        "folder": "Episode 16.6 - The Echo of Error",
+        "id": "16.6",
+        "title": "The Echo of Error"
+    },
+    {
+        "folder": "Episode 16.7 - The Untouchables",
+        "id": "16.7",
+        "title": "The Untouchables"
+    },
+    {
+        "folder": "Episode 16.8 - The Phantom Signal",
+        "id": "16.8",
+        "title": "The Phantom Signal"
+    },
+    {
+        "folder": "Episode 17 - The Cloud Empire",
+        "id": "17",
+        "title": "The Cloud Empire"
+    },
+    {
+        "folder": "Episode 18 - The Life of a Data Point",
+        "id": "18",
+        "title": "The Life of a Data Point"
+    },
+    {
+        "folder": "Episode 2 - Friend or Foe",
+        "id": "2",
+        "title": "Friend or Foe"
+    },
+    {
+        "folder": "Episode 2.5 - The Digital Lighthouse",
+        "id": "2.5",
+        "title": "The Digital Lighthouse"
+    },
+    {
+        "folder": "Episode 3 - Digital Mirage",
+        "id": "3",
+        "title": "Digital Mirage"
+    },
+    {
+        "folder": "Episode 3.5 - Invisibility Paradox",
+        "id": "3.5",
+        "title": "Invisibility Paradox"
+    },
+    {
+        "folder": "Episode 4 - The Mathematical Vault",
+        "id": "4",
+        "title": "The Mathematical Vault"
+    },
+    {
+        "folder": "Episode 5 - The Gray Zone",
+        "id": "5",
+        "title": "The Gray Zone"
+    },
+    {
+        "folder": "Episode 5.5",
+        "id": "5.5",
+        "title": "Episode 5.5"
+    },
+    {
+        "folder": "Episode 6 - Digital Mirage",
+        "id": "6",
+        "title": "Digital Mirage"
+    },
+    {
+        "folder": "Episode 6.5 - The Vanishing Act",
+        "id": "6.5",
+        "title": "The Vanishing Act"
+    },
+    {
+        "folder": "Episode 7 - The Digital Sentry",
+        "id": "7",
+        "title": "The Digital Sentry"
+    },
+    {
+        "folder": "Episode 7.2 - The Sky as a Mirror",
+        "id": "7.2",
+        "title": "The Sky as a Mirror"
+    },
+    {
+        "folder": "Episode 7.3 - The Dark Grid",
+        "id": "7.3",
+        "title": "The Dark Grid"
+    },
+    {
+        "folder": "Episode 7.5 - The Invisible Wall",
+        "id": "7.5",
+        "title": "The Invisible Wall"
+    },
+    {
+        "folder": "Episode 8 - The Heat Signature",
+        "id": "8",
+        "title": "The Heat Signature"
+    },
+    {
+        "folder": "Episode 8.5 - The Eye in the Sky",
+        "id": "8.5",
+        "title": "The Eye in the Sky"
+    },
+    {
+        "folder": "Episode 8.6 - Thermodynamics as an Intelligence Tool",
+        "id": "8.6",
+        "title": "Thermodynamics as an Intelligence Tool"
+    },
+    {
+        "folder": "Episode 8.7 - The Precision Map",
+        "id": "8.7",
+        "title": "The Precision Map"
+    },
+    {
+        "folder": "Episode 8.8 - The Drone Boomerang",
+        "id": "8.8",
+        "title": "The Drone Boomerang"
+    },
+    {
+        "folder": "Episode 8.9 - Borrowing the Bodyguard's Eyes",
+        "id": "8.9",
+        "title": "Borrowing the Bodyguard's Eyes"
+    },
+    {
+        "folder": "Episode 9 - Imaging the Unseen",
+        "id": "9",
+        "title": "Imaging the Unseen"
+    },
+    {
+        "folder": "Episode 9.4 - The Taxonomy of Secrets",
+        "id": "9.4",
+        "title": "The Taxonomy of Secrets"
+    },
+    {
+        "folder": "Episode 9.5 - The Human Firewall",
+        "id": "9.5",
+        "title": "The Human Firewall"
+    },
+    {
+        "folder": "Episode 9.6 - The United States of Intelligence",
+        "id": "9.6",
+        "title": "The United States of Intelligence"
+    },
+    {
+        "folder": "Episode 9.7 - The Trigger and the Code",
+        "id": "9.7",
+        "title": "The Trigger and the Code"
+    },
+    {
+        "folder": "Episode 9.8 - The Engineering of Compliance",
+        "id": "9.8",
+        "title": "The Engineering of Compliance"
+    }
+]

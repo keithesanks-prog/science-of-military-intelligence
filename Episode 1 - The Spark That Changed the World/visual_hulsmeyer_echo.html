@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Act 6 — Hülsmeyer: The Telemobiloscope (1904)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #030508;
+            --text: #c8ddd5;
+            --brass: #b5a642;
+            --teal: #33cccc;
+            --fog: #2a3038;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas#c {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 2;
+        }
+
+        .stage.active {
+            opacity: 1;
+        }
+
+        /* MAXWELL CONTINUITY YEAR STYLE */
+        #stage-year h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8rem;
+            letter-spacing: 20px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            animation: glow 3s infinite alternate;
+            color: white;
+            z-index: 10;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            }
+
+            to {
+                text-shadow: 0 0 50px rgba(255, 255, 255, 1);
+                transform: scale(1.05);
+            }
+        }
+
+        /* FIXED PORTRAIT FRAME */
+        .portrait-container {
+            position: relative;
+            width: 500px;
+            height: 630px;
+            border: 1px solid rgba(181, 166, 66, 0.3);
+            background: #000;
+            box-shadow: 0 0 80px rgba(181, 166, 66, 0.1);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: sepia(0.25) contrast(1.1);
+        }
+
+        .portrait-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.95;
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 45%, #000 100%);
+            pointer-events: none;
+        }
+
+        .overlay-text {
+            position: absolute;
+            bottom: 60px;
+            left: 60px;
+            max-width: 480px;
+            z-index: 10;
+            pointer-events: none;
+            background: rgba(3, 5, 8, 0.85);
+            padding: 24px;
+            border-left: 4px solid var(--brass);
+            backdrop-filter: blur(15px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .stage.active .overlay-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .overlay-text h2 {
+            font-family: 'Orbitron';
+            color: var(--brass);
+            font-size: 1.4rem;
+            letter-spacing: 4px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .overlay-text p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(200, 221, 213, 1);
+        }
+
+        #step-label {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-family: 'Orbitron';
+            font-size: 0.75rem;
+            color: var(--brass);
+            letter-spacing: 3px;
+            border-left: 2px solid var(--brass);
+            padding-left: 15px;
+            z-index: 100;
+        }
+
+        #fadeOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 200;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="c"></canvas>
+
+    <!-- STAGE 0: YEAR -->
+    <div id="stage-year" class="stage active">
+        <h1>1904</h1>
+        <div class="overlay-text">
+            <h2>The Rotterdam Harbor</h2>
+            <p>In the spring of 1904, Christian Hülsmeyer prepares to unveil the "Telemobiloscope"—a device designed to
+                pierce the thickest harbor fog.</p>
+        </div>
+    </div>
+
+    <!-- STAGE 1: INVENTOR -->
+    <div id="stage-portrait" class="stage">
+        <div class="portrait-container">
+            <img src="Telemobiloskop_Christian_Hülsmeyer_d.jpg" alt="Christian Hülsmeyer Archival Photo">
+            <div class="vignette"></div>
+        </div>
+        <div class="overlay-text">
+            <h2>The Inventor</h2>
+            <p>Young Christian Hülsmeyer understood that Hertzian waves could reflect off metal hulls. He built the
+                world's first obstacle-detection radar.</p>
+        </div>
+    </div>
+
+    <!-- STAGE 2: TECHNICAL BLUEPRINT -->
+    <div id="stage-blueprint" class="stage">
+        <div class="overlay-text">
+            <h2>Patent No. 165546</h2>
+            <p>The "Telemobiloscope" used a vertical stack: a **high-voltage transmitter (below)** to shout waves and a
+                **shielded receiver (above)** to listen for the faint echo.</p>
+        </div>
+    </div>
+
+    <!-- STAGE 3: ACTION DEMO -->
+    <div id="stage-action" class="stage">
+        <div class="overlay-text">
+            <h2>The Shout & Echo</h2>
+            <p>To detect a ship, the device fires its lower spark gap, then mechanically rotates its upper receiver
+                array 180° to listen for the return signal.</p>
+        </div>
+    </div>
+
+    <!-- STAGE 4: SYNC -->
+    <div id="stage-sync" class="stage">
+        <div class="overlay-text">
+            <h2>Synchronized Bridge</h2>
+            <p>Every rotation of the deck assembly was mechanically linked to a "Compass Dial" on the bridge, the direct
+                ancestor of the modern radar display.</p>
+        </div>
+    </div>
+
+    <!-- STAGE 5: DISMISSAL -->
+    <div id="stage-dismissal" class="stage">
+        <div class="overlay-text">
+            <h2>A Forgotten Echo</h2>
+            <p>The German Navy saw Hülsmeyer's "electronic eye" as a curiosity. The device was dismantled, and the
+                secret of radar was lost for thirty years.</p>
+        </div>
+    </div>
+
+    <div id="step-label">BEAT 1 / 6 — 1904: ROTTERDAM</div>
+    <div id="fadeOverlay"></div>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let W, H;
+        let step = 0;
+        let t = 0;
+        let stepStartT = 0;
+        let particles = [];
+        let labels = ["ROTTERDAM", "INVENTOR", "BLUEPRINT", "DEMONSTRATION", "SYNC", "DISMISSAL"];
+
+        // --- DIRECT COLOR CONSTANTS (No var() usage in Canvas) ---
+        const COLOR_BRASS = '#b5a642';
+        const COLOR_TEAL = '#33cccc';
+        const COLOR_TEAL_DIM = 'rgba(51, 204, 204, 0.4)';
+        const COLOR_SHAFT = '#444444'; // Lightened for visibility
+        const COLOR_GOLD_BRIGHT = '#f5d57a';
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            W = window.innerWidth; H = window.innerHeight;
+            canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resize); resize();
+
+        function initParticles() {
+            for (let i = 0; i < 200; i++) {
+                particles.push({
+                    x: Math.random() * W, y: Math.random() * H,
+                    vx: Math.random() * 0.1 - 0.05, vy: Math.random() * 0.1 - 0.05,
+                    r: Math.random() * 1.5 + 0.5, o: Math.random() * 0.2
+                });
+            }
+        }
+        initParticles();
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' && step < 5) triggerTransition(step + 1);
+            if (e.key === 'ArrowLeft' && step > 0) triggerTransition(step - 1);
+        });
+
+        function triggerTransition(nextStep) {
+            const overlay = document.getElementById('fadeOverlay');
+            overlay.style.opacity = 1;
+            setTimeout(() => {
+                step = nextStep; stepStartT = t;
+                updateUI();
+                overlay.style.opacity = 0;
+            }, 1000);
+        }
+
+        function updateUI() {
+            document.getElementById('step-label').innerText = `BEAT ${step + 1} / 6 — ${labels[step]}`;
+            const ids = ["stage-year", "stage-portrait", "stage-blueprint", "stage-action", "stage-sync", "stage-dismissal"];
+            ids.forEach((id, i) => document.getElementById(id).classList.toggle('active', i === step));
+        }
+
+        function drawBackground() {
+            // Stronger background contrast with higher luminance in the center
+            ctx.fillStyle = '#030508'; ctx.fillRect(0, 0, W, H);
+            const grad = ctx.createRadialGradient(W / 2, H * 0.4, 0, W / 2, H * 0.4, W);
+            grad.addColorStop(0, '#101520'); // Lifted black for visibility
+            grad.addColorStop(1, '#030508');
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+                if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+                ctx.globalAlpha = p.o;
+                ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function drawBell(x, y, active) {
+            ctx.save(); ctx.translate(x, y);
+            if (active) {
+                ctx.rotate(Math.sin(t * 80) * 0.15);
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+                for (let i = 0; i < 3; i++) {
+                    const r = (t * 60 + i * 20) % 60;
+                    ctx.beginPath(); ctx.arc(0, 5, r, Math.PI, 0); ctx.stroke();
+                }
+            }
+            ctx.fillStyle = active ? COLOR_GOLD_BRIGHT : COLOR_BRASS;
+            ctx.beginPath(); ctx.arc(0, 0, 30, Math.PI, 0); ctx.lineTo(30, 25); ctx.lineTo(-30, 25); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = '#333'; ctx.beginPath(); ctx.arc(0, active ? 25 + Math.sin(t * 80) * 5 : 25, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
+
+        function drawCoherer(x, y, scale = 1, state = 'loose') {
+            ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
+            ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.roundRect(-70, -18, 140, 36, 18); ctx.stroke();
+            const filings = 80; ctx.fillStyle = '#bbb';
+            for (let i = 0; i < filings; i++) {
+                let fx, fy;
+                if (state === 'clinging') {
+                    fx = -15 + Math.random() * 30; fy = -10 + Math.random() * 20;
+                } else {
+                    fx = -60 + i * 1.5; fy = 12 + Math.sin(t * 40 + i) * 3;
+                }
+                ctx.beginPath(); ctx.arc(fx, fy, 1.6, 0, Math.PI * 2); ctx.fill();
+            }
+            if (state === 'clinging') {
+                ctx.shadowBlur = 25; ctx.shadowColor = COLOR_TEAL;
+                ctx.strokeStyle = 'cyan'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(-70, 0); ctx.lineTo(-100, 0); ctx.moveTo(70, 0); ctx.lineTo(100, 0); ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawMasterModel(opt = {}) {
+            const { zoom = 1.0, alpha = 1.0, transmission = false, labels = false, x, y, rotationY = 0, blueprint = false } = opt;
+            const cx = x || W / 2, cy = y || H / 2;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.scale(zoom, zoom);
+            ctx.globalAlpha = alpha;
+
+            const col = blueprint ? COLOR_TEAL : COLOR_BRASS;
+            ctx.strokeStyle = col; ctx.lineWidth = 2;
+
+            const cosY = Math.cos(rotationY);
+            const sinY = Math.sin(rotationY);
+
+            // 1. Fixed Base
+            ctx.beginPath(); ctx.arc(0, 50, 80, Math.PI, 0); ctx.stroke();
+            ctx.strokeRect(-85, 50, 170, 5);
+            // Lightened Shaft for better contrast
+            ctx.fillStyle = COLOR_SHAFT;
+            ctx.fillRect(-12, -220, 24, 270);
+            ctx.strokeRect(-12, -220, 24, 270);
+
+            // COMPONENT RENDERERS
+            const drawTransmitter = () => {
+                ctx.save(); ctx.scale(cosY, 1);
+                ctx.translate(-cosY * 12, -60);
+                ctx.beginPath(); ctx.moveTo(0, -60); ctx.lineTo(-180, -45); ctx.lineTo(-180, 45); ctx.lineTo(0, 60); ctx.stroke();
+                if (labels) { ctx.fillStyle = col; ctx.font = '700 24px Orbitron'; ctx.fillText("l", -100, 0); }
+                if (transmission && cosY < 0.2) {
+                    const s = Math.sin(t * 60);
+                    if (s > 0.4) {
+                        ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(-40, -5); ctx.lineTo(-10, -5); ctx.stroke();
+                        ctx.strokeStyle = COLOR_TEAL_DIM;
+                        for (let j = 0; j < 3; j++) {
+                            const r = (t * 600 + j * 100) % 500;
+                            ctx.beginPath(); ctx.arc(-140, 0, r, -0.2, 0.2); ctx.stroke();
+                        }
+                    }
+                }
+                ctx.restore();
+            };
+
+            const drawReceiver = () => {
+                ctx.save(); ctx.scale(cosY, 1);
+                ctx.translate(cosY * 12, -230);
+                ctx.beginPath(); ctx.moveTo(0, -110); ctx.lineTo(40, -95); ctx.lineTo(40, 95); ctx.lineTo(0, 110); ctx.stroke();
+                for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.moveTo(5, -80 + i * 32); ctx.lineTo(35, -80 + i * 32); ctx.stroke(); }
+                if (labels) { ctx.fillStyle = col; ctx.font = '700 24px Orbitron'; ctx.fillText("n", 50, 0); }
+                ctx.restore();
+            };
+
+            // Shield m
+            ctx.fillStyle = '#0a0a0a'; ctx.fillRect(-140, -115, 280, 8); ctx.strokeRect(-140, -115, 280, 8);
+            if (labels) { ctx.fillStyle = col; ctx.font = '700 24px Orbitron'; ctx.fillText("m", 160, -108); }
+
+            if (sinY > 0) { drawTransmitter(); drawReceiver(); } else { drawReceiver(); drawTransmitter(); }
+            ctx.restore();
+        }
+
+        function drawHarbor(alpha = 1.0, illuminated = 0) {
+            ctx.globalAlpha = alpha;
+            const seaY = H * 0.7;
+            const seaGrad = ctx.createLinearGradient(0, seaY, 0, H);
+            seaGrad.addColorStop(0, '#0a1018'); seaGrad.addColorStop(1, '#030508');
+            ctx.fillStyle = seaGrad; ctx.fillRect(0, seaY, W, H - seaY);
+
+            ctx.save();
+            ctx.translate(W * 0.15, seaY);
+
+            // Lighten hull based on illumination
+            const hullBase = illuminated > 0 ? '#333' : '#050505';
+            ctx.fillStyle = hullBase;
+            ctx.beginPath(); ctx.moveTo(-150, 0); ctx.lineTo(-110, -40); ctx.lineTo(110, -40); ctx.lineTo(150, 0); ctx.closePath(); ctx.fill();
+
+            // Metallic Rim Highlight
+            ctx.strokeStyle = `rgba(181, 166, 66, ${0.3 + illuminated * 0.7})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Portholes (Golden Lights)
+            ctx.fillStyle = illuminated > 0.5 ? '#fff' : 'rgba(245, 213, 122, 0.5)';
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath(); ctx.arc(-60 + i * 60, -15, 3, 0, Math.PI * 2); ctx.fill();
+            }
+
+            // Impact Flash
+            if (illuminated > 0.1) {
+                ctx.shadowBlur = 30 * illuminated; ctx.shadowColor = 'cyan';
+                ctx.strokeStyle = `rgba(0, 255, 255, ${illuminated})`; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(-160, -10); ctx.lineTo(160, -10); ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.restore();
+            ctx.globalAlpha = 1;
+        }
+
+        function drawPracticalDemo() {
+            const cycle = (t * 0.1) % 1;
+            const shipX = W * 0.15, deviceX = W * 0.75;
+            let rot = Math.PI, transmit = false, cState = 'loose', bell = false, pText = "", illu = 0;
+
+            if (cycle < 0.25) {
+                rot = Math.PI; transmit = true; pText = "STEP 1: CONTINUOUS WAVE TRANSMISSION";
+                const p = (cycle / 0.25);
+                const xWave = deviceX - 100 - (deviceX - shipX - 100) * p;
+                ctx.strokeStyle = COLOR_TEAL; ctx.lineWidth = 3;
+                for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(xWave + i * 20, H * 0.6, 20 + i * 15, -0.6, 0.6); ctx.stroke(); }
+                // Impact glow
+                if (p > 0.85) illu = (p - 0.85) * 6.6;
+            } else if (cycle < 0.45) {
+                const p = (cycle - 0.25) / 0.2;
+                rot = Math.PI + p * Math.PI; pText = "STEP 2: MECHANICAL ASSEMBLY ROTATING...";
+            } else if (cycle < 0.75) {
+                rot = 0; pText = "STEP 3: LISTENING FOR ECHO...";
+                const p = (cycle - 0.45) / 0.3;
+                const xEcho = shipX + (deviceX - shipX) * p;
+                ctx.strokeStyle = COLOR_TEAL_DIM;
+                for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(xEcho - i * 20, H * 0.6, 40 + i * 10, -0.6, 0.6); ctx.stroke(); }
+                if (p > 0.8) { cState = 'clinging'; bell = true; pText = "ECHO DETECTED! RINGING BELL"; }
+            } else {
+                rot = 0; cState = 'loose'; pText = "STEP 4: HAMMER TAPPING (RESETTING)";
+            }
+
+            drawHarbor(0.4, illu);
+            drawMasterModel({ x: deviceX, y: H * 0.7, zoom: 0.65, rotationY: rot, transmission: transmit });
+            drawCoherer(deviceX - 250, H * 0.4, 0.8, cState);
+            drawBell(deviceX - 100, H * 0.35, bell);
+
+            ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '14px Orbitron'; ctx.textAlign = 'right';
+            ctx.fillText(pText, W - 40, H - 40);
+        }
+
+        function drawKompassSync() {
+            const rot = t * 0.6;
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke();
+            drawMasterModel({ x: W * 0.25, y: H * 0.65, zoom: 0.6, rotationY: rot });
+            ctx.save(); ctx.translate(W * 0.75, H * 0.45);
+            ctx.strokeStyle = COLOR_BRASS; ctx.lineWidth = 10;
+            ctx.beginPath(); ctx.arc(0, 0, 150, 0, Math.PI * 2); ctx.stroke(); ctx.fillStyle = '#050a0a'; ctx.fill();
+            ctx.rotate(rot); ctx.strokeStyle = '#ff3010'; ctx.lineWidth = 6;
+            ctx.beginPath(); ctx.moveTo(0, 30); ctx.lineTo(0, -140); ctx.stroke();
+            ctx.fillStyle = '#ff3010'; ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        }
+
+        function loop() {
+            t += 0.016;
+            drawBackground();
+            const dt = t - stepStartT;
+
+            if (step === 0) {
+                drawHarbor(0.3, 0);
+            } else if (step === 2) {
+                drawMasterModel({ x: W / 2, y: H / 2, zoom: 0.8, rotationY: t * 0.2, labels: true, blueprint: true });
+            } else if (step === 3) {
+                drawPracticalDemo();
+            } else if (step === 4) {
+                drawKompassSync();
+            } else if (step === 5) {
+                const a = Math.max(0, 1 - dt * 0.25);
+                drawPracticalDemo();
+                ctx.fillStyle = `rgba(3, 5, 8, ${1 - a})`; ctx.fillRect(0, 0, W, H);
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+        updateUI();
+    </script>
+</body>
+
+</html>

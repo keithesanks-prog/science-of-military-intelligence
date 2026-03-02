@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFF Challenge-Response Visualizer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030a05;
+            --panel-bg: rgba(5, 15, 10, 0.9);
+            --accent: #22ff44;
+            --accent-dim: rgba(34, 255, 68, 0.15);
+            --foe: #ff3333;
+            --neutral: #ffcc00;
+            --unknown: #666666;
+            --border: rgba(34, 255, 68, 0.3);
+            --text: #d0ffd0;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Orbitron', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(34, 255, 68, 0.05) 0%, transparent 80%),
+                linear-gradient(rgba(34, 255, 68, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 255, 68, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        header {
+            padding: 15px 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(34, 255, 68, 0.2);
+        }
+
+        .header-left h1 {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-dim);
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .data-readout {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            border-left: 1px solid var(--border);
+            padding-left: 15px;
+        }
+
+        .data-label {
+            opacity: 0.6;
+            font-size: 0.6rem;
+            display: block;
+        }
+
+        .data-val {
+            color: var(--accent);
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 10;
+        }
+
+        h3 {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-btn:hover {
+            background: var(--accent-dim);
+        }
+
+        .mode-btn.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            box-shadow: inset 0 0 10px var(--accent-dim);
+        }
+
+        .mode-btn .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .btn-friend .dot {
+            background: var(--accent);
+        }
+
+        .btn-foe .dot {
+            background: var(--foe);
+        }
+
+        .btn-unknown .dot {
+            background: var(--unknown);
+        }
+
+        .btn-neutral .dot {
+            background: var(--neutral);
+        }
+
+        .action-area {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .primary-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 15px;
+            font-family: var(--font-mono);
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(34, 255, 68, 0.4);
+        }
+
+        .primary-btn:active {
+            transform: translateY(0);
+        }
+
+        .vis-stage {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #iffCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .hud-overlay {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 300px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+        }
+
+        .pulse-viz {
+            height: 60px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            margin: 15px 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .pulse-bar {
+            width: 8px;
+            background: var(--accent);
+            transition: height 0.3s;
+        }
+
+        .status-msg {
+            font-size: 0.75rem;
+            padding: 8px;
+            border-radius: 4px;
+            background: rgba(34, 255, 68, 0.1);
+            border: 1px solid rgba(34, 255, 68, 0.2);
+        }
+
+        .interrogation-beam {
+            position: absolute;
+            left: 200px;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            transform-origin: left center;
+            pointer-events: none;
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1>IFF CHALLENGE INTERFACE</h1>
+        </div>
+        <div class="header-right">
+            <div class="data-readout">
+                <span class="data-label">MODE SELECT</span>
+                <span class="data-val">ANTENNA: SSR-MOD 3A</span>
+            </div>
+            <div class="data-readout">
+                <span class="data-label">INTERROGATE FREQ</span>
+                <span class="data-val">1030 MHz</span>
+            </div>
+            <div class="data-readout">
+                <span class="data-label">RESPONSE FREQ</span>
+                <span class="data-val">1090 MHz</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="scenario-div">
+                <h3>Target Profile</h3>
+                <div class="scenario-grid">
+                    <button class="mode-btn active btn-friend" onclick="setScenario('FRIEND')">
+                        <div class="dot"></div> FRIENDLY VESTA
+                    </button>
+                    <button class="mode-btn btn-foe" onclick="setScenario('FOE')">
+                        <div class="dot"></div> UNKNOWN (FOE)
+                    </button>
+                    <button class="mode-btn btn-neutral" onclick="setScenario('NEUTRAL')">
+                        <div class="dot"></div> CIVILIAN / NEUTRAL
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-section" style="font-size: 0.75rem; opacity: 0.8;">
+                <h3>Unclassified Mechanics</h3>
+                <p>Interrogator sends pulse sequence (P1, P3). Pulse spacing determines Mode.</p>
+                <br>
+                <p>Mode 3/A: Identification Code</p>
+                <p>Mode C: Altitude Reporting</p>
+            </div>
+
+            <div class="action-area">
+                <button class="primary-btn" onclick="fireInterrogation()">Interrogate Target</button>
+            </div>
+        </aside>
+
+        <main class="vis-stage">
+            <canvas id="iffCanvas"></canvas>
+            <div class="hud-overlay">
+                <h3>Signal Analyzer</h3>
+                <div class="pulse-viz" id="analyzer">
+                    <!-- Pulses will appear here -->
+                </div>
+                <div class="status-msg" id="status-text">SYSTEM READY. WAITING FOR TRIGGER.</div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('iffCanvas');
+        const ctx = canvas.getContext('2d');
+        const analyzer = document.getElementById('analyzer');
+        const statusText = document.getElementById('status-text');
+
+        let state = {
+            scenario: 'FRIEND',
+            interrogating: false,
+            interrogateTime: 0,
+            pulses: [],
+            targetX: 0,
+            targetClassification: 'UNKNOWN',
+            classificationFade: 0
+        };
+
+        const COLORS = {
+            FRIEND: '#22ff44',
+            FOE: '#ff3333',
+            NEUTRAL: '#ffcc00',
+            UNKNOWN: '#666666'
+        };
+
+        function setScenario(scen) {
+            state.scenario = scen;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.includes(scen));
+            });
+            state.targetClassification = 'UNKNOWN';
+            statusText.innerText = `PROFILE SET: ${scen}. WAITING FOR INTERROGATION.`;
+            analyzer.innerHTML = '';
+        }
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+            state.targetX = canvas.width * 0.75;
+            requestAnimationFrame(animate);
+        }
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            state.targetX = canvas.width * 0.75;
+        }
+
+        function fireInterrogation() {
+            if (state.interrogating) return;
+            state.interrogating = true;
+            state.interrogateTime = Date.now();
+            state.targetClassification = 'UNKNOWN';
+            statusText.innerText = "CHALLENGE PULSE (P1+P3) EMITTED...";
+
+            // Add interrogation pulses
+            state.pulses.push({ x: 200, type: 'CHALLENGE', dir: 1, speed: 8, strength: 1.0 });
+
+            // Clear analyzer
+            analyzer.innerHTML = '<div class="pulse-bar" style="height: 100%; opacity: 0.5"></div><div class="pulse-bar" style="height: 100%; opacity: 0.2"></div>';
+        }
+
+        function drawInterrogator(x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Ship Hull
+            ctx.beginPath();
+            ctx.moveTo(-50, 20); ctx.lineTo(60, 20); ctx.lineTo(100, 0); ctx.lineTo(-100, 0);
+            ctx.closePath();
+            ctx.fillStyle = '#223322';
+            ctx.fill();
+            ctx.strokeStyle = varColor('--accent');
+            ctx.stroke();
+
+            // Mast
+            ctx.fillRect(-20, -60, 10, 60);
+
+            // Rotating Antenna (SSR)
+            const rot = Date.now() / 1000;
+            ctx.save();
+            ctx.translate(-15, -60);
+            ctx.rotate(rot);
+            ctx.beginPath();
+            ctx.moveTo(-20, 0); ctx.lineTo(20, 0);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.restore();
+
+            ctx.restore();
+        }
+
+        function drawTarget(x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            const color = COLORS[state.targetClassification];
+
+            // Target Icon (Diamond for hostile/unknown, circle for friendly)
+            ctx.beginPath();
+            if (state.targetClassification === 'FRIEND') {
+                ctx.arc(0, 0, 25, 0, Math.PI * 2);
+            } else {
+                ctx.moveTo(0, -25); ctx.lineTo(25, 0); ctx.lineTo(0, 25); ctx.lineTo(-25, 0);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Hull
+            ctx.beginPath();
+            ctx.moveTo(-40, 25); ctx.lineTo(40, 25); ctx.lineTo(60, 15); ctx.lineTo(-60, 15);
+            ctx.closePath();
+            ctx.fillStyle = '#222';
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = color;
+            ctx.font = '700 10px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText(state.targetClassification === 'UNKNOWN' ? '?' : state.targetClassification, 0, -35);
+
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const yCenter = canvas.height / 2;
+
+            drawInterrogator(200, yCenter);
+            drawTarget(state.targetX, yCenter);
+
+            // Update pulses
+            for (let i = state.pulses.length - 1; i >= 0; i--) {
+                const p = state.pulses[i];
+                p.x += p.speed * p.dir;
+
+                // Draw pulses
+                ctx.beginPath();
+                ctx.arc(p.x, yCenter - 20, 15, 0, Math.PI * 2);
+                ctx.fillStyle = p.type === 'CHALLENGE' ? 'rgba(34, 255, 68, 0.4)' : 'rgba(255, 255, 255, 0.6)';
+                ctx.fill();
+
+                // Pulse tail
+                const tail = p.dir * -20;
+                const grad = ctx.createLinearGradient(p.x, 0, p.x + tail, 0);
+                grad.addColorStop(0, p.type === 'CHALLENGE' ? 'rgba(34, 255, 68, 0.5)' : 'rgba(255,255,255,0.7)');
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.fillRect(p.x, yCenter - 25, tail, 10);
+
+                // Trigger transponder
+                if (p.dir === 1 && p.x >= state.targetX) {
+                    state.pulses.splice(i, 1);
+                    handleChallengeReached();
+                }
+
+                // Trigger interrogator reception
+                if (p.dir === -1 && p.x <= 200) {
+                    state.pulses.splice(i, 1);
+                    handleResponseReceived(p);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function handleChallengeReached() {
+            if (state.scenario === 'FOE') {
+                statusText.innerText = "NO RESPONSE DETECTED FROM TARGET.";
+                state.interrogating = false;
+                state.targetClassification = 'FOE';
+                return;
+            }
+
+            statusText.innerText = "CHALLENGE RECEIVED. TRANSPONDER RESPONDING...";
+            // Friend or Neutral returns a code
+            const isCivilian = state.scenario === 'NEUTRAL';
+            state.pulses.push({
+                x: state.targetX,
+                type: 'RESPONSE',
+                dir: -1,
+                speed: 8,
+                data: isCivilian ? 'CIV-7100' : 'FRD-1200',
+                scen: state.scenario
+            });
+        }
+
+        function handleResponseReceived(p) {
+            state.interrogating = false;
+            state.targetClassification = p.scen;
+            statusText.innerText = `RESPONSE DECODED: [${p.data}]. CLASSIFIED AS ${p.scen}.`;
+
+            // Visualize in analyzer
+            analyzer.innerHTML = '';
+            const pulses = [100, 40, 80, 20, 50, 100]; // Simulated bracket pulses
+            pulses.forEach(h => {
+                const bar = document.createElement('div');
+                bar.className = 'pulse-bar';
+                bar.style.height = h + '%';
+                if (p.scen === 'NEUTRAL') bar.style.background = varColor('--neutral');
+                analyzer.appendChild(bar);
+            });
+        }
+
+        const varColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(name);
+
+        init();
+    </script>
+
+</body>
+
+</html>

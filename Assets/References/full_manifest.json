@@ -1,0 +1,67 @@
+{
+    "Technical": {
+        "Hertz spark gap transmitter": "c:/Users/ksank/Video_visual_creation/Assets/References\\hertz_spark_gap_transmitter.svg",
+        "Marconi radio transmitter 1900": "c:/Users/ksank/Video_visual_creation/Assets/References\\marconi_radio_transmitter_1900.jpg",
+        "Hulsmeyer Telemobiloskop": "c:/Users/ksank/Video_visual_creation/Assets/References\\hulsmeyer_telemobiloskop.jpg",
+        "Cavity Magnetron internal": "c:/Users/ksank/Video_visual_creation/Assets/References\\cavity_magnetron_internal.png",
+        "Great Seal Bug Schematic": "c:/Users/ksank/Video_visual_creation/Assets/References\\great_seal_bug_schematic.png",
+        "SCR-270 radar antenna": "c:/Users/ksank/Video_visual_creation/Assets/References\\scr-270_radar_antenna.jpg",
+        "Enigma machine open": "c:/Users/ksank/Video_visual_creation/Assets/References\\enigma_machine_open.jpg",
+        "F-117 Nighthawk USAF": "c:/Users/ksank/Video_visual_creation/Assets/References\\f-117_nighthawk_usaf.jpg",
+        "AMRAAM seeker gimbal": "c:/Users/ksank/Video_visual_creation/Assets/References\\amraam_seeker_gimbal.jpg"
+    },
+    "People": {
+        "Pillars": {
+            "James Clerk Maxwell": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Pillars\\james_clerk_maxwell.jpg",
+            "Heinrich Hertz": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Pillars\\heinrich_hertz.jpg",
+            "Wilhelm Rontgen": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Pillars\\wilhelm_rontgen.jpg",
+            "William Herschel": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Pillars\\william_herschel.jpg",
+            "Paul Langevin": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Pillars\\paul_langevin.jpg"
+        },
+        "Inventors": {
+            "Guglielmo Marconi": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\guglielmo_marconi.jpg",
+            "Christian Hulsmeyer": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\christian_hulsmeyer.jpg",
+            "Hedy Lamarr": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\hedy_lamarr.jpg",
+            "George Antheil": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\george_antheil.jpg",
+            "Paul Baran": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\paul_baran.jpg",
+            "Whitfield Diffie": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\whitfield_diffie.jpg",
+            "Martin Hellman": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\martin_hellman.jpg",
+            "Alan Turing": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Inventors\\alan_turing.jpg"
+        },
+        "Controversial": {
+            "General James Ripley": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Controversial\\general_james_ripley.jpg",
+            "Kermit Tyler": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Controversial\\kermit_tyler.jpg",
+            "Jack Phillips": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Controversial\\jack_phillips.jpg"
+        },
+        "ShadowList": {
+            "Klaus Fuchs": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\klaus_fuchs.jpg",
+            "Julius Rosenberg": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\julius_rosenberg.jpg",
+            "Aldrich Ames": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\aldrich_ames.jpg",
+            "Robert Hanssen": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\robert_hanssen.jpg",
+            "Chelsea Manning": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\chelsea_manning.jpeg",
+            "Edward Snowden": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\edward_snowden.jpg",
+            "John Anthony Walker": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\john_anthony_walker.jpg",
+            "Ronald Pelton": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\ShadowList\\ronald_pelton.jpg"
+        },
+        "Context": {
+            "Averell Harriman": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Context\\averell_harriman.jpg",
+            "Howard Hughes": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Context\\howard_hughes.jpg",
+            "Louis B Mayer": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Context\\louis_b_mayer.jpg"
+        },
+        "Operators": {},
+        "Heroes": {
+            "Virginia Hall": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Heroes\\virginia_hall.jpg",
+            "Richard Sorge": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Heroes\\richard_sorge.jpg",
+            "Eli Cohen": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Heroes\\eli_cohen.jpg",
+            "Nancy Wake": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Heroes\\nancy_wake.jpg"
+        },
+        "Military": {
+            "Paul von Hindenburg": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Military\\paul_von_hindenburg.jpg",
+            "Lord Raglan": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Military\\lord_raglan.jpg",
+            "Lord Lucan": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Military\\lord_lucan.jpg",
+            "Lord Cardigan": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Military\\lord_cardigan.jpg",
+            "General James Ripley": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Military\\general_james_ripley.jpg",
+            "Kermit Tyler": "c:/Users/ksank/Video_visual_creation/Assets/References\\People\\Military\\kermit_tyler.jpg"
+        }
+    }
+}

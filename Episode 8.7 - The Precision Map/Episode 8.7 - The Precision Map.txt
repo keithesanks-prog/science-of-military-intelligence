@@ -1,0 +1,44 @@
+### Episode 8.7: The Precision Map (The History of GPS)
+
+---
+
+### Act 1: The Navigational Gap (KAL Flight 007)
+(Visual: A digital map of the Pacific Ocean, 1983. A Korean Air Lines Boeing 747 is seen veering off its planned path, crossing a red dotted line into Soviet airspace over Sakhalin Island. Text: **SEPTEMBER 1, 1983**)
+
+Narrator: "Before GPS was in every pocket, navigation was a high-stakes game of estimation. In 1983, Korean Air Lines Flight 007 veered off course due to a simple pilot error in its manual navigation system. It strayed into prohibited Soviet airspace, and because the pilots didn't know their exact coordinates, they were intercepted and shot down. All 269 people on board were killed."
+
+Narrator: "President Ronald Reagan realized that a fundamental layer of international safety—the ability for civilians to know exactly where they are—was missing. It was a failure of the 'Mathematical Map'."
+
+---
+
+### Act 2: The "Selective" Decision (The Military Pivot)
+(Visual: A satellite orbiting Earth. It sends down two signals. One is sharp and precise (Military), the other is fuzzy and blurred (Civilian). Text: **SELECTIVE AVAILABILITY**)
+
+Narrator: "In the aftermath of the KAL 007 catastrophe, Reagan issued a directive to make the military's Global Positioning System (GPS) available for civilian use once it was operational. But to maintain a military advantage, the Department of Defense implemented 'Selective Availability'."
+
+Narrator: "They intentionally 'fuzzed' the civilian signal, making it accurate only within 100 meters. The military kept the 'High-Definition' signal—accurate to within centimeters—reserved for their own 'Bodyguards' and precision munitions."
+
+---
+
+### Act 3: The Gulf War "Glitch" (The Public Release)
+(Visual: 1991. The featureless deserts of Iraq. Soldiers are holding small, ruggedized handheld GPS units, but they are civilian models bought 'off-the-shelf'.)
+
+Narrator: "The next major shift didn't happen in a lab, but in a desert. During Operation Desert Storm in 1991, the military had a shortage of ruggedized military GPS receivers. They were forced to buy thousands of civilian units to equip their troops."
+
+Narrator: "But because the civilian units were 'fuzzed' by Selective Availability, the soldiers couldn't navigate the featureless sand with military precision. For the first time, the DoD was forced to turn off the encryption for the entire world so their own troops could use the civilian gear effectively."
+
+---
+
+### Act 4: The Open Horizon
+(Visual: A montage of modern life—cars using maps, farmers using precision tractors, ships docking. Text: **MAY 2000 - SA DISABLED**)
+
+Narrator: "That war gave the public their first real taste of what high-precision navigation could do. The demand became unstoppable. In 2000, President Bill Clinton permanently disabled Selective Availability, giving every civilian the same 'High-Definition' view of the Earth that the military once kept for themselves."
+
+---
+
+### SMI Key Concepts:
+1.  **KAL 007 Tragedy**: The 1983 event that catalyzed the decision to open GPS for civilian safety.
+2.  **Selective Availability (SA)**: The intentional degradation of the civilian GPS signal to maintain military advantage.
+3.  **The Gulf War "Glitch"**: The 1991 logistics crisis that proved the need for high-precision civilian signals.
+4.  **Mathematical Map**: The use of a satellite constellation to provide absolute coordinates, moving past manual estimation.
+5.  **SMI Payoff**: Strategic intelligence isn't just about watching the enemy; it's about knowing exactly where you stand. Precision is the ultimate safety tool.

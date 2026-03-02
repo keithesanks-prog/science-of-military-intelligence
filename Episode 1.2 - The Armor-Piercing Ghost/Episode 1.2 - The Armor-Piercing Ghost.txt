@@ -1,0 +1,85 @@
+Episode 1.2: The Armor-Piercing Ghost: Röntgen’s Accident
+
+### Cold Open: The Shared Playground (1895)
+(Visual: A split screen. On the left, Heinrich Hertz in 1887 with his spark-gap transmitter. On the right, Wilhelm Röntgen in 1895, surrounded by glass vacuum tubes and high-voltage coils. Text: **THE LABORATORY ERA**.)
+
+Narrator: "To understand Military Intelligence, you have to understand that the 'Ghost' has many layers. In the 1890s, the greatest minds in the world were all playing in the same laboratory playground: the Vacuum Tube."
+
+Narrator: "Heinrich Hertz was using these tubes to prove the 'Shout'—how to send a radio wave through the air. But Wilhelm Röntgen was interested in something else. He wanted to know what happened when the energy inside the tube hit a wall."
+
+(Visual: Cut to BLACK. A high-voltage 'crackling' sound. White text: **THE SCIENCE OF MILITARY INTELLIGENCE**)
+
+---
+
+### Act 1: The "SMI" Leak (The Discovery)
+(Visual: A recreation of Röntgen’s dark lab. He wraps a Crookes Tube in thick black cardboard—a complete 'silencer' for visible light. He turns it on.)
+
+(Visual: A screen across the room starts to glow a ghostly green. Röntgen looks at it, confused. Text: **THE GHOST LEAK**.)
+
+Narrator: "Röntgen wasn't trying to invent a camera. He was trying to replicate Hertz’s work on how rays pass through metal foils. To make sure he was only seeing the 'Internal' energy, he wrapped his tube in thick black cardboard."
+
+Narrator: "But the Ghost leaked. Even with the cardboard shield, a screen across the room began to glow. Röntgen realized he had found a version of the 'Mathematical Ghost' that was far more aggressive than Hertz’s radio waves. He had reached a frequency so high, it ignored the barriers of the material world. He called them X-Rays."
+
+(Visual: Röntgen puts his hand in front of the tube. The screen doesn't show his skin; it shows his skeleton. High-contrast, ghostly bones. Text: **BEYOND THE MASK**.)
+
+Narrator: "The 'Oh Damn' moment came when he put his hand in front of the tube. He didn't see his skin; he saw his skeleton. He had found the part of the spectrum that doesn't just bounce—it punches through."
+
+---
+
+### Act 2: The SMI Pivot (From Messages to Matter)
+(Visual: A side-by-side transition. Left: A 1900s radio operator. Right: A 1910s WWI medic using an early X-ray machine to find shrapnel inside a soldier.)
+
+Narrator: "This discovery changed the 'Bodyguard’s' path forever. We realized the 'Ghost' wasn't just for talking; it was for Looking Inside. If radio waves were the ears of the SMI, X-rays became its scalpel."
+
+(Visual: A modern Navy submarine in drydock. A technician is using a massive X-ray scanner on the pressure hull. Text: **NDT - NON-DESTRUCTIVE TESTING**.)
+
+Narrator: "Today, the Navy uses Röntgen’s discovery to find microscopic cracks in submarine hulls. A crack no thicker than a human hair can lead to structural failure at depth. We use the 'Armor-Piercing Ghost' to see through steel, turning the fortress of a submarine into a window."
+
+---
+
+### Act 3: The Nuclear Signature (Gamma’s Shadow)
+(Visual: A spectrum analyzer. The waves get tighter and tighter until they become a flat, aggressive line. Text: **GAMMA RAYS**.)
+
+Narrator: "Röntgen's accident led directly to the discovery of Gamma Rays—the absolute peak of the spectrum’s energy. Because we learned to 'see' X-rays, we learned to 'hear' the atomic shout of a nuclear reactor from miles away."
+
+(Visual: A silent black-and-white satellite view of a facility. A 'Gamma' detection overlay shows a pulsing red signature deep underground. Text: **ELINT: NUCLEAR VERIFICATION**.)
+
+Narrator: "We use the legacy of the vacuum tube to verify nuclear treaties. We don't need to be in the room to know if the reactor is hot; we just need to catch the 'Shadow' of the energy that punches through the concrete."
+
+---
+
+### Act 4: The Object Lesson (The Wall vs. The Window)
+(Visual: An instructor holding a standard flashlight and a high-powered violet laser pointer.)
+
+Narrator: "The object lesson is the difference between a 'Wall' and a 'Window.'"
+
+(Visual: The instructor shines the flashlight at a closed book. The light stops at the cover. Text: **THE WALL (RADIO)**.)
+
+Narrator: "This is the radio wave. It’s for Radar and Comms. It hits a surface and stays on the outside. It tells you 'Something is there.'"
+
+(Visual: The instructor shines the violet beam, and the animation shows it passing *through* the cover to highlight the words on the internal pages. Text: **THE WINDOW (X-RAY)**.)
+
+Narrator: "This is Röntgen’s legacy. He turned the world’s walls into windows. He proved that the 'Mathematical Ghost' can strip away any mask if you have the right frequency."
+
+---
+
+### Conclusion: The Unmasking
+Narrator: "In the SMI, the frequency you choose determines the truth you find. Hertz found the voice; Röntgen found the bone. And the military learned that in the spectrum, no armor is truly solid."
+
+(Visual: A glowing X-ray of a complex engine. Fade to black.)
+
+(Visual: White text: **MATTER IS ONLY AN OBSTACLE UNTIL YOU FIND THE RIGHT LIGHT**)
+
+---
+
+### Science of Military Intelligence Key Concepts:
+1.  **X-Ray**: High-energy electromagnetic radiation with a wavelength shorter than UV light and longer than Gamma rays.
+2.  **Vacuum Tube (Crookes Tube)**: A glass tube where a vacuum is maintained, allowing for the study of cathode rays.
+3.  **Diffraction Foil**: The original tool Röntgen was using to study how electrons pass through materials.
+4.  **Armor-Piercing (Hard) X-rays**: High-frequency X-rays used for industrial and military inspections of thick metals.
+5.  **Gamma Rays**: The most energetic form of the EM spectrum, produced by nuclear decay and high-energy reactions.
+6.  **NDT (Non-Destructive Testing)**: Techniques used to inspect materials without causing damage, essential for aerospace and submarine safety.
+7.  **Nuclear Signature**: The specific emission of Gamma radiation used to detect and identify nuclear materials.
+8.  **Penetration Depth**: The distance an EM wave can travel into a material before its intensity is significantly reduced.
+9.  **Fluorescent Screen**: The material (often Barium Platinocyanide) that allowed Röntgen to 'see' the invisible X-ray leaks.
+10. **The EM Spectrum**: The full range of electromagnetic radiation, from the 'Shout' of radio to the 'Punch' of Gamma rays.

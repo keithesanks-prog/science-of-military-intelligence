@@ -1,0 +1,52 @@
+### Episode 8.8: The Drone Boomerang (From Predator to Attrition)
+
+---
+
+### Act 1: The Military Origin (The "Heavy" Ghost)
+(Visual: Archive footage of an MQ-1 Predator drone taxiing. It’s massive, the size of a small plane. Overlay text: **CIRCA 2001 - THE PREDATOR ERA**)
+
+Narrator: "In the early 2000s, the face of aerial intelligence was the MQ-1 Predator. It was a 'Heavy' Ghost—massive, expensive, and requiring a literal crew of pilots and a satellite link to function. It was a 'Bodyguard' tool: centralized, strictly controlled, and far out of reach for the average soldier on the ground."
+
+Narrator: "It was built for a world of absolute air superiority. But the laws of physics were about to meet the laws of the free market."
+
+---
+
+### Act 2: The Consumer Revolution (The "Toy" Phase)
+(Visual: A rapid-fire montage of hobbyist drones, FPV racing, and DJI commercials. We see tiny brushless motors spinning and lightweight batteries being snapped into place. Text: **THE CONSUMER LEAP**)
+
+Narrator: "While the military was building giants, the private sector was dreaming small. Companies like DJI and the FPV racing community took the basic concepts of flight and optimized them for the public."
+
+Narrator: "They solved the problems the military didn't even know it had:
+1. **Miniaturization**: Tiny, high-torque brushless motors and lightweight Lithium-Polymer batteries.
+2. **Massive Scale**: By selling millions of units, the cost of high-definition cameras and GPS chips plummeted.
+3. **Computer Vision**: They invested in 'Obstacle Avoidance' and 'Subject Tracking' so that a regular person could fly a drone without crashing."
+
+---
+
+### Act 3: The Eastern Shift (The Logic of Attrition)
+(Visual: The screen shifts to grainy, high-contrast drone footage from the modern conflict in the East. We see a $500 FPV drone weaving through a ruined building to strike a tank. Text: **THE MODERN FRONT - EXPENDABLE WARFARE**)
+
+Narrator: "As the conflict in the East continues, we’re seeing a new type of warfare unfold before our eyes, changing the battlefield landscape forever. This is how the wars of the future will be fought. Wars aren’t won on numbers alone—they are won on logistics and expendability."
+
+Narrator: "The military realized that a $500 'toy' could do things their $10 million Predator couldn't. It’s about high-efficiency use: making products as cheaply as possible to inflict the most damage and casualties. If the 'Ghost' is disposable, the enemy’s $2 million air-defense missile becomes a liability. That is the logic of attrition where the side that can replace its tools the fastest wins."
+
+---
+
+### Act 4: The SMI Lesson (The Feedback Loop)
+(Visual: A split screen. On one side, a racing drone goggles view; on the other, a thermal camera identifying a specific vehicle type. Text: **SMI FEEDBACK LOOP**)
+
+Narrator: "This proves that the Science of Military Intelligence isn’t a one-way street; it’s a permanent feedback loop.
+- **The First Law (Energy)**: Private sector demand for longer flight times pushed battery density further than the military ever could.
+- **The Second Law (Heat)**: Heat dissipation in tiny consumer processors allowed the military to run complex 'AI at the edge'—identifying targets without a human eye.
+- **The Logic ($E=hf$)**: By using 5.8GHz low-latency video links used by racers, the military gained 'eyes' that are much harder for traditional jammers to find."
+
+Narrator: "The Predator started the fire, but the 'toys' refined the flame for the wars of tomorrow."
+
+---
+
+### SMI Key Concepts:
+1. **The Drone Boomerang**: The cycle where military tech is democratized by the private sector and returned with improved specs and lower costs.
+2. **Logic of Attrition**: Prioritizing high-volume, low-cost expendable assets to overwhelm the enemy's economy and air defense.
+3. **AI at the Edge**: Running target recognition locally on the drone, a tech pioneered for consumer 'Follow Me' modes.
+4. **Mesh Networking**: Using private-sector signal stability to allow swarms of drones to share data without a central satellite.
+5. **SMI Payoff**: In modern warfare, the strongest 'Bodyguard' isn't the most expensive one—it's the one you can afford to lose.

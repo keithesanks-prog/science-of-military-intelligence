@@ -1,0 +1,12 @@
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary / Debug files
+*_DEBUG_*.html
+*.log
+_agents/
+.gemini/
+
+# Large binaries (optional, keeping small assets)
+# download.mp4

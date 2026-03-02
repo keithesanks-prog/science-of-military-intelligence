@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite ELINT Collection Visualizer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #02040a;
+            --panel-bg: rgba(5, 10, 25, 0.95);
+            --accent: #00d2ff;
+            --accent-dim: rgba(0, 210, 255, 0.1);
+            --intel: #ff00ff;
+            --success: #00ff88;
+            --warning: #ffcc00;
+            --border: rgba(0, 210, 255, 0.2);
+            --text: #e0f2f1;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Orbitron', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image:
+                radial-gradient(circle at 50% 100%, #0a1128 0%, #02040a 60%);
+        }
+
+        header {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+
+        .brand h1 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            position: relative;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .control-panel {
+            width: 320px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+            min-height: 0;
+        }
+
+        .section-title {
+            flex-shrink: 0;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .intel-feed {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            padding: 15px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            overflow-y: auto;
+            color: var(--intel);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 0;
+        }
+
+        .feed-entry {
+            flex-shrink: 0;
+            border-left: 2px solid var(--intel);
+            padding-left: 8px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .vis-container {
+            flex: 1;
+            position: relative;
+            cursor: crosshair;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #spaceCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .box {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: #ccc;
+        }
+
+        .btn-interrogate {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>Global ELINT Collection</h1>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.6;">
+            PLATFORM: LEO-CONSTELLATION / SIGINT-NET
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="control-panel">
+            <div class="section">
+                <span class="section-title">Concept Overview</span>
+                <div class="concept-card">
+                    Tactical radar is directed at local targets. However, much of that energy <strong>"leaks"</strong>
+                    past the horizon. This unintentional signal escapes the atmosphere and travels indefinitely into
+                    space.
+                </div>
+            </div>
+
+            <div class="section">
+                <span class="section-title">Emitter Control</span>
+                <button class="btn-interrogate" onclick="triggerPulsing()">Activate Tactical Scan</button>
+            </div>
+
+            <div class="section" style="flex: 1; display: flex; flex-direction: column;">
+                <span class="section-title">Intelligence Feed (Intercept)</span>
+                <div class="intel-feed" id="feed">
+                    [SYSTEM READY]
+                </div>
+            </div>
+        </aside>
+
+        <main class="vis-container">
+            <canvas id="spaceCanvas"></canvas>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="box" style="background: var(--accent)"></div> Surface Platform
+                </div>
+                <div class="legend-item">
+                    <div class="box" style="background: var(--success)"></div> Local Target
+                </div>
+                <div class="legend-item">
+                    <div class="box" style="background: var(--intel)"></div> ELINT Satellite
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        const feed = document.getElementById('feed');
+
+        let state = {
+            earthRadius: 500,
+            cx: 0,
+            cy: 0,
+            satellites: [],
+            waves: [],
+            pulsing: false,
+            pulseCount: 0,
+            lastPulseTime: 0
+        };
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+
+            // Setup Satellites
+            for (let i = 0; i < 4; i++) { // Added one more for variety
+                state.satellites.push({
+                    angle: -Math.PI / 2 - 0.4 + (i * 0.3),
+                    centerAngle: -Math.PI / 2,
+                    sweepRange: 0.8, // Wider sweep so some are clearly "out of vicinity"
+                    altitude: 160 + (i * 40),
+                    speed: 0.0006 + (Math.random() * 0.0006),
+                    phase: Math.random() * Math.PI * 2,
+                    id: 'SAT-' + (100 + i),
+                    collecting: false
+                });
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function resize() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            state.cx = canvas.width / 2;
+            state.cy = canvas.height + 400; // Fixed offset from bottom for stability
+        }
+
+        function triggerPulsing() {
+            state.pulsing = !state.pulsing;
+            if (state.pulsing) {
+                addEntry("EMITTER ENGAGED: Navigation Radar active.");
+            } else {
+                addEntry("EMITTER SILENT.");
+            }
+        }
+
+        function addEntry(text) {
+            const entry = document.createElement('div');
+            entry.className = 'feed-entry';
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false, minute: '2-digit', second: '2-digit' });
+            entry.innerHTML = `<span style="opacity:0.5">[${time}]</span> ${text}`;
+            feed.prepend(entry);
+            if (feed.children.length > 20) feed.removeChild(feed.lastChild);
+        }
+
+        function drawEarth() {
+            // Space/Atmo boundary
+            ctx.beginPath();
+            ctx.arc(state.cx, state.cy, state.earthRadius + 80, 0, Math.PI * 2);
+            const atmoGrad = ctx.createRadialGradient(state.cx, state.cy, state.earthRadius, state.cx, state.cy, state.earthRadius + 80);
+            atmoGrad.addColorStop(0, 'rgba(0, 210, 255, 0.1)');
+            atmoGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = atmoGrad;
+            ctx.fill();
+
+            // Earth
+            ctx.beginPath();
+            ctx.arc(state.cx, state.cy, state.earthRadius, 0, Math.PI * 2);
+            const grad = ctx.createRadialGradient(state.cx, state.cy, state.earthRadius * 0.9, state.cx, state.cy, state.earthRadius);
+            grad.addColorStop(0, '#051025');
+            grad.addColorStop(1, '#0a2244');
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(0, 210, 255, 0.3)';
+            ctx.stroke();
+
+            // Surface details (Geographic texture)
+            ctx.save();
+            ctx.translate(state.cx, state.cy);
+            ctx.rotate(-Math.PI / 2);
+            ctx.beginPath();
+            for (let i = -20; i < 20; i++) {
+                const a = i * 0.04;
+                ctx.moveTo(Math.cos(a) * state.earthRadius, Math.sin(a) * state.earthRadius);
+                ctx.lineTo(Math.cos(a) * (state.earthRadius - 10), Math.sin(a) * (state.earthRadius - 10));
+            }
+            ctx.strokeStyle = 'rgba(0, 210, 255, 0.1)';
+            ctx.stroke();
+            ctx.restore();
+
+            // Strategic Intel CMD Center
+            const intelAngle = -Math.PI / 2 - 0.45;
+            const gsX = state.cx + state.earthRadius * Math.cos(intelAngle);
+            const gsY = state.cy + state.earthRadius * Math.sin(intelAngle);
+
+            ctx.beginPath();
+            ctx.arc(gsX, gsY, 7, 0, Math.PI * 2);
+            ctx.fillStyle = varColor('--intel');
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.stroke();
+
+            ctx.fillStyle = varColor('--intel');
+            ctx.font = '700 8px Orbitron';
+            ctx.textAlign = 'right';
+            ctx.fillText('INTEL CMD CTR', gsX - 12, gsY - 5);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawEarth();
+
+            const emitterAngle = -Math.PI / 2;
+            const emitterX = state.cx + state.earthRadius * Math.cos(emitterAngle);
+            const emitterY = state.cy + state.earthRadius * Math.sin(emitterAngle);
+
+            // Draw Surface Platform (Ship)
+            ctx.save();
+            ctx.translate(emitterX, emitterY);
+            ctx.rotate(emitterAngle + Math.PI / 2);
+            ctx.fillStyle = varColor('--accent');
+            ctx.beginPath();
+            ctx.moveTo(-12, 0); ctx.lineTo(12, 0); ctx.lineTo(8, -6); ctx.lineTo(-8, -6);
+            ctx.closePath();
+            ctx.fill();
+            // Radar Mast
+            ctx.fillRect(-2, -12, 4, 6);
+            ctx.restore();
+
+            ctx.fillStyle = varColor('--accent');
+            ctx.font = '700 9px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('RADAR SHIP', emitterX, emitterY + 15);
+
+            // Draw local target (Intentional Target)
+            const targetAngle = emitterAngle + 0.12;
+            const targetX = state.cx + state.earthRadius * Math.cos(targetAngle);
+            const targetY = state.cy + state.earthRadius * Math.sin(targetAngle);
+
+            ctx.beginPath();
+            ctx.rect(targetX - 5, targetY - 15, 10, 10);
+            ctx.fillStyle = varColor('--success');
+            ctx.fill();
+
+            ctx.fillStyle = varColor('--success');
+            ctx.textAlign = 'center';
+            ctx.fillText('LOCAL TARGET', targetX, targetY + 15);
+
+            // Handle Pulsing
+            if (state.pulsing && Date.now() - state.lastPulseTime > 1200) {
+                state.waves.push({
+                    r: 0,
+                    maxR: 900,
+                    opacity: 1
+                });
+                state.lastPulseTime = Date.now();
+            }
+
+            // Target distance for leakage threshold
+            const dxT = targetX - emitterX;
+            const dyT = targetY - emitterY;
+            const targetDist = Math.sqrt(dxT * dxT + dyT * dyT);
+
+            // Update Waves
+            for (let i = state.waves.length - 1; i >= 0; i--) {
+                const w = state.waves[i];
+                w.r += 4.5;
+                w.opacity -= 0.0012;
+
+                const isLeakage = w.r > targetDist;
+
+                // Main Beam Path (Tactical Intent)
+                if (!isLeakage) {
+                    ctx.beginPath();
+                    ctx.moveTo(emitterX, emitterY);
+                    ctx.lineTo(targetX, targetY);
+                    ctx.strokeStyle = `rgba(0, 255, 136, ${w.opacity * 0.4})`;
+                    ctx.lineWidth = 15;
+                    ctx.stroke();
+                }
+
+                // Wavefronts
+                ctx.beginPath();
+                const startAngle = emitterAngle - 0.55;
+                const endAngle = emitterAngle + 0.55;
+                ctx.arc(emitterX, emitterY, w.r, startAngle, endAngle);
+
+                // Visual leakage: Dim the signal as it escapes tactical vicinity
+                ctx.strokeStyle = isLeakage
+                    ? `rgba(255, 0, 255, ${w.opacity * 0.6})`  // Leakage (Magenta)
+                    : `rgba(0, 210, 255, ${w.opacity})`;      // Tactical (Cyan)
+                ctx.lineWidth = isLeakage ? 1.5 : 2.5;
+                ctx.stroke();
+
+                // Check Satellite Intercept (Leakage intercept only)
+                if (isLeakage) {
+                    state.satellites.forEach(sat => {
+                        const satX = state.cx + (state.earthRadius + sat.altitude) * Math.cos(sat.angle);
+                        const satY = state.cy + (state.earthRadius + sat.altitude) * Math.sin(sat.angle);
+
+                        const dx = satX - emitterX;
+                        const dy = satY - emitterY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        // Angular check relative to emitter
+                        const angleToSat = Math.atan2(satY - emitterY, satX - emitterX);
+                        const diff = Math.abs(angleToSat - emitterAngle);
+
+                        if (diff < 0.4 && Math.abs(dist - w.r) < 15) {
+                            if (!sat.collecting) {
+                                sat.collecting = true;
+                                addEntry(`INTERCEPT: ${sat.id} captured escaped pulse leakage.`);
+                                setTimeout(() => sat.collecting = false, 800);
+                            }
+
+                            // Intercept line showing "leakage capture"
+                            ctx.beginPath();
+                            ctx.moveTo(emitterX, emitterY); // Line from emitter to show path
+                            ctx.lineTo(satX, satY);
+                            ctx.setLineDash([5, 5]);
+                            ctx.strokeStyle = 'rgba(255, 0, 255, 0.5)';
+                            ctx.stroke();
+                            ctx.setLineDash([]);
+                        }
+                    });
+                }
+
+                if (w.opacity <= 0 || w.r > w.maxR) state.waves.splice(i, 1);
+            }
+
+            // Draw Satellites with Robust movement
+            state.satellites.forEach(sat => {
+                sat.phase += sat.speed;
+                sat.angle = sat.centerAngle + Math.sin(sat.phase) * sat.sweepRange;
+
+                const satX = state.cx + (state.earthRadius + sat.altitude) * Math.cos(sat.angle);
+                const satY = state.cy + (state.earthRadius + sat.altitude) * Math.sin(sat.angle);
+
+                ctx.save();
+                ctx.translate(satX, satY);
+                ctx.rotate(sat.angle + Math.PI / 2);
+
+                // Sat Body
+                ctx.fillStyle = sat.collecting ? varColor('--intel') : '#fff';
+                ctx.fillRect(-6, -4, 12, 8);
+                // Panels
+                ctx.fillStyle = 'rgba(0, 210, 255, 0.5)';
+                ctx.fillRect(-15, -2, 8, 4);
+                ctx.fillRect(7, -2, 8, 4);
+
+                if (sat.collecting) {
+                    ctx.shadowBlur = 10; ctx.shadowColor = varColor('--intel');
+                    ctx.strokeStyle = varColor('--intel');
+                    ctx.strokeRect(-8, -6, 16, 12);
+                }
+                ctx.restore();
+
+                // Downlink beam to Ground Intel
+                if (sat.collecting) {
+                    const intelAngle = -Math.PI / 2 - 0.45;
+                    const gsX = state.cx + state.earthRadius * Math.cos(intelAngle);
+                    const gsY = state.cy + state.earthRadius * Math.sin(intelAngle);
+                    ctx.beginPath();
+                    ctx.setLineDash([2, 4]);
+                    ctx.moveTo(satX, satY);
+                    ctx.lineTo(gsX, gsY);
+                    ctx.strokeStyle = varColor('--intel');
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        const varColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(name);
+        init();
+    </script>
+
+</body>
+
+</html>

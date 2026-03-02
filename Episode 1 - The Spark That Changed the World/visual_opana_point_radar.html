@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Act 9 — Opana Point: December 7, 1941</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #05040a;
+            --phosphor: #55ff77;
+            --phosphor-glow: rgba(85, 255, 119, 0.3);
+            --accent: #60d0ff;
+            --text: #d0c8d8;
+            --sub: #60505a;
+            --border: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        canvas#main {
+            flex: 1;
+            width: 100%;
+            display: block;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: 'Orbitron';
+            font-size: 0.6rem;
+            color: var(--sub);
+            letter-spacing: 2px;
+            z-index: 100;
+        }
+
+        .overlay-text {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            max-width: 600px;
+            pointer-events: none;
+            opacity: 1;
+            transition: 1s;
+        }
+
+        .overlay-text h2 {
+            font-family: 'Orbitron';
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .overlay-text p {
+            font-size: 0.8rem;
+            color: var(--sub);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="main"></canvas>
+    <div class="step-indicator" id="step-label">BEAT 1 / 4 — OPANA POINT</div>
+
+    <script>
+        const mc = document.getElementById('main');
+        const mx = mc.getContext('2d');
+        let W, H, t = 0;
+        let step = 0;
+        let stepStartT = 0;
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            W = window.innerWidth;
+            H = window.innerHeight;
+            mc.width = Math.round(W * dpr);
+            mc.height = Math.round(H * dpr);
+            mc.style.width = W + 'px';
+            mc.style.height = H + 'px';
+            mx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function setStep(s) {
+            step = s;
+            stepStartT = t;
+            const labels = ['OPANA POINT', 'THE A-SCOPE', 'THE INFORMATION SILO', 'THE FATAL GUESS'];
+            document.getElementById('step-label').innerText = `BEAT ${s + 1} / 4 — ${labels[s]}`;
+        }
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') setStep((step + 1) % 4);
+            if (e.key === 'ArrowLeft') setStep((step + 3) % 4);
+        });
+
+        function loop() {
+            mx.clearRect(0, 0, W, H);
+
+            if (step === 0) drawCliff();
+            else if (step === 1) drawAScope();
+            else if (step === 2) drawSiloSplit();
+            else if (step === 3) drawTylerCloseUp();
+
+            t += 0.016;
+            requestAnimationFrame(loop);
+        }
+
+        function drawCliff() {
+            // Dawn Sky Gradient
+            const skyGrad = mx.createLinearGradient(0, 0, 0, H);
+            skyGrad.addColorStop(0, '#0a0d1a');   // Deep night/blue
+            skyGrad.addColorStop(0.5, '#1e1432'); // Purple haze
+            skyGrad.addColorStop(0.8, '#ff4500'); // Orange horizon
+            skyGrad.addColorStop(1, '#ff8c00');   // Sun glow
+            mx.fillStyle = skyGrad;
+            mx.fillRect(0, 0, W, H);
+
+            // Rugged Cliff Silhouette
+            mx.fillStyle = '#05040a';
+            mx.beginPath();
+            mx.moveTo(0, H * 0.7);
+            for (let x = 0; x <= W; x += 10) {
+                const y = H * 0.7 + Math.sin(x * 0.01) * 20 + Math.random() * 5;
+                mx.lineTo(x, y);
+            }
+            mx.lineTo(W, H);
+            mx.lineTo(0, H);
+            mx.closePath(); mx.fill();
+
+            // Wind-swept grass (Simple stalks)
+            for (let i = 0; i < 100; i++) {
+                const gx = (i * W / 100) + Math.sin(t + i) * 10;
+                const gy = H * 0.72 + Math.cos(i) * 15;
+                mx.strokeStyle = '#08080c';
+                mx.lineWidth = 1;
+                mx.beginPath();
+                mx.moveTo(gx, gy);
+                mx.lineTo(gx + Math.sin(t * 2) * 10, gy - 20);
+                mx.stroke();
+            }
+
+            // SCR-270 Bedspring Antenna (Silhouette)
+            mx.save();
+            mx.translate(W * 0.5, H * 0.7);
+            drawBedspring();
+            mx.restore();
+        }
+
+        function drawBedspring() {
+            mx.fillStyle = '#020202';
+            mx.strokeStyle = '#000';
+            mx.lineWidth = 3;
+
+            // Mast
+            mx.fillRect(-10, -300, 20, 300);
+
+            // Mounting frame
+            mx.save();
+            const rot = Math.sin(t * 0.2) * 0.5; // Slow rotation perspective simulation
+            mx.scale(Math.cos(rot), 1);
+
+            // Grid Frame (Bedspring)
+            const gridW = 200;
+            const gridH = 120;
+            mx.strokeRect(-gridW / 2, -280, gridW, gridH);
+
+            // Dipoles (4x4 or 3x8 look)
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 6; c++) {
+                    const dx = -gridW * 0.4 + c * gridW * 0.16;
+                    const dy = -270 + r * gridH * 0.25;
+                    mx.fillRect(dx - 10, dy - 2, 20, 4); // Horizontal dipole
+                }
+            }
+
+            // Vertical support bars
+            for (let c = 0; c < 7; c++) {
+                const sx = -gridW / 2 + c * gridW / 6;
+                mx.fillRect(sx - 2, -280, 4, gridH);
+            }
+
+            mx.restore();
+        }
+
+        function drawAScope() {
+            // Dark room / Dashboard background
+            mx.fillStyle = '#0a0a0c';
+            mx.fillRect(0, 0, W, H);
+
+            const cx = W / 2, cy = H / 2;
+            const scopeR = Math.min(W, H) * 0.4;
+
+            // 1. CRT Outer Housing
+            mx.fillStyle = '#111';
+            mx.beginPath(); mx.arc(cx, cy, scopeR + 20, 0, Math.PI * 2); mx.fill();
+            mx.strokeStyle = '#222'; mx.lineWidth = 4;
+            mx.stroke();
+
+            // 2. Phosphor Screen
+            const screenGrad = mx.createRadialGradient(cx, cy, 0, cx, cy, scopeR);
+            screenGrad.addColorStop(0, '#0a1d0e');
+            screenGrad.addColorStop(1, '#050805');
+            mx.fillStyle = screenGrad;
+            mx.beginPath(); mx.arc(cx, cy, scopeR, 0, Math.PI * 2); mx.fill();
+
+            // 3. Grid Lines (Reticle)
+            mx.strokeStyle = 'rgba(85, 255, 119, 0.1)';
+            mx.lineWidth = 1;
+            for (let i = 0; i < 10; i++) {
+                const lx = cx - scopeR + (i / 10) * scopeR * 2;
+                mx.beginPath(); mx.moveTo(lx, cy - scopeR); mx.lineTo(lx, cy + scopeR); mx.stroke();
+                // Mile markers
+                mx.fillStyle = 'rgba(85, 255, 119, 0.4)';
+                mx.font = '8px Orbitron';
+                mx.textAlign = 'center';
+                mx.fillText(i * 20, lx, cy + 20);
+            }
+
+            // 4. The Trace (A-Scope)
+            const traceY = cy;
+            mx.beginPath();
+            mx.moveTo(cx - scopeR, traceY);
+
+            mx.strokeStyle = varProp('--phosphor');
+            mx.shadowColor = varProp('--phosphor');
+            mx.shadowBlur = 10;
+            mx.lineWidth = 2;
+
+            for (let x = cx - scopeR; x < cx + scopeR; x += 2) {
+                const progress = (x - (cx - scopeR)) / (scopeR * 2);
+                const miles = progress * 200;
+
+                // Noise / Grass
+                let noise = (Math.random() - 0.5) * 5;
+
+                // THE 132-MILE SPIKE
+                let spike = 0;
+                if (miles > 130 && miles < 134) {
+                    const distToPeak = Math.abs(miles - 132);
+                    spike = - (150 - distToPeak * 40) * Math.min(1, t / 5); // Grow over time
+                }
+
+                // Ground Clutter (Close range)
+                let clutter = 0;
+                if (miles < 15) {
+                    clutter = - (30 - miles * 2) * Math.random();
+                }
+
+                mx.lineTo(x, traceY + noise + spike + clutter);
+            }
+            mx.stroke();
+            mx.shadowBlur = 0;
+
+            // 5. Annotations
+            mx.fillStyle = 'rgba(85, 255, 119, 0.6)';
+            mx.font = '700 14px Orbitron';
+            mx.textAlign = 'center';
+            mx.fillText('SCR-270 A-SCOPE  ·  07:02 AM', cx, cy - scopeR - 40);
+
+            if (t > 5) {
+                mx.fillStyle = '#fff';
+                mx.font = '12px Orbitron';
+                mx.fillText('ECHO DETECTED: 132 MILES', cx, cy + scopeR + 40);
+                mx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                mx.font = '10px Inter';
+                mx.fillText('AZIMUTH: 3° EAST OF NORTH', cx, cy + scopeR + 60);
+            }
+        }
+
+        function drawSiloSplit() {
+            const cx = W / 2, cy = H / 2;
+            // --- ATMOSPHERIC BACKGROUNDS ---
+            mx.fillStyle = '#050a06'; mx.fillRect(0, 0, W / 2, H); // Opana Green-Black
+            mx.fillStyle = '#080812'; mx.fillRect(W / 2, 0, W / 2, H); // Shafter Deep Blue
+
+            // Central "Tension" Divider
+            const divG = mx.createLinearGradient(W / 2 - 4, 0, W / 2 + 4, 0);
+            divG.addColorStop(0, 'transparent');
+            divG.addColorStop(0.5, 'rgba(255,255,255,0.1)');
+            divG.addColorStop(1, 'transparent');
+            mx.fillStyle = divG; mx.fillRect(W / 2 - 4, 0, 8, H);
+
+            // --- LEFT: OPANA RADAR VAN (HIGH-TENSION) ---
+            mx.save();
+            mx.translate(W * 0.25, H * 0.5);
+
+            // Equipment Racks (SCR-270 Details)
+            mx.fillStyle = '#010101';
+            mx.fillRect(-180, -180, 100, 360); // Main rack
+            mx.fillRect(-185, -40, 110, 8);    // Rack shelf
+            mx.fillRect(100, -200, 60, 400);   // Van ceiling beam/wall
+
+            // Dials & Knobs (Subtle green rim light)
+            mx.strokeStyle = 'rgba(85, 255, 119, 0.1)'; mx.lineWidth = 1;
+            for (let i = 0; i < 8; i++) {
+                mx.beginPath(); mx.arc(-140, -140 + i * 35, 6, 0, Math.PI * 2); mx.stroke();
+            }
+
+            // The A-Scope Flicker (Backlighting the scene)
+            const flicker = Math.abs(Math.sin(t * 4)) * 0.15;
+            const scopeX = -90, scopeY = -20;
+            const scopeG = mx.createRadialGradient(scopeX, scopeY, 10, scopeX, scopeY, 250);
+            scopeG.addColorStop(0, `rgba(85, 255, 119, ${0.4 + flicker})`); // Brighter base
+            scopeG.addColorStop(1, 'rgba(0,0,0,0)');
+            mx.fillStyle = scopeG;
+            mx.fillRect(-W / 4, -H / 2, W / 2, H);
+
+            // Private Lockard (Hunched tech, head darting)
+            mx.save();
+            const headX = -50, headY = -30;
+            mx.translate(headX, headY);
+            // Head (darting between scope and notepad)
+            const dart = Math.sin(t * 3) > 0.5 ? -0.2 : 0.1;
+            mx.rotate(dart);
+            mx.fillStyle = '#222'; // Lifted from black
+            mx.beginPath(); mx.ellipse(0, -110, 24, 30, 0.1, 0, Math.PI * 2); mx.fill();
+            mx.fillRect(-32, -115, 8, 22); // Headset
+
+            // Phosphor Rim Light on Face
+            mx.strokeStyle = 'rgba(85, 255, 119, 0.4)'; mx.lineWidth = 2;
+            mx.beginPath(); mx.arc(0, -110, 25, Math.PI * 0.8, Math.PI * 1.2); mx.stroke();
+
+            mx.strokeStyle = '#111'; mx.lineWidth = 2;
+            mx.beginPath(); mx.moveTo(-28, -100); mx.bezierCurveTo(-40, -50, -60, -20, -100, 100); mx.stroke(); // Headset wire
+
+            // Body (Hunched)
+            mx.fillStyle = '#1a1a1a';
+            mx.beginPath();
+            mx.moveTo(-30, 180); mx.quadraticCurveTo(0, -40, 25, -90);
+            mx.lineTo(55, 180); mx.closePath(); mx.fill();
+
+            // Reaching hand (Rim lit)
+            mx.strokeStyle = 'rgba(85, 255, 119, 0.6)'; mx.lineWidth = 3;
+            mx.beginPath(); mx.moveTo(25, -50); mx.lineTo(scopeX + 10, scopeY + 15); mx.stroke();
+            mx.restore();
+
+            // Private Elliott (The Static Plotter)
+            mx.save();
+            mx.translate(45, 60);
+            mx.fillStyle = '#1a1a1a';
+            // Static arm pointing at board
+            mx.lineWidth = 6;
+            mx.strokeStyle = '#1a1a1a';
+            mx.beginPath(); mx.moveTo(-10, -80); mx.lineTo(-65, -50); mx.stroke();
+
+            mx.beginPath(); mx.ellipse(0, -135, 22, 28, -0.1, 0, Math.PI * 2); mx.fill(); // Head
+            mx.fillRect(-25, -110, 50, 150); // Torso
+            mx.restore();
+
+            // Scanlines Overlay
+            mx.fillStyle = 'rgba(85, 255, 119, 0.02)';
+            for (let y = -H / 2; y < H / 2; y += 4) mx.fillRect(-W / 4, y, W / 2, 1);
+
+            mx.restore();
+
+            // --- RIGHT: FORT SHAFTER (THE QUIET DISCONNECT) ---
+            mx.save();
+            mx.translate(W * 0.75, H * 0.5);
+
+            // Architectural Dials (Window/Fan)
+            mx.fillStyle = '#030308';
+            mx.fillRect(-180, -250, 15, 500); // Support beam
+
+            // Backlight behind Tyler (Strong separation)
+            const shafterGlow = mx.createRadialGradient(20, -100, 0, 20, -100, 400);
+            shafterGlow.addColorStop(0, 'rgba(120, 180, 255, 0.4)'); // Stronger alpha
+            shafterGlow.addColorStop(1, 'rgba(0,0,0,0)');
+            mx.fillStyle = shafterGlow;
+            mx.fillRect(-W / 4, -H / 2, W / 2, H);
+
+            // Dawn Window Gradient (Brighter)
+            const winX = -160, winY = -180, winW = 100, winH = 150;
+            const winG = mx.createLinearGradient(0, winY, 0, winY + winH);
+            winG.addColorStop(0, '#202050'); winG.addColorStop(1, '#603030');
+            mx.fillStyle = winG;
+            mx.fillRect(winX, winY, winW, winH);
+
+            // Window Panes (Making it obvious)
+            mx.strokeStyle = 'rgba(255,255,255,0.1)'; mx.lineWidth = 4;
+            mx.strokeRect(winX, winY, winW, winH);
+            mx.beginPath();
+            mx.moveTo(winX + winW / 2, winY); mx.lineTo(winX + winW / 2, winY + winH);
+            mx.moveTo(winX, winY + winH / 3); mx.lineTo(winX + winW, winY + winH / 3);
+            mx.moveTo(winX, winY + 2 * winH / 3); mx.lineTo(winX + winW, winY + 2 * winH / 3);
+            mx.stroke();
+
+            // Secondary "Fill Light" from Window (Aggressive)
+            const fillGlow = mx.createRadialGradient(-110, -100, 0, -110, -100, 300);
+            fillGlow.addColorStop(0, 'rgba(255, 150, 150, 0.15)');
+            fillGlow.addColorStop(1, 'rgba(0,0,0,0)');
+            mx.fillStyle = fillGlow;
+            mx.beginPath(); mx.arc(-110, -100, 300, 0, Math.PI * 2); mx.fill();
+
+            // Ceiling Fan (Visible texture)
+            mx.save(); mx.translate(0, -230); mx.rotate(t * 0.4);
+            mx.fillStyle = '#111'; // Lifted
+            for (let i = 0; i < 3; i++) {
+                mx.rotate((Math.PI * 2) / 3); mx.fillRect(-80, -4, 160, 8);
+            }
+            mx.restore();
+
+            // Lieutenant Tyler (The Visible Silhouette)
+            mx.save();
+            mx.translate(20, 40);
+            mx.fillStyle = '#252530'; // Significantly lifted for visibility
+            // Head with detailed military cap
+            mx.beginPath(); mx.ellipse(0, -150, 26, 32, 0, 0, Math.PI * 2); mx.fill();
+            mx.fillRect(-12, -178, 55, 15); // Visor
+            // High-back officer's chair
+            mx.fillStyle = '#1a1a20';
+            mx.beginPath();
+            mx.moveTo(40, 160); mx.quadraticCurveTo(-70, 150, -90, -120);
+            mx.quadraticCurveTo(-60, -140, 0, -140);
+            mx.lineTo(60, -120); mx.lineTo(80, 160); mx.closePath(); mx.fill();
+
+            // Rim Light for visibility (Extreme boost)
+            mx.strokeStyle = 'rgba(200, 230, 255, 0.8)';
+            mx.lineWidth = 2;
+            mx.beginPath();
+            mx.moveTo(43, -178); // Visor edge
+            mx.lineTo(0, -182); // Cap top
+            mx.lineTo(-26, -180); // Back of cap
+            mx.stroke();
+
+            mx.beginPath();
+            mx.moveTo(-26, -150);
+            mx.quadraticCurveTo(-45, -100, -55, 100); // Continuous rim down the back
+            mx.stroke();
+
+            mx.restore();
+
+            // Desk Gear (More detailed/less blank)
+            mx.fillStyle = '#111';
+            mx.fillRect(-180, 90, 360, 20); // Desk surface
+
+            // THE TELEPHONE (Redesigned to avoid "hat" look)
+            mx.save();
+            mx.translate(-50, 55);
+            mx.fillStyle = '#0a0a0a';
+            mx.fillRect(-20, 0, 40, 35); // Phone base
+            mx.beginPath(); // Handset cradle
+            mx.moveTo(-25, 0); mx.lineTo(-15, -10); mx.lineTo(15, -10); mx.lineTo(25, 0); mx.stroke();
+            // The Handset
+            mx.fillStyle = '#050505';
+            mx.beginPath(); mx.ellipse(0, -12, 35, 10, 0, 0, Math.PI * 2); mx.fill();
+            mx.restore();
+
+            // Desk Lamp
+            mx.save();
+            mx.translate(140, 0);
+            mx.fillStyle = '#080808';
+            mx.fillRect(-5, 0, 10, 90); // Stem
+            mx.beginPath(); mx.arc(0, 90, 20, Math.PI, 0); mx.fill(); // Base
+            mx.beginPath(); mx.ellipse(0, -10, 30, 15, -0.4, 0, Math.PI * 2); mx.fill(); // Shade
+            mx.restore();
+
+            // Folders / Papers
+            mx.fillStyle = '#151515';
+            mx.fillRect(40, 80, 60, 10); // Folder stack
+            mx.fillRect(45, 75, 50, 5);  // Top paper
+
+            mx.restore();
+
+            // LABELS (Cinematic Metadata style)
+            mx.fillStyle = 'rgba(255,255,255,0.3)';
+            mx.font = '800 12px Orbitron'; mx.textAlign = 'center';
+            mx.fillText('CHAIN OF COMMAND // STATUS: FRACTURED', cx, H - 80);
+
+            mx.font = '700 10px Inter';
+            mx.fillStyle = 'rgba(85, 255, 119, 0.4)';
+            mx.fillText('OPANA POINT // PVTS. LOCKARD & ELLIOTT', W * 0.25, H - 40);
+            mx.fillStyle = 'rgba(100, 160, 255, 0.4)';
+            mx.fillText('FORT SHAFTER // LT. KERMIT TYLER', W * 0.75, H - 40);
+        }
+
+        function drawTylerCloseUp() {
+            // Brightened background slightly for better contrast
+            mx.fillStyle = '#0a0d1a';
+            mx.fillRect(0, 0, W, H);
+
+            const cx = W / 2, cy = H / 2;
+
+            // 1. Ghostly Map Backdrop (Context)
+            mx.save();
+            mx.globalAlpha = 0.05;
+            mx.translate(cx, cy);
+            mx.strokeStyle = '#fff';
+            mx.beginPath();
+            mx.moveTo(-60, -20); mx.lineTo(-100, -80); mx.lineTo(-40, -120);
+            mx.lineTo(20, -130); mx.lineTo(80, -90); mx.lineTo(100, -20);
+            mx.lineTo(80, 60); mx.lineTo(20, 100); mx.lineTo(-60, 80);
+            mx.closePath(); mx.stroke();
+            mx.restore();
+
+            // 2. BACKLIGHT (To separate silhouette from BG)
+            const bgGlow = mx.createRadialGradient(cx - 50, cy + 50, 0, cx - 50, cy + 50, 300);
+            bgGlow.addColorStop(0, 'rgba(96, 208, 255, 0.15)');
+            bgGlow.addColorStop(1, 'rgba(96, 208, 255, 0)');
+            mx.fillStyle = bgGlow;
+            mx.beginPath(); mx.arc(cx - 50, cy + 50, 300, 0, Math.PI * 2); mx.fill();
+
+            // 3. Lieutenant Tyler (Head/Shoulders Profile)
+            mx.fillStyle = '#020202';
+            // Main Silhouette Path
+            mx.beginPath();
+            mx.moveTo(cx - 300, H); mx.quadraticCurveTo(cx - 150, cy + 100, cx, cy + 150);
+            mx.lineTo(cx + 300, H);
+            mx.fill();
+            mx.beginPath();
+            mx.ellipse(cx - 40, cy + 30, 60, 85, 0.1, 0, Math.PI * 2);
+            mx.fill();
+
+            // Military Cover (Peaked Cap)
+            mx.save();
+            mx.translate(cx - 45, cy - 35);
+            mx.rotate(0.02);
+            mx.fillRect(-75, -25, 150, 40); // cap body
+            mx.beginPath(); // visor
+            mx.moveTo(65, 0); mx.lineTo(110, 25); mx.lineTo(75, 40); mx.closePath(); mx.fill();
+            mx.restore();
+            mx.beginPath();
+            mx.moveTo(cx + 10, cy - 10); mx.lineTo(cx + 35, cy + 20); mx.lineTo(cx + 20, cy + 40);
+            mx.lineTo(cx + 25, cy + 80); mx.lineTo(cx - 20, cy + 80); mx.closePath(); mx.fill();
+
+            // 4. RIM LIGHT (Cyan edge highlight for clarity)
+            mx.strokeStyle = 'rgba(96, 208, 255, 0.3)';
+            mx.lineWidth = 1;
+            mx.beginPath();
+            mx.moveTo(cx + 50, cy - 40); // cap edge
+            mx.lineTo(cx + 85, cy - 5);  // visor tip
+            mx.lineTo(cx + 35, cy + 20); // nose
+            mx.lineTo(cx + 20, cy + 40); // chin
+            mx.lineTo(cx + 25, cy + 80);
+            mx.stroke();
+
+            // 5. THE COMPASS OVERLAY (Interaction of Intent)
+            mx.save();
+            mx.translate(cx + 180, cy - 80);
+            const compR = 100;
+
+            // Outer ring
+            mx.strokeStyle = 'rgba(255,255,255,0.1)'; mx.lineWidth = 1;
+            mx.beginPath(); mx.arc(0, 0, compR, 0, Math.PI * 2); mx.stroke();
+
+            // ACTUAL HIT (NORTH)
+            mx.setLineDash([5, 5]);
+            mx.strokeStyle = '#ff4444'; mx.lineWidth = 2;
+            mx.beginPath(); mx.moveTo(0, 0); mx.lineTo(0, -compR * 1.2); mx.stroke();
+            mx.setLineDash([]);
+
+            mx.fillStyle = '#ff4444'; mx.font = 'bold 11px Orbitron';
+            mx.fillText('ACTUAL CONTACT', -50, -compR * 1.3);
+            mx.font = '8px Inter';
+            mx.fillText('FROM NORTH (JAPAN)', -50, -compR * 1.3 + 12);
+
+            // ASSUMED HIT (EAST)
+            mx.strokeStyle = '#60ff80'; mx.lineWidth = 4;
+            mx.beginPath(); mx.moveTo(0, 0); mx.lineTo(compR * 1.2, 0); mx.stroke();
+
+            mx.fillStyle = '#60ff80'; mx.font = 'bold 11px Orbitron';
+            mx.fillText('ASSUMED B-17s', compR * 0.4, -15);
+            mx.font = '8px Inter';
+            mx.fillText('FROM EAST (CALIFORNIA)', compR * 0.4, -3);
+
+            // "Thought" Pulse
+            const pSize = (t * 50) % compR;
+            mx.strokeStyle = 'rgba(96, 255, 128, 0.3)';
+            mx.beginPath(); mx.arc(0, 0, pSize, 0, Math.PI * 2); mx.stroke();
+
+            mx.restore();
+
+            // 4. The Watch (Timing)
+            mx.save();
+            mx.translate(cx - 220, cy + 180);
+            mx.fillStyle = '#111'; mx.beginPath(); mx.arc(0, 0, 45, 0, Math.PI * 2); mx.fill();
+            mx.strokeStyle = '#333'; mx.lineWidth = 3; mx.stroke();
+            mx.fillStyle = '#fff'; mx.font = 'bold 10px Orbitron'; mx.textAlign = 'center';
+            mx.fillText('07:06', 0, 0);
+            mx.restore();
+
+            // 5. THE THREE WORDS (Individually "Spoken" Kinetic Typography)
+            const dt = t - stepStartT;
+            const phrase = "DON'T WORRY ABOUT IT";
+            const wordsArr = phrase.split(' ');
+
+            const mouthX = cx + 25;
+            const mouthY = cy + 40;
+            const targetY = H - 100;
+            const totalWidth = 600;
+            const spokenDelay = 5.0; // 5-second cinematic pause for audience to absorb context
+
+            mx.font = '900 32px Orbitron';
+            mx.textAlign = 'center';
+            mx.textBaseline = 'middle';
+
+            // Speech Hub Glow (synchronized with mouth)
+            const speechGlow = Math.max(0, Math.sin((dt - spokenDelay) * 8)) * 0.2 * (dt > spokenDelay && dt < 8 ? 1 : 0);
+            mx.fillStyle = `rgba(255, 255, 255, ${speechGlow})`;
+            mx.beginPath(); mx.arc(mouthX, mouthY, 20, 0, Math.PI * 2); mx.fill();
+
+            wordsArr.forEach((word, i) => {
+                // Staggered start times after the long initial pause
+                const wordDelay = spokenDelay + (i * 0.45);
+                const wordProgress = Math.max(0, Math.min(1, (dt - wordDelay) / 1.5));
+
+                if (wordProgress > 0) {
+                    const eased = 1 - Math.pow(1 - wordProgress, 4); // Strong ease-out
+
+                    // Destination X (spread across bottom)
+                    const destX = (cx - totalWidth / 2) + (i / (wordsArr.length - 1)) * totalWidth;
+
+                    // Current Path (Arching from mouth to bottom)
+                    const curX = mouthX + (destX - mouthX) * eased;
+                    const curY = mouthY + (targetY - mouthY) * eased - Math.sin(Math.PI * eased) * 120;
+
+                    mx.save();
+                    mx.globalAlpha = eased;
+                    mx.translate(curX, curY);
+
+                    // Subtle "floating" after arrival
+                    if (wordProgress === 1) {
+                        mx.translate(0, Math.sin(t * 2 + i) * 5);
+                    }
+
+                    // Shadow / Glow
+                    mx.shadowColor = 'rgba(255, 255, 255, 0.4)';
+                    mx.shadowBlur = 10 * eased;
+                    mx.fillStyle = '#fff';
+
+                    // Scale up as it emerges
+                    const s = 0.5 + 0.5 * eased;
+                    mx.scale(s, s);
+
+                    mx.fillText(word, 0, 0);
+                    mx.restore();
+                }
+            });
+        }
+
+        function varProp(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        loop();
+    </script>
+</body>
+
+</html>

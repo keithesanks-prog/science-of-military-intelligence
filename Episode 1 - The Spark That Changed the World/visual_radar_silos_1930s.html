@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Act 7 — The National Silos (1930s)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IM+Fell+English+SC&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #020305;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #fadeOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 20;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="c"></canvas>
+    <div id="fadeOverlay"></div>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let W, H;
+        let step = 0;
+        const MAX_STEP = 4;
+        let t = 0;
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W * dpr;
+            canvas.height = H * dpr;
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' && step < MAX_STEP) triggerTransition(step + 1);
+            if (e.key === 'ArrowLeft' && step > 0) triggerTransition(step - 1);
+        });
+
+        function triggerTransition(next) {
+            const ov = document.getElementById('fadeOverlay');
+            ov.style.opacity = 0.9;
+            setTimeout(() => { step = next; ov.style.opacity = 0; }, 400);
+        }
+
+        // ─── BACKGROUND ─────────────────────────────────────────────────────────
+        function drawBG(r = 3, g = 4, b = 8) {
+            const grad = ctx.createLinearGradient(0, 0, 0, H);
+            grad.addColorStop(0, `rgb(${r},${g},${b})`);
+            grad.addColorStop(1, `rgb(${Math.floor(r * 0.4)},${Math.floor(g * 0.4)},${Math.floor(b * 0.6)})`);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, W, H);
+        }
+
+        // Utility: draw a grid
+        function drawGrid(col = 'rgba(255,255,255,0.03)', step = 80) {
+            ctx.strokeStyle = col; ctx.lineWidth = 0.5;
+            for (let x = 0; x < W; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+            for (let y = 0; y < H; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+        }
+
+        // ─── STEP 0: THE TRANSITION ─────────────────────────────────────────────
+        // Patent document burns, classified folder rises
+        function drawTransition() {
+            drawBG(5, 4, 10);
+            drawGrid();
+
+            // Faded Telemobiloscope ghost in background
+            ctx.save();
+            ctx.globalAlpha = 0.07 + Math.sin(t * 0.3) * 0.03;
+            drawTeleDevice(W * 0.5, H * 0.45, 1.0, false);
+            ctx.globalAlpha = 1;
+            ctx.restore();
+
+            // Burning patent document
+            const docX = W * 0.5 - 160, docY = H * 0.25;
+            const docW = 320, docH = 220;
+            ctx.save();
+            ctx.rotate(-0.03);
+            ctx.translate(30, 0);
+
+            // Parchment base
+            const docGrad = ctx.createLinearGradient(docX, docY, docX, docY + docH);
+            docGrad.addColorStop(0, '#d4c8a0');
+            docGrad.addColorStop(1, '#b8a870');
+            ctx.fillStyle = docGrad;
+            ctx.fillRect(docX, docY, docW, docH);
+
+            // Patent text lines (stylized)
+            ctx.fillStyle = 'rgba(60,40,20,0.6)';
+            ctx.font = 'bold 11px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('DEUTSCHES REICH — KAISERLICHES PATENTAMT', docX + docW / 2, docY + 22);
+            ctx.font = '9px Inter';
+            ctx.fillStyle = 'rgba(60,40,20,0.4)';
+            for (let i = 0; i < 8; i++) {
+                ctx.fillRect(docX + 30, docY + 38 + i * 18, docW - 60, 2);
+            }
+            ctx.font = 'bold 14px Inter';
+            ctx.fillStyle = 'rgba(60,40,20,0.5)';
+            ctx.fillText('PATENT № 165546', docX + docW / 2, docY + 195);
+
+            // Burn effect — charred edges consuming inward
+            const burnCycle = (t * 0.06) % 1;
+            const burnDepth = burnCycle * 70;
+            // Draw charred overlay
+            const burnGrad = ctx.createRadialGradient(docX + docW * 0.7, docY + docH, 0, docX + docW * 0.7, docY + docH, burnDepth + 80);
+            burnGrad.addColorStop(0, 'rgba(0,0,0,0.95)');
+            burnGrad.addColorStop(0.3, 'rgba(80,30,5,0.85)');
+            burnGrad.addColorStop(0.6, 'rgba(200,80,10,0.4)');
+            burnGrad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = burnGrad;
+            ctx.fillRect(docX, docY, docW, docH);
+
+            // Embers (tiny red/gold sparks)
+            ctx.save();
+            for (let i = 0; i < 20; i++) {
+                const ex = docX + docW * 0.6 + Math.sin(i * 7.3 + t * 2.1) * 60;
+                const ey = docY + docH - Math.abs(Math.sin(i * 3.7 + t * 1.8)) * 80 - burnDepth * 0.5;
+                const er = Math.random() * 2 + 0.5;
+                ctx.globalAlpha = 0.6 + Math.sin(i + t * 3) * 0.4;
+                ctx.fillStyle = i % 2 === 0 ? '#ff6010' : '#ffcc30';
+                ctx.beginPath(); ctx.arc(ex, ey, er, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.restore();
+            ctx.restore();
+
+            // Classified Folder
+            const foldX = W * 0.5 - 120, foldY = H * 0.58;
+            const folderAlpha = Math.min(1, burnCycle * 3);
+            ctx.save();
+            ctx.globalAlpha = folderAlpha;
+            ctx.translate(foldX + 120, foldY + 80);
+            ctx.rotate(0.04);
+            ctx.translate(-(foldX + 120), -(foldY + 80));
+
+            // Folder body
+            ctx.fillStyle = '#c8b87a';
+            ctx.beginPath();
+            ctx.moveTo(foldX, foldY + 20);
+            ctx.lineTo(foldX + 75, foldY + 20);
+            ctx.lineTo(foldX + 90, foldY);
+            ctx.lineTo(foldX + 240, foldY);
+            ctx.lineTo(foldX + 240, foldY + 160);
+            ctx.lineTo(foldX, foldY + 160);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#8a7a4a'; ctx.lineWidth = 2; ctx.stroke();
+
+            // CLASSIFIED stamp
+            ctx.save();
+            ctx.translate(foldX + 120, foldY + 95);
+            ctx.rotate(-0.18);
+            ctx.font = 'bold 22px Inter';
+            ctx.fillStyle = '#8b0000';
+            ctx.strokeStyle = '#8b0000';
+            ctx.lineWidth = 2;
+            ctx.textAlign = 'center';
+            ctx.strokeText('CLASSIFIED', 0, 0);
+            ctx.fillText('CLASSIFIED', 0, 0);
+            ctx.lineWidth = 1.5;
+            [[-55, -14], [55, -14], [-55, 14], [55, 14]].forEach(([rx, ry]) => {
+                ctx.beginPath(); ctx.arc(rx, ry, 6, 0, Math.PI * 2); ctx.stroke();
+            });
+            ctx.restore();
+            ctx.restore();
+
+            // Label
+            ctx.fillStyle = 'rgba(200,170,100,0.4)';
+            ctx.font = '11px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('PATENT EXPIRED — 1918', W * 0.5, H * 0.88);
+            ctx.fillStyle = 'rgba(200,170,100,0.2)';
+            ctx.fillText('THE SCIENCE DOES NOT DIE', W * 0.5, H * 0.91);
+        }
+
+        // ─── STEP 1: UK — CHAIN HOME ─────────────────────────────────────────────
+        function drawUK() {
+            drawBG(3, 6, 12);
+            drawGrid('rgba(200,160,48,0.04)', 100);
+
+            const gold = '#c8a030';
+            const baseY = H * 0.82;
+
+            // Foggy sea horizon
+            const seaGrad = ctx.createLinearGradient(0, H * 0.5, 0, H);
+            seaGrad.addColorStop(0, 'rgba(5, 15, 30, 0)');
+            seaGrad.addColorStop(1, 'rgba(5, 15, 30, 0.95)');
+            ctx.fillStyle = 'rgba(5, 12, 25, 0.5)';
+            ctx.fillRect(0, H * 0.65, W, H);
+            ctx.fillStyle = seaGrad;
+            ctx.fillRect(0, H * 0.5, W, H);
+
+            // Wave ripples
+            ctx.strokeStyle = 'rgba(50, 100, 180, 0.12)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 8; i++) {
+                const wy = H * 0.7 + i * 30;
+                ctx.beginPath();
+                for (let x = 0; x < W; x += 5) ctx.lineTo(x, wy + Math.sin(x * 0.015 + t * 0.5 + i) * 4);
+                ctx.stroke();
+            }
+
+            // Coastal cliff silhouette
+            ctx.fillStyle = '#080d18';
+            ctx.beginPath();
+            ctx.moveTo(0, H);
+            ctx.lineTo(0, baseY - 10);
+            ctx.bezierCurveTo(W * 0.1, baseY - 30, W * 0.15, baseY - 20, W * 0.25, baseY - 5);
+            ctx.lineTo(W * 0.25, H);
+            ctx.closePath();
+            ctx.fill();
+
+            // FLOODLIGHT PULSE — Three synchronized emitters (matching 3 towers)
+            const phase = (t * 0.3) % 1;
+            const pulseR = phase * W * 1.4;
+            const towersX = [W * 0.08, W * 0.18, W * 0.28];
+            const pulseOriginY = baseY - H * 0.28; // originate from mid-tower height
+
+            ctx.save();
+            ctx.strokeStyle = gold;
+            ctx.shadowColor = gold;
+
+            towersX.forEach((tx, ti) => {
+                // Primary wave from each tower
+                ctx.globalAlpha = 0.4 * (1 - phase);
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 12;
+                ctx.beginPath();
+                ctx.arc(tx, pulseOriginY, pulseR, -Math.PI * 0.28, Math.PI * 0.28);
+                ctx.stroke();
+
+                // Fainter harmonics for visual depth
+                ctx.globalAlpha = 0.15 * (1 - phase);
+                ctx.lineWidth = 1;
+                ctx.shadowBlur = 0;
+                ctx.beginPath();
+                ctx.arc(tx, pulseOriginY, pulseR * 0.9, -Math.PI * 0.3, Math.PI * 0.3);
+                ctx.stroke();
+            });
+            ctx.restore();
+
+            // Chain Home Towers (3 along the coast)
+            const towers = [W * 0.08, W * 0.18, W * 0.28];
+            towers.forEach((tx, ti) => {
+                const th = H * 0.48 - ti * 20;
+                ctx.strokeStyle = '#8a9aaa';
+                ctx.lineWidth = 2;
+                // Main mast
+                ctx.beginPath(); ctx.moveTo(tx, baseY); ctx.lineTo(tx, baseY - th); ctx.stroke();
+                // Cross-bracing
+                for (let h = 0; h < 7; h++) {
+                    const y = baseY - h * (th / 7);
+                    const hw = 18 - h * 2;
+                    ctx.lineWidth = 1;
+                    // Horizontal bar
+                    ctx.beginPath(); ctx.moveTo(tx - hw, y); ctx.lineTo(tx + hw, y); ctx.stroke();
+                    // Diagonal braces
+                    if (h > 0) {
+                        const py = baseY - (h - 1) * (th / 7);
+                        ctx.beginPath(); ctx.moveTo(tx - hw, y); ctx.lineTo(tx - (hw - 2), py); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(tx + hw, y); ctx.lineTo(tx + (hw - 2), py); ctx.stroke();
+                    }
+                }
+                // Guy wires
+                ctx.strokeStyle = 'rgba(100,120,140,0.4)';
+                ctx.lineWidth = 0.5;
+                [tx - 50, tx + 50].forEach(gwx => {
+                    ctx.beginPath(); ctx.moveTo(tx, baseY - th); ctx.lineTo(gwx, baseY); ctx.stroke();
+                });
+                // Ground anchor
+                ctx.fillStyle = '#3a4a5a';
+                ctx.fillRect(tx - 6, baseY - 4, 12, 8);
+            });
+
+            // Filter Room cable — line connecting towers
+            ctx.strokeStyle = 'rgba(200,160,48,0.15)';
+            ctx.setLineDash([4, 8]);
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            towers.forEach((tx, i) => ctx.lineTo(tx, baseY - H * 0.2 + i * 15));
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+        }
+
+        // ─── STEP 2: GERMANY — FREYA / SEETAKT ──────────────────────────────────
+        function drawDE() {
+            drawBG(8, 3, 3);
+            drawGrid('rgba(204,51,51,0.04)', 80);
+
+            const red = '#cc3333';
+            const baseY = H * 0.72;
+            const cx = W * 0.55, cy = H * 0.55;
+
+            // Dark industrial landscape
+            ctx.fillStyle = '#060304';
+            ctx.beginPath();
+            ctx.moveTo(0, H);
+            ctx.lineTo(0, baseY + 10);
+            ctx.bezierCurveTo(W * 0.3, baseY - 30, W * 0.7, baseY + 20, W, baseY - 10);
+            ctx.lineTo(W, H);
+            ctx.closePath();
+            ctx.fill();
+
+            // Rotating Freya antenna frame
+            const angle = (t * 0.5) % (Math.PI * 2);
+            // rotScale: perspective effect for horizontal turn
+            const rotScale = Math.cos(angle);
+            const beamIntensity = Math.abs(rotScale);
+            const beamDir = rotScale >= 0 ? 1 : -1;
+
+            // PULSE BURST LOGIC — smooth sine modulation (no strobe)
+            const burstWave = 0.15 + 0.85 * Math.pow(Math.max(0, Math.sin(t * 8)), 3); // gentle pulse
+            const isBursting = burstWave > 0.6; // for dipole glow threshold
+            const finalIntensity = beamIntensity * burstWave;
+
+            // HORIZONTAL BEAM (Perspective View)
+            const beamLen = W * 0.75;
+            if (finalIntensity > 0.04) {
+                const beamEndX = cx + beamDir * beamLen;
+                ctx.save();
+                const beamGrad = ctx.createLinearGradient(cx, cy, beamEndX, cy);
+                beamGrad.addColorStop(0, `rgba(204,51,51,${0.9 * finalIntensity})`);
+                beamGrad.addColorStop(0.35, `rgba(204,51,51,${0.3 * finalIntensity})`);
+                beamGrad.addColorStop(1, 'rgba(204,51,51,0)');
+                ctx.fillStyle = beamGrad;
+                const spread = beamLen * 0.04;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(beamEndX, cy - spread);
+                ctx.lineTo(beamEndX, cy + spread);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Static pedestal base
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(cx - 12, cy + 5, 24, 60);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(cx - 40, cy + 65, 80, 15);
+
+            // Antenna structure — Angled Perspective
+            ctx.save();
+            ctx.translate(cx, cy);
+            // Angle the whole thing slightly for depth
+            ctx.transform(rotScale, 0.15 * rotScale, 0, 1, 0, 0);
+
+            // Cross bar (mattress frame)
+            ctx.strokeStyle = '#c0c0c0'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(-65, 0); ctx.lineTo(65, 0); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, -40); ctx.lineTo(0, 40); ctx.stroke();
+
+            // Dipole elements — light up during bursts
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = isBursting && beamIntensity > 0.3 ? '#ff6666' : '#909090';
+            if (isBursting && beamIntensity > 0.3) {
+                ctx.shadowColor = '#ff3333'; ctx.shadowBlur = 10;
+            }
+            for (let i = -2; i <= 2; i++) {
+                const ex = i * 26;
+                ctx.beginPath(); ctx.moveTo(ex, -30); ctx.lineTo(ex, 30); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(ex - 8, -15); ctx.lineTo(ex + 8, -15); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(ex - 8, 15); ctx.lineTo(ex + 8, 15); ctx.stroke();
+            }
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#707070';
+            ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            // TOP-DOWN RADAR MAP OVERLAY
+            const mapR = 80;
+            const mapX = W - mapR - 40;
+            const mapY = mapR + 40;
+
+            ctx.save();
+            ctx.beginPath(); ctx.arc(mapX, mapY, mapR, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fill();
+            ctx.strokeStyle = 'rgba(204,51,51,0.3)'; ctx.lineWidth = 2; ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(204,51,51,0.1)'; ctx.lineWidth = 1;
+            [0.3, 0.6, 0.9].forEach(f => {
+                ctx.beginPath(); ctx.arc(mapX, mapY, mapR * f, 0, Math.PI * 2); ctx.stroke();
+            });
+            ctx.beginPath(); ctx.moveTo(mapX - mapR, mapY); ctx.lineTo(mapX + mapR, mapY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(mapX, mapY - mapR); ctx.lineTo(mapX, mapY + mapR); ctx.stroke();
+
+            // Rotating Sweep Line
+            ctx.strokeStyle = 'rgba(204,51,51,0.8)'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(mapX, mapY);
+            ctx.lineTo(mapX + Math.cos(angle) * mapR, mapY + Math.sin(angle) * mapR);
+            ctx.stroke();
+
+            // Sweep Glow
+            const sweepGrad = ctx.createRadialGradient(mapX, mapY, 0, mapX, mapY, mapR);
+            sweepGrad.addColorStop(0, 'rgba(204,51,51,0.15)');
+            sweepGrad.addColorStop(1, 'rgba(204,51,51,0)');
+            ctx.fillStyle = sweepGrad;
+            ctx.beginPath();
+            ctx.moveTo(mapX, mapY);
+            ctx.arc(mapX, mapY, mapR, angle - 0.2, angle);
+            ctx.closePath(); ctx.fill();
+
+            ctx.fillStyle = '#fff';
+            ctx.beginPath(); ctx.arc(mapX, mapY, 3, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            // RANGE-FINDING OSCILLOSCOPE
+            const oscW = 220;
+            const oscH = 120;
+            const oscX = W - oscW - 40;
+            const oscY = H - oscH - 40;
+
+            ctx.save();
+            ctx.fillStyle = 'rgba(10,15,10,0.85)';
+            ctx.fillRect(oscX, oscY, oscW, oscH);
+            ctx.strokeStyle = 'rgba(100,120,100,0.4)';
+            ctx.strokeRect(oscX, oscY, oscW, oscH);
+
+            ctx.strokeStyle = 'rgba(0,180,50,0.15)'; ctx.lineWidth = 0.5;
+            for (let gx = 0; gx <= oscW; gx += oscW / 10) {
+                ctx.beginPath(); ctx.moveTo(oscX + gx, oscY); ctx.lineTo(oscX + gx, oscY + oscH); ctx.stroke();
+            }
+            for (let gy = 0; gy <= oscH; gy += oscH / 4) {
+                ctx.beginPath(); ctx.moveTo(oscX, oscY + gy); ctx.lineTo(oscX + oscW, oscY + gy); ctx.stroke();
+            }
+
+            const beamStart = oscX + 10;
+            const beamEnd = oscX + oscW - 10;
+            const beamY = oscY + oscH * 0.7;
+
+            ctx.strokeStyle = 'rgba(50,255,100,0.9)'; ctx.lineWidth = 2;
+            ctx.shadowColor = '#00ff44'; ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.moveTo(beamStart, beamY);
+            for (let bx = beamStart; bx < beamEnd; bx += 2) {
+                let by = beamY;
+                const distOnScale = (bx - beamStart) / (beamEnd - beamStart);
+                if (distOnScale < 0.05) {
+                    const blastIntensity = Math.exp(-Math.pow(distOnScale - 0.02, 2) / 0.0001);
+                    by -= blastIntensity * 25 * isBursting;
+                }
+                const targetDist = 0.65; // Fixed target at 130km
+                const echoIntensity = Math.exp(-Math.pow(distOnScale - targetDist, 2) / 0.0001);
+                const signalFlicker = 0.8 + Math.sin(t * 20) * 0.2;
+                by -= echoIntensity * 18 * beamIntensity * signalFlicker;
+                ctx.lineTo(bx, by);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = 'rgba(50,255,100,0.6)'; ctx.font = '8px Orbitron'; ctx.textAlign = 'center';
+            for (let k = 0; k <= 200; k += 50) {
+                const kx = beamStart + (k / 200) * (beamEnd - beamStart);
+                ctx.fillText(k + 'km', kx, beamY + 15);
+                ctx.fillRect(kx - 0.5, beamY + 2, 1, 4);
+            }
+            ctx.restore();
+
+            // Pulse wavefront (Main View) — only shows during bursts
+            const pulsePhase = (t * 0.8) % 1;
+            const pingDist = pulsePhase * W * 0.55;
+            if (finalIntensity > 0.04) {
+                ctx.save();
+                ctx.globalAlpha = 0.75 * (1 - pulsePhase) * finalIntensity;
+                ctx.strokeStyle = '#cc3333'; ctx.lineWidth = 2;
+                ctx.shadowColor = '#cc3333'; ctx.shadowBlur = 8;
+                const px = cx + beamDir * pingDist;
+                const spread = pingDist * 0.04 + 10;
+                ctx.beginPath();
+                ctx.moveTo(px, cy - spread);
+                ctx.lineTo(px, cy + spread);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        // ─── STEP 3: US — POTOMAC MYSTERY ──────────────────────────────────────
+        function drawUS() {
+            // Grainy, retro-film aesthetic
+            drawBG(4, 6, 4);
+
+            // Film grain
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            // (skip heavy grain for performance, use canvas noise-rect instead)
+            ctx.save();
+            for (let i = 0; i < 600; i++) {
+                const gx = Math.random() * W;
+                const gy = Math.random() * H;
+                const gs = Math.random() * 2;
+                const ga = Math.random() * 0.08;
+                ctx.globalAlpha = ga;
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(gx, gy, gs, gs);
+            }
+            ctx.restore();
+
+            // Scanlines
+            ctx.save();
+            ctx.globalAlpha = 0.04;
+            ctx.fillStyle = '#000';
+            for (let y = 0; y < H; y += 4) ctx.fillRect(0, y, W, 2);
+            ctx.restore();
+
+            const blue = '#2255cc';
+            const riverY = H * 0.62;
+
+            // Potomac riverbank
+            ctx.fillStyle = '#0a1505';
+            ctx.beginPath();
+            ctx.moveTo(0, H);
+            ctx.lineTo(0, riverY + 20);
+            ctx.bezierCurveTo(W * 0.2, riverY - 10, W * 0.4, riverY + 15, W * 0.6, riverY + 5);
+            ctx.bezierCurveTo(W * 0.7, riverY, W * 0.85, riverY + 20, W, riverY + 10);
+            ctx.lineTo(W, H); ctx.closePath(); ctx.fill();
+
+            // River sheen
+            ctx.strokeStyle = 'rgba(30, 80, 120, 0.2)';
+            for (let i = 0; i < 5; i++) {
+                const wy = riverY + 20 + i * 25;
+                ctx.beginPath();
+                for (let x = 0; x < W; x += 5) ctx.lineTo(x, wy + Math.sin(x * 0.02 + t * 0.3 + i) * 3);
+                ctx.stroke();
+            }
+
+            // Radio poles (simple, austere)
+            const p1x = W * 0.2, p2x = W * 0.6;
+            const pBaseY = riverY;
+            [p1x, p2x].forEach(px => {
+                ctx.strokeStyle = '#708070';
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(px, pBaseY); ctx.lineTo(px, pBaseY - H * 0.35); ctx.stroke();
+                // Guy wires
+                ctx.lineWidth = 0.8;
+                ctx.strokeStyle = 'rgba(80,100,80,0.5)';
+                [px - 60, px + 60].forEach(gwx => {
+                    ctx.beginPath(); ctx.moveTo(px, pBaseY - H * 0.35); ctx.lineTo(gwx, pBaseY); ctx.stroke();
+                });
+                // Antenna tip
+                ctx.fillStyle = '#809080';
+                ctx.fillRect(px - 4, pBaseY - H * 0.35 - 8, 8, 12);
+            });
+
+            // Radio signal wave between poles
+            ctx.shadowColor = blue;
+            ctx.shadowBlur = 8;
+            ctx.strokeStyle = blue;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            const signalY = pBaseY - H * 0.18;
+            for (let x = p1x; x <= p2x; x += 3) {
+                const wave = Math.sin((x - p1x) * 0.06 + t * 3) * 12;
+                ctx.lineTo(x, signalY + wave);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // PLANE silhouette
+            const planeCycle = (t * 0.12) % 1;
+            const planeX = p1x + planeCycle * (p2x - p1x + 200) - 100;
+            const planeY = pBaseY - H * 0.18 - 30;
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.fillStyle = '#30302a';
+            // Fuselage
+            ctx.beginPath();
+            ctx.ellipse(planeX, planeY, 28, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // Wing
+            ctx.beginPath();
+            ctx.moveTo(planeX - 5, planeY - 2);
+            ctx.lineTo(planeX - 5, planeY - 20);
+            ctx.lineTo(planeX + 10, planeY - 2);
+            ctx.closePath(); ctx.fill();
+            // Tail
+            ctx.beginPath();
+            ctx.moveTo(planeX - 24, planeY - 2);
+            ctx.lineTo(planeX - 28, planeY - 10);
+            ctx.lineTo(planeX - 18, planeY - 2);
+            ctx.closePath(); ctx.fill();
+            ctx.restore();
+
+            // Analog meter UI (bottom right)
+            const mX = W * 0.78, mY = H * 0.52;
+            const mW = 180, mH = 120;
+            ctx.fillStyle = '#0a0f08';
+            ctx.fillRect(mX, mY, mW, mH);
+            ctx.strokeStyle = '#405035'; ctx.lineWidth = 2;
+            ctx.strokeRect(mX, mY, mW, mH);
+
+            // Meter face
+            ctx.fillStyle = '#e8e0c8';
+            ctx.beginPath(); ctx.arc(mX + mW / 2, mY + mH - 20, mH * 0.7, -Math.PI, 0); ctx.fill();
+            ctx.strokeStyle = '#8a7a5a'; ctx.lineWidth = 1; ctx.stroke();
+
+            // Scale marks
+            ctx.strokeStyle = '#5a5040';
+            for (let i = 0; i <= 10; i++) {
+                const ang = -Math.PI + i * Math.PI / 10;
+                const r1 = mH * 0.6, r2 = mH * 0.65;
+                const nx = mX + mW / 2 + Math.cos(ang) * r1;
+                const ny = mY + mH - 20 + Math.sin(ang) * r1;
+                const fx = mX + mW / 2 + Math.cos(ang) * r2;
+                const fy = mY + mH - 20 + Math.sin(ang) * r2;
+                ctx.lineWidth = i % 5 === 0 ? 2 : 1;
+                ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(fx, fy); ctx.stroke();
+            }
+
+            // Needle — flickers when plane enters beam
+            const isInBeam = planeX > p1x && planeX < p2x;
+            const targetNeedle = isInBeam
+                ? -Math.PI * 0.1 + Math.sin(t * 12) * 0.4   // wild deflection
+                : -Math.PI * 0.7 + Math.sin(t * 0.5) * 0.05; // resting
+            const needleAngle = targetNeedle;
+            const needleLen = mH * 0.6;
+            const nBaseX = mX + mW / 2, nBaseY = mY + mH - 20;
+            ctx.strokeStyle = '#8b0000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(nBaseX, nBaseY);
+            ctx.lineTo(nBaseX + Math.cos(needleAngle) * needleLen, nBaseY + Math.sin(needleAngle) * needleLen);
+            ctx.stroke();
+            ctx.fillStyle = '#8b0000';
+            ctx.beginPath(); ctx.arc(nBaseX, nBaseY, 5, 0, Math.PI * 2); ctx.fill();
+
+
+        }
+
+        // ─── STEP 4: THE THREE SILOS ─────────────────────────────────────────────
+        function drawSilos() {
+            drawBG(3, 3, 3);
+
+            const panelW = W / 3;
+
+            // UK Panel (left)
+            ctx.save();
+            ctx.beginPath(); ctx.rect(0, 0, panelW, H); ctx.clip();
+            drawBG(3, 6, 12);
+            drawGrid('rgba(200,160,48,0.04)', 80);
+            drawUK_mini(panelW * 0.5, H * 0.82);
+            ctx.restore();
+
+            // DE Panel (center)
+            ctx.save();
+            ctx.beginPath(); ctx.rect(panelW, 0, panelW, H); ctx.clip();
+            ctx.translate(panelW, 0);
+            drawBG(8, 3, 3);
+            drawGrid('rgba(204,51,51,0.04)', 80);
+            drawDE_mini(panelW * 0.5, H * 0.5);
+            ctx.restore();
+
+            // US Panel (right)
+            ctx.save();
+            ctx.beginPath(); ctx.rect(panelW * 2, 0, panelW, H); ctx.clip();
+            ctx.translate(panelW * 2, 0);
+            drawBG(4, 6, 4);
+            drawGrid('rgba(34,85,204,0.04)', 80);
+            drawUS_mini(panelW * 0.5);
+            ctx.restore();
+
+            // Dividers
+            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(panelW, 0); ctx.lineTo(panelW, H); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(panelW * 2, 0); ctx.lineTo(panelW * 2, H); ctx.stroke();
+
+        }
+
+        // Mini versions for the silo comparison panel
+        function drawUK_mini(cx, baseY) {
+            const gold = 'rgba(200,160,48,0.8)';
+            const phase = (t * 0.3) % 1;
+            const panelW = W / 3;
+
+            // Signal origin aligned with towers
+            const towersX = [cx - 40, cx, cx + 40];
+            const oy = baseY - H * 0.2;
+            ctx.save();
+            ctx.strokeStyle = gold;
+            ctx.shadowColor = gold;
+
+            towersX.forEach(tx => {
+                ctx.globalAlpha = 0.5 * (1 - phase);
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 6;
+                ctx.beginPath();
+                // Radiate outward from each tower
+                ctx.arc(tx, oy, phase * panelW * 0.9, -Math.PI * 0.4, Math.PI * 0.4);
+                ctx.stroke();
+            });
+            ctx.restore();
+
+            // Towers — reduced spacing for mini panel
+            [cx - 40, cx, cx + 40].forEach(tx => {
+                const th = H * 0.4;
+                ctx.strokeStyle = '#8a9aaa'; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(tx, baseY); ctx.lineTo(tx, baseY - th); ctx.stroke();
+                for (let h = 0; h < 5; h++) {
+                    const y = baseY - h * (th / 5);
+                    const hw = 14 - h * 2;
+                    ctx.beginPath(); ctx.moveTo(tx - hw, y); ctx.lineTo(tx + hw, y); ctx.stroke();
+                }
+            });
+        }
+
+        function drawDE_mini(cx, cy) {
+            const angle = (t * 0.5) % (Math.PI * 2);
+            const rotScale = Math.cos(angle);
+            const panelW = W / 3;
+            const beamIntensity = Math.abs(rotScale);
+            const beamDir = rotScale >= 0 ? 1 : -1;
+
+            // Smooth pulse modulation (matching main view)
+            const burstWave = 0.15 + 0.85 * Math.pow(Math.max(0, Math.sin(t * 8)), 3);
+            const finalIntensity = beamIntensity * burstWave;
+
+            // Horizontal beam (matching main view — left/right only)
+            const beamLen = panelW * 0.85;
+            if (finalIntensity > 0.04) {
+                const beamEndX = cx + beamDir * beamLen;
+                ctx.save();
+                const beamGrad = ctx.createLinearGradient(cx, cy, beamEndX, cy);
+                beamGrad.addColorStop(0, `rgba(204,51,51,${0.7 * finalIntensity})`);
+                beamGrad.addColorStop(0.4, `rgba(204,51,51,${0.2 * finalIntensity})`);
+                beamGrad.addColorStop(1, 'rgba(204,51,51,0)');
+                ctx.fillStyle = beamGrad;
+                const spread = beamLen * 0.03;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(beamEndX, cy - spread);
+                ctx.lineTo(beamEndX, cy + spread);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Mini pedestal
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(cx - 4, cy + 2, 8, 20);
+
+            // Antenna — perspective rotation
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.scale(rotScale, 1);
+            ctx.strokeStyle = burstWave > 0.6 && beamIntensity > 0.3 ? '#ff6666' : '#909090';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(-40, 0); ctx.lineTo(40, 0); ctx.stroke();
+            for (let i = -2; i <= 2; i++) {
+                ctx.beginPath(); ctx.moveTo(i * 16, -15); ctx.lineTo(i * 16, 15); ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawUS_mini(cx) {
+            const blue = 'rgba(34,85,204,0.8)';
+            const panelW = W / 3;
+            const p1 = 20, p2 = panelW - 20, py = H * 0.6;
+
+            // Radio poles
+            ctx.strokeStyle = '#708070'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(p1, py); ctx.lineTo(p1, py - H * 0.25); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(p2, py); ctx.lineTo(p2, py - H * 0.25); ctx.stroke();
+
+            // Radio signal wave between poles
+            ctx.strokeStyle = blue; ctx.lineWidth = 1;
+            ctx.shadowColor = blue; ctx.shadowBlur = 4;
+            ctx.beginPath();
+            for (let x = p1; x < p2; x += 3) {
+                ctx.lineTo(x, py - H * 0.12 + Math.sin(x * 0.07 + t * 3) * 10);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Plane
+            const px = p1 + ((t * 0.12) % 1) * (p2 - p1 + 60) - 20;
+            ctx.fillStyle = '#30302a';
+            ctx.beginPath(); ctx.ellipse(px, py - H * 0.12 - 20, 18, 4, 0, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Shared mini Telemobiloscope for transition backdrop
+        function drawTeleDevice(x, y, scale = 1, blueprint = false) {
+            ctx.save();
+            ctx.translate(x, y); ctx.scale(scale, scale);
+            const col = blueprint ? '#33cccc' : '#b5a642';
+            ctx.strokeStyle = col; ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-60, -150); ctx.quadraticCurveTo(0, -130, 60, -150);
+            ctx.lineTo(60, 50); ctx.quadraticCurveTo(0, 70, -60, 50); ctx.closePath();
+            ctx.stroke();
+            ctx.fillStyle = '#2a2a2a'; ctx.fillRect(-170, 60, 80, 40); ctx.fillRect(-30, 70, 60, 20);
+            ctx.strokeStyle = col;
+            ctx.beginPath(); ctx.moveTo(-160, 30); ctx.lineTo(180, 30); ctx.stroke();
+            ctx.restore();
+        }
+
+        // ─── MAIN LOOP ───────────────────────────────────────────────────────────
+        function loop() {
+            t += 0.016;
+            ctx.clearRect(0, 0, W, H);
+            if (step === 0) drawTransition();
+            else if (step === 1) drawUK();
+            else if (step === 2) drawDE();
+            else if (step === 3) drawUS();
+            else if (step === 4) drawSilos();
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+
+</html>

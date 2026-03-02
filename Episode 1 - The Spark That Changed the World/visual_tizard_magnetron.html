@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Act 8 — The Tizard Mission: The Black Box (1940)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #05040a;
+            --copper: #b87333;
+            --copper-bright: #e08a40;
+            --copper-glow: rgba(184, 115, 51, 0.35);
+            --accent: #60d0ff;
+            --text: #d0c8d8;
+            --sub: #60505a;
+            --border: rgba(184, 115, 51, 0.2);
+            --panel: rgba(8, 6, 14, 0.96);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        canvas#main {
+            flex: 1;
+            width: 100%;
+            display: block;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: 'Orbitron';
+            font-size: 0.6rem;
+            color: var(--sub);
+            letter-spacing: 2px;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="main"></canvas>
+    <div class="step-indicator" id="step-label">BEAT 1 / 4</div>
+
+    <script>
+        const mc = document.getElementById('main');
+        const mx = mc.getContext('2d');
+        let W, H, t = 0;
+        let step = 0;
+
+        const imgFront = new Image(); imgFront.src = 'SMI_Front.png';
+        const imgRear = new Image(); imgRear.src = 'SMI_Rear.png';
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            W = window.innerWidth;
+            H = window.innerHeight;
+            mc.width = Math.round(W * dpr);
+            mc.height = Math.round(H * dpr);
+            mc.style.width = W + 'px';
+            mc.style.height = H + 'px';
+            mx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function setStep(s) {
+            step = s;
+            const labels = ['THE TRANSITION', 'THE DOCK', 'THE MAGNETRON', 'THE SHRINKAGE'];
+            document.getElementById('step-label').innerText = `BEAT ${s + 1} / 4 — ${labels[s]}`;
+        }
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') setStep((step + 1) % 4);
+            if (e.key === 'ArrowLeft') setStep((step + 3) % 4);
+        });
+
+        function loop() {
+            mx.clearRect(0, 0, W, H);
+
+            if (step === 0) drawSpin();
+            else if (step === 1) drawDock();
+            else if (step === 2) drawMagnetron();
+            else if (step === 3) drawShrink();
+
+            t += 0.016;
+            requestAnimationFrame(loop);
+        }
+
+        function drawSpin() {
+            drawBG('#030206');
+            const cx = W / 2, cy = H / 2;
+
+            // "Friendly" Rotation Physics
+            // Slowed down, with a slight tilt/wobble for 3D feel
+            const spinSpeed = 1.2;
+            const rot = t * spinSpeed;
+            const tilt = Math.sin(t * 0.5) * 0.15; // Subtle organic wobble
+
+            const scaleX = Math.cos(rot);
+            const face = scaleX >= 0 ? 0 : 1; // 0 for front, 1 for rear
+            const absScaleX = Math.abs(scaleX);
+
+            const coinSize = 340;
+            const thickness = 18; // 3D thickness
+
+            mx.save();
+            mx.translate(cx, cy);
+            mx.rotate(tilt);
+
+            // Draw 3D Edge (Thickness)
+            // We draw multiple layers to create the "side" of the coin
+            const edgeSteps = 10;
+            for (let i = 0; i < edgeSteps; i++) {
+                const offset = (i / edgeSteps - 0.5) * thickness * (1 - absScaleX);
+                mx.fillStyle = i < edgeSteps / 2 ? '#6a4010' : '#8d5a20';
+                mx.beginPath();
+                mx.ellipse(offset, 0, absScaleX * coinSize / 2, coinSize / 2, 0, 0, Math.PI * 2);
+                mx.fill();
+            }
+
+            // Draw coin face
+            mx.save();
+            mx.scale(absScaleX, 1);
+
+            const img = face === 0 ? imgFront : imgRear;
+
+            // Draw coin with circular clip
+            mx.beginPath();
+            mx.arc(0, 0, coinSize / 2, 0, Math.PI * 2);
+            mx.clip();
+
+            if (img.complete) {
+                // Fine-tuned zoom (1.45x) to ensure the coin imagery fits perfectly within the circular clip
+                const fillScale = 1.45;
+                mx.drawImage(img, -coinSize / 2 * fillScale, -coinSize / 2 * fillScale, coinSize * fillScale, coinSize * fillScale);
+            } else {
+                mx.fillStyle = '#b87333';
+                mx.fill();
+            }
+
+            // Rim highlighting
+            const rimGrad = mx.createRadialGradient(0, 0, coinSize / 2 - 10, 0, 0, coinSize / 2);
+            rimGrad.addColorStop(0, 'rgba(224, 138, 64, 0)');
+            rimGrad.addColorStop(1, 'rgba(224, 138, 64, 0.4)');
+            mx.fillStyle = rimGrad;
+            mx.beginPath(); mx.arc(0, 0, coinSize / 2, 0, Math.PI * 2); mx.fill();
+
+            mx.restore();
+            mx.restore();
+
+            // Year Counting
+            const startYear = 1934;
+            const endYear = 1940;
+            const yearProgress = Math.min(1, t / 8); // Slower progress
+            const currentYear = Math.floor(startYear + yearProgress * (endYear - startYear));
+
+            mx.fillStyle = '#e08a40';
+            mx.font = '700 80px Orbitron';
+            mx.shadowColor = 'rgba(224, 138, 64, 0.4)';
+            mx.shadowBlur = 15;
+            mx.textAlign = 'center';
+            mx.fillText(currentYear, cx, cy + coinSize / 2 + 100);
+            mx.shadowBlur = 0;
+
+            mx.font = '300 14px Inter';
+            mx.fillStyle = 'rgba(224, 138, 64, 0.4)';
+            mx.fillText('THE SCIENCE OF MILITARY INTELLIGENCE', cx, cy - coinSize / 2 - 60);
+        }
+
+        function drawDock() {
+            drawBG('#0a0c10');
+            // Fog effect
+            for (let i = 0; i < 20; i++) {
+                const fx = (Math.sin(t * 0.2 + i) * 0.5 + 0.5) * W;
+                const fy = H - 100 + Math.sin(t * 0.5 + i) * 50;
+                const grad = mx.createRadialGradient(fx, fy, 0, fx, fy, 200);
+                grad.addColorStop(0, 'rgba(100,110,120,0.1)');
+                grad.addColorStop(1, 'rgba(100,110,120,0)');
+                mx.fillStyle = grad;
+                mx.beginPath(); mx.arc(fx, fy, 200, 0, Math.PI * 2); mx.fill();
+            }
+
+            // Ship Silhouette (SS Duchess of Richmond)
+            drawShip(W * 0.8, H * 0.6);
+
+            // Dock
+            mx.fillStyle = '#050505';
+            mx.fillRect(0, H * 0.7, W, H * 0.3);
+
+            // Tizard Box being carried
+            const boxX = W * 0.2 + (t % 10) * W * 0.05;
+            const boxY = H * 0.7 - 40 + Math.sin(t * 5) * 5;
+            drawBox(boxX, boxY, 0.6);
+
+            // Silhouettes of carriers
+            drawCarrier(boxX - 20, H * 0.7);
+            drawCarrier(boxX + 20, H * 0.7);
+        }
+
+        function drawShip(x, y) {
+            mx.fillStyle = '#020202';
+            mx.beginPath();
+            mx.moveTo(x - 300, y);
+            mx.lineTo(x + 200, y);
+            mx.lineTo(x + 150, y - 80);
+            mx.lineTo(x - 200, y - 80);
+            mx.closePath(); mx.fill();
+            // Funnels
+            mx.fillRect(x - 50, y - 140, 40, 60);
+            mx.fillRect(x + 30, y - 140, 40, 60);
+        }
+
+        function drawCarrier(x, baseY) {
+            mx.fillStyle = '#000';
+            mx.beginPath();
+            mx.moveTo(x - 10, baseY);
+            mx.lineTo(x + 10, baseY);
+            mx.lineTo(x + 5, baseY - 50);
+            mx.lineTo(x - 5, baseY - 50);
+            mx.closePath(); mx.fill();
+            mx.beginPath(); mx.arc(x, baseY - 55, 6, 0, Math.PI * 2); mx.fill();
+        }
+
+        function drawBox(x, y, scale) {
+            mx.save();
+            mx.translate(x, y);
+            mx.scale(scale, scale);
+            mx.fillStyle = '#111';
+            mx.fillRect(-50, -30, 100, 60);
+            mx.strokeStyle = '#b87333';
+            mx.lineWidth = 2;
+            mx.strokeRect(-50, -30, 100, 60);
+            // Straps
+            mx.fillStyle = '#b87333';
+            mx.fillRect(-30, -30, 10, 60);
+            mx.fillRect(20, -30, 10, 60);
+            mx.restore();
+        }
+
+        function drawMagnetron() {
+            drawBG('#05040a');
+            const cx = W / 2, cy = H / 2;
+
+            // Glow from box
+            const boxOpen = Math.min(1, (t - 0.5) * 0.5);
+            if (boxOpen > 0) {
+                const glowGrad = mx.createRadialGradient(cx, cy, 0, cx, cy, 400 * boxOpen);
+                glowGrad.addColorStop(0, 'rgba(184, 115, 51, 0.15)');
+                glowGrad.addColorStop(1, 'rgba(184, 115, 51, 0)');
+                mx.fillStyle = glowGrad;
+                mx.beginPath(); mx.arc(cx, cy, 400 * boxOpen, 0, Math.PI * 2); mx.fill();
+            }
+
+            mx.save();
+            mx.translate(cx, cy);
+
+            // 1. Horizontal Protrusions (Glass Tubes)
+            drawMagnetronProtrusions();
+
+            // 2. Outer Black Housing with Structural Split
+            mx.fillStyle = '#1a1a1a';
+            mx.beginPath(); mx.arc(0, 0, 180, 0, Math.PI * 2); mx.fill();
+
+            // The split/gap at 9 o'clock position (from photo)
+            mx.save();
+            mx.globalCompositeOperation = 'destination-out';
+            mx.fillRect(-185, -2, 40, 4);
+            mx.restore();
+
+            mx.strokeStyle = '#000'; mx.lineWidth = 2;
+            mx.beginPath(); mx.arc(0, 0, 180, 0, Math.PI * 2); mx.stroke();
+
+            // Small circular label on housing (from photo)
+            mx.fillStyle = '#aaa';
+            mx.beginPath(); mx.arc(100, 80, 15, 0, Math.PI * 2); mx.fill();
+            mx.fillStyle = '#222';
+            mx.font = 'bold 8px Arial'; mx.textAlign = 'center';
+            mx.fillText('SMI', 100, 80);
+            mx.fillText('0042', 100, 88);
+            mx.textAlign = 'left';
+
+            // 3. Central Copper Core (The Puck)
+            const puckR = 110;
+            // Main copper body
+            const puckGrad = mx.createRadialGradient(0, 0, 0, 0, 0, puckR);
+            puckGrad.addColorStop(0, '#d48d4d');
+            puckGrad.addColorStop(0.8, '#b87333');
+            puckGrad.addColorStop(1, '#8d5a20');
+            mx.fillStyle = puckGrad;
+            mx.beginPath(); mx.arc(0, 0, puckR, 0, Math.PI * 2); mx.fill();
+
+            // Inner rim (bright copper edge from photo)
+            mx.strokeStyle = '#e0a060'; mx.lineWidth = 4;
+            mx.beginPath(); mx.arc(0, 0, puckR - 2, 0, Math.PI * 2); mx.stroke();
+
+            // 4. The 8 Cavities
+            const cavR = 22;
+            const cavDist = 65;
+            for (let i = 0; i < 8; i++) {
+                const a = i * Math.PI * 0.25;
+                const hx = Math.cos(a) * cavDist;
+                const hy = Math.sin(a) * cavDist;
+
+                // Dark cavity hole
+                mx.fillStyle = '#110a08';
+                mx.beginPath(); mx.arc(hx, hy, cavR, 0, Math.PI * 2); mx.fill();
+
+                // Slot to center
+                mx.save();
+                mx.rotate(a);
+                mx.fillRect(25, -3, 30, 6);
+                mx.restore();
+
+                // Physics Glow (Microwaves)
+                const mGlow = 0.2 + 0.3 * Math.sin(t * 4 + i);
+                mx.fillStyle = `rgba(100, 180, 255, ${mGlow})`;
+                mx.beginPath(); mx.arc(hx, hy, cavR * 0.7, 0, Math.PI * 2); mx.fill();
+            }
+
+            // 5. Center Cathode & Wire
+            // Dark center interaction space
+            mx.fillStyle = '#0a0a0a';
+            mx.beginPath(); mx.arc(0, 0, 35, 0, Math.PI * 2); mx.fill();
+
+            // Cathode core
+            mx.fillStyle = '#333';
+            mx.beginPath(); mx.arc(0, 0, 15, 0, Math.PI * 2); mx.fill();
+            mx.fillStyle = '#ff6040'; // Heated filament glow
+            mx.globalAlpha = 0.6 + 0.2 * Math.sin(t * 2);
+            mx.beginPath(); mx.arc(0, 0, 8, 0, Math.PI * 2); mx.fill();
+            mx.globalAlpha = 1.0;
+
+            // Connection wire from photo
+            mx.strokeStyle = '#999'; mx.lineWidth = 2;
+            mx.beginPath();
+            mx.moveTo(0, 0);
+            mx.lineTo(80, 0);
+            mx.stroke();
+
+            mx.restore();
+        }
+
+        function drawMagnetronProtrusions() {
+            // Left Protrusion (Brass & Bulbous Glass)
+            mx.save();
+            mx.translate(-180, 0);
+            // Brass threaded section
+            const bG = mx.createLinearGradient(0, -25, 0, 25);
+            bG.addColorStop(0, '#8b7d4b'); bG.addColorStop(0.5, '#b5a675'); bG.addColorStop(1, '#5d5432');
+            mx.fillStyle = bG;
+            mx.fillRect(-80, -25, 80, 50);
+            for (let i = 0; i < 8; i++) {
+                mx.strokeStyle = 'rgba(0,0,0,0.3)'; mx.lineWidth = 1;
+                mx.beginPath(); mx.moveTo(-75 + i * 10, -25); mx.lineTo(-75 + i * 10, 25); mx.stroke();
+            }
+            // Glass tube with bulbous tip
+            mx.fillStyle = 'rgba(200, 230, 255, 0.1)';
+            mx.beginPath();
+            mx.moveTo(0, -18); mx.lineTo(-140, -18);
+            mx.arc(-140, 0, 18, -Math.PI / 2, Math.PI / 2, true);
+            mx.lineTo(0, 18); mx.closePath(); mx.fill();
+            mx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            mx.stroke();
+            // Internal electrodes
+            mx.fillStyle = '#444'; mx.fillRect(-150, -3, 80, 6);
+            mx.fillStyle = '#222'; mx.fillRect(-70, -6, 20, 12);
+            mx.restore();
+
+            // Right Protrusion (Vacuum Tube with Bulb)
+            mx.save();
+            mx.translate(180, 0);
+            // Glass tube body
+            mx.fillStyle = 'rgba(200, 230, 255, 0.1)';
+            mx.beginPath();
+            mx.moveTo(0, -20); mx.lineTo(120, -20);
+            mx.arc(120, 0, 20, -Math.PI / 2, Math.PI / 2);
+            mx.lineTo(0, 20); mx.closePath(); mx.fill();
+            mx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            mx.stroke();
+            // Internal structure (Multi-stage electrodes)
+            mx.fillStyle = '#555'; mx.fillRect(10, -5, 100, 10);
+            mx.fillStyle = '#333'; mx.fillRect(110, -8, 5, 16);
+            mx.fillStyle = '#000'; mx.beginPath(); mx.arc(140, 0, 6, 0, Math.PI * 2); mx.fill();
+            // Tip connector
+            mx.strokeStyle = '#666'; mx.lineWidth = 2;
+            mx.beginPath(); mx.moveTo(140, 0); mx.lineTo(165, 0); mx.stroke();
+            mx.restore();
+        }
+
+        function drawShrink() {
+            drawBG('#030305');
+            const cx = W / 2, cy = H / 2;
+
+            const platforms = [
+                { label: 'FIGHTER JET (SIDE VIEW)', draw: drawFighterSil, radarPos: { x: 60, y: 0 }, mode: 'sector' },
+                { label: 'DESTROYER (TOP DOWN)', draw: drawDestroyerSil, radarPos: { x: 0, y: 0 }, mode: '360' },
+                { label: 'MOBILE TRUCK (TOP DOWN)', draw: drawTruckSil, radarPos: { x: 0, y: 0 }, mode: '360' }
+            ];
+
+            platforms.forEach((p, i) => {
+                const ix = W * (0.25 + i * 0.25);
+                const iy = cy;
+
+                // Blueprint Box (Subtle)
+                mx.strokeStyle = 'rgba(184, 115, 51, 0.15)';
+                mx.setLineDash([5, 5]);
+                mx.strokeRect(ix - 100, iy - 120, 200, 240);
+                mx.setLineDash([]);
+
+                mx.save();
+                mx.translate(ix, iy);
+
+                // Draw Silhouettes
+                p.draw();
+
+                // Miniature Radar Dish with specific physics
+                mx.save();
+                mx.translate(p.radarPos.x, p.radarPos.y);
+
+                let angle;
+                if (p.mode === 'sector') {
+                    // Fighter: Narrow Forward Sector Scan (Oscillation)
+                    angle = Math.sin(t * 4) * 0.4;
+                    mx.rotate(angle);
+                } else {
+                    // Ship/Truck: 360 Degree Circular Rotation
+                    angle = t * 2.5;
+                    mx.rotate(angle);
+                }
+
+                mx.strokeStyle = '#60d0ff';
+                mx.lineWidth = 2;
+                mx.beginPath(); mx.arc(0, 0, 18, -0.6, 0.6); mx.stroke();
+
+                // Scanning beam line
+                const beamAlpha = 0.2 + 0.3 * (1 + Math.sin(t * 10));
+                mx.globalAlpha = beamAlpha;
+                mx.beginPath(); mx.moveTo(18, 0); mx.lineTo(65, 0); mx.stroke();
+                mx.restore();
+
+                mx.restore();
+
+                mx.fillStyle = '#d0c8d8';
+                mx.font = '10px Orbitron';
+                mx.textAlign = 'center';
+                mx.fillText(p.label, ix, iy + 100);
+            });
+        }
+
+        function drawFighterSil() {
+            mx.fillStyle = '#252528'; // Lifted from #111
+            // Fuselage (Side)
+            mx.beginPath();
+            mx.ellipse(0, 0, 75, 12, 0, 0, Math.PI * 2);
+            mx.fill();
+            // Tail
+            mx.beginPath();
+            mx.moveTo(-65, 0); mx.lineTo(-88, -22); mx.lineTo(-82, 0); mx.closePath(); mx.fill();
+            // Wing (Side view profile)
+            mx.fillRect(-15, 2, 40, 4);
+            // Cockpit
+            mx.fillStyle = '#3a3a40';
+            mx.beginPath(); mx.arc(15, -6, 12, Math.PI, 0); mx.fill();
+
+            // Rim Light
+            mx.strokeStyle = 'rgba(96, 208, 255, 0.3)'; mx.lineWidth = 1;
+            mx.beginPath(); mx.ellipse(0, 0, 76, 13, 0, 0, Math.PI * 2); mx.stroke();
+        }
+
+        function drawDestroyerSil() {
+            mx.fillStyle = '#252528';
+            // Hull (Top Down) - Slim pointed oval
+            mx.beginPath();
+            mx.ellipse(0, 0, 85, 22, 0, 0, Math.PI * 2);
+            mx.fill();
+            // Superstructure (Top Down)
+            mx.fillStyle = '#1a1a20';
+            mx.fillRect(-35, -12, 70, 24);
+            // Gun Turrets
+            mx.beginPath(); mx.arc(-55, 0, 7, 0, Math.PI * 2); mx.fill();
+            mx.beginPath(); mx.arc(55, 0, 7, 0, Math.PI * 2); mx.fill();
+
+            // Rim Light
+            mx.strokeStyle = 'rgba(96, 208, 255, 0.3)'; mx.lineWidth = 1;
+            mx.beginPath(); mx.ellipse(0, 0, 86, 23, 0, 0, Math.PI * 2); mx.stroke();
+        }
+
+        function drawTruckSil() {
+            mx.fillStyle = '#252528';
+            // Chassis (Top Down)
+            mx.fillRect(-65, -28, 130, 56);
+            // Cab Front
+            mx.fillStyle = '#1a1a20';
+            mx.fillRect(35, -28, 30, 56);
+            // Roof / Cargo Area
+            mx.fillStyle = '#15151a';
+            mx.fillRect(-60, -24, 100, 48);
+
+            // Rim Light
+            mx.strokeStyle = 'rgba(96, 208, 255, 0.3)'; mx.lineWidth = 1;
+            mx.strokeRect(-66, -29, 132, 58);
+        }
+
+        function drawBG(col) {
+            mx.fillStyle = col;
+            mx.fillRect(0, 0, W, H);
+
+            // Grid
+            mx.strokeStyle = 'rgba(255,255,255,0.02)';
+            mx.lineWidth = 1;
+            for (let x = 0; x < W; x += 100) { mx.beginPath(); mx.moveTo(x, 0); mx.lineTo(x, H); mx.stroke(); }
+            for (let y = 0; y < H; y += 100) { mx.beginPath(); mx.moveTo(0, y); mx.lineTo(W, y); mx.stroke(); }
+        }
+
+        loop();
+    </script>
+</body>
+
+</html>

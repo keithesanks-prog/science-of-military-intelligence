@@ -1,0 +1,60 @@
+# Episode 7.2: The Sky as a Mirror (Atmospheric Propagation)
+
+---
+
+### Act 1: The Ionospheric Discovery (The Sky Mirage)
+(Visual: A radio tower in 1901. Marconi is listening to a signal from across the Atlantic. He looks confused. Text: **THE IMPOSSIBLE SIGNAL**.)
+
+Narrator: "When Guglielmo Marconi sent the first radio signal across the Atlantic in 1901, the scientific community said it was impossible. Radio waves travel in straight lines; they should have vanished into space as the Earth curved away."
+
+Narrator: "But the signal arrived. Why? Because the Earth has a 'Mathematical Mirror' in the sky. Oliver Heaviside and Arthur Kennelly hypothesized that an electrified layer of the atmosphere was reflecting the signals back. We call it the **Ionosphere**."
+
+---
+
+### Act 2: The Layers of the Ghost (The Radio Filters)
+(Visual: A cross-section of the Earth's atmosphere showing three distinct glowing bands: **D Layer**, **E Layer**, and **F Layer**.)
+
+Narrator: "The atmosphere isn't a single wall; it's a series of filters. The **D Layer** is the basement—it absorbs low frequencies during the day. The **E Layer** and the **F Layer** are the 'High Altitude Mirrors.' They are created by the sun's radiation stripping electrons from the air."
+
+Narrator: "At night, the D and E layers vanish. The 'Mirror' becomes clearer and higher. This is why you can hear a radio station from a thousand miles away at midnight, but only fifty miles during the day. The atmosphere literally 'tunes' itself to the sun."
+
+---
+
+### Act 3: The Frequency Window (Where to Aim)
+(Visual: A spectrum analyzer. Waves of different sizes are hitting the Ionosphere. The long waves (HF) bounce back. The short waves (VHF/UHF) go straight through into space.)
+
+Narrator: "In the SMI, we have to know which window to use. **High Frequency (HF)**—the long, rolling waves—hits the Ionosphere like a solid wall and bounces. This is **Skywave Propagation**. It allows a commander to talk to a ship on the other side of the planet."
+
+Narrator: "But **VHF** and **UHF**—the sharp, fast waves—are too energetic to be reflected. They punch straight through the Mirror and vanish into the stars. This is why satellites use UHF; if they used HF, the atmosphere would lock the signal in like a bird in a cage."
+
+---
+
+### Act 4: Ducting (The Atmospheric Pipe)
+(Visual: A hot air layer sitting on top of a cold air layer over the ocean. A radio signal enters the gap and bounces between them like a fiber-optic cable. Text: **ATMOSPHERIC DUCTING**.)
+
+Narrator: "Sometimes, the weather creates a 'Super-Highway.' When a layer of warm air sits over cold air, it creates a **Temperature Inversion**. This acts as a 'Digital Pipe' or a **Duct**."
+
+Narrator: "Inside a duct, signals don't reflect off the Ionosphere; they bounce between the air layers. A radar operator might suddenly see a ship that is three hundred miles away, well over the horizon. It’s an 'Atmospheric Miracle'—and an engineer's nightmare."
+
+---
+
+### Act 5: The Solar Wind (The Sun’s Eraser)
+(Visual: A massive flare erupting from the sun. A wave of particles hits the Earth's magnetic field. The Ionosphere glows and then turns dark. Text: **SOLAR STORM**.)
+
+Narrator: "But the mirror is fragile. When the sun erupts with a **Solar Flare**, it floods the atmosphere with particles that turn the D-layer into a 'Radio Sponge.' It doesn't reflect; it absorbs."
+
+Narrator: "This is a **Radio Blackout**. The 'Sky Mirror' is shattered. In a solar storm, the most advanced military on Earth can be rendered deaf and blind, proving that no matter how good our engineering is, we are always at the mercy of the 'Weather of Space.'"
+
+---
+
+### Science of Military Intelligence Key Concepts:
+1.  **Ionosphere**: A region of the upper atmosphere, from about 60 km to 1,000 km altitude, that is ionized by solar radiation.
+2.  **Skywave Propagation (Skipping)**: The movement of radio waves reflected from the ionosphere back to Earth.
+3.  **D, E, and F Layers**: The distinct regions of the ionosphere that vary in density and altitude based on time of day and solar activity.
+4.  **Critical Frequency**: The highest frequency that will be reflected back to Earth at a vertical angle.
+5.  **Ground Wave**: Radio waves that travel along the surface of the Earth (limited range).
+6.  **Line-of-Sight (LOS)**: Propagation where the transmitter and receiver must be in a direct, unobstructed path (VHF/UHF).
+7.  **Atmospheric Ducting**: A mode of propagation where radio waves are trapped between air layers of different temperatures, traveling extreme distances.
+8.  **Temperature Inversion**: An atmospheric condition where warm air sits above cooler air, facilitating ducting.
+9.  **Solar Flare / Radio Blackout**: An eruption on the sun that increases D-layer ionization, causing the absorption of HF radio signals.
+10. **Refractive Index**: A value representing how much the atmosphere "bends" a radio wave.

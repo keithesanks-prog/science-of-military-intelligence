@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Signal Types & Scan Patterns</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020408;
+            --panel-bg: rgba(5, 10, 20, 0.95);
+            --accent: #00d2ff;
+            --scan-color: #00ff88;
+            --path-color: rgba(0, 255, 136, 0.3);
+            --text: #e0f2f1;
+            --border: rgba(0, 210, 255, 0.2);
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Orbitron', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image: linear-gradient(to bottom, #000, #0a1128);
+        }
+
+        header {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+
+        .brand h1 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            position: relative;
+            min-height: 0;
+        }
+
+        .sidebar {
+            width: 340px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #aaa;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 15px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(0, 210, 255, 0.1);
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .mode-btn .mode-title {
+            font-weight: 900;
+            font-size: 0.8rem;
+        }
+
+        .mode-btn .mode-desc {
+            font-family: var(--font-main);
+            font-size: 0.65rem;
+            opacity: 0.8;
+        }
+
+        .vis-container {
+            flex: 1;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+        }
+
+        #scanCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .hud {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border);
+            padding: 20px;
+            width: 220px;
+            font-family: var(--font-mono);
+            pointer-events: none;
+        }
+
+        .hud-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.7rem;
+        }
+
+        .hud-label {
+            color: var(--accent);
+        }
+
+        .hud-val {
+            color: #fff;
+        }
+
+        .control-panel {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            right: 25px;
+            display: flex;
+            gap: 20px;
+            pointer-events: none;
+        }
+
+        .control-box {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--border);
+            padding: 15px 20px;
+            flex: 1;
+            pointer-events: auto;
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>Signal Types & Scan Patterns</h1>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.6;">
+            MODULE: BEAM-DYNAMICS-101
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="section">
+                <span class="section-title">Scan Methodology</span>
+                <div class="concept-card">
+                    A radar's effectiveness depends on how it directs its energy. Search radars sweep wide areas, while
+                    tracking radars focus energy to maintain precise locks.
+                </div>
+            </div>
+
+            <div class="section">
+                <span class="section-title">Select Scan Mode</span>
+                <div class="btn-group" style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="mode-btn active" id="btn-conical" onclick="setMode('conical')">
+                        <span class="mode-title">CONICAL SCAN</span>
+                        <span class="mode-desc">Beam nutates around a central axis. Used for high-precision target
+                            tracking.</span>
+                    </button>
+                    <button class="mode-btn" id="btn-circular" onclick="setMode('circular')">
+                        <span class="mode-title">CIRCULAR SEARCH</span>
+                        <span class="mode-desc">Continuous 360° rotation for wide-area surveillance and
+                            detection.</span>
+                    </button>
+                    <button class="mode-btn" id="btn-sector" onclick="setMode('sector')">
+                        <span class="mode-title">SECTOR SCAN</span>
+                        <span class="mode-desc">Back-and-forth "nodding" pattern to focus on a specific tactical threat
+                            area.</span>
+                    </button>
+                    <button class="mode-btn" id="btn-raster" onclick="setMode('raster')">
+                        <span class="mode-title">RASTER SCAN</span>
+                        <span class="mode-desc">Grid-like pattern (Horizontal + Vertical) for detailed volumetric
+                            imaging.</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="vis-container">
+            <canvas id="scanCanvas"></canvas>
+
+            <div class="hud">
+                <div class="hud-item">
+                    <span class="hud-label">Azimuth:</span>
+                    <span class="hud-val" id="val-az">0.0°</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Elevation:</span>
+                    <span class="hud-val" id="val-el">0.0°</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Beam Power:</span>
+                    <span class="hud-val" id="val-pwr">100%</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Pulse Rate:</span>
+                    <span class="hud-val" id="val-prf">1200 Hz</span>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="control-box">
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span>SCAN VELOCITY</span>
+                            <span id="speedVal">1.0x</span>
+                        </div>
+                        <input type="range" min="0.5" max="3" step="0.1" value="1.0"
+                            oninput="updateParam('speed', this.value)">
+                    </div>
+                </div>
+                <div class="control-box">
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span>BEAM WIDTH</span>
+                            <span id="widthVal">10°</span>
+                        </div>
+                        <input type="range" min="2" max="25" step="1" value="10"
+                            oninput="updateParam('width', this.value)">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('scanCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let state = {
+            mode: 'conical',
+            time: 0,
+            params: {
+                speed: 1.0,
+                width: 10
+            },
+            history: [], // For trailing path
+            az: 0,
+            el: 0
+        };
+
+        function setMode(mode) {
+            state.mode = mode;
+            state.history = [];
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${mode}`).classList.add('active');
+        }
+
+        function updateParam(id, val) {
+            state.params[id] = parseFloat(val);
+            document.getElementById(`${id}Val`).innerText = (id === 'width') ? val + '°' : val + 'x';
+        }
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+            requestAnimationFrame(animate);
+        }
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+
+        function drawRadarDish(cx, cy) {
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            // Base/Pedestal
+            ctx.fillStyle = '#111';
+            ctx.fillRect(-40, 60, 80, 20);
+
+            // Dish
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, 60, Math.PI * 0.2, Math.PI * 0.8);
+            ctx.stroke();
+
+            // Feed Horn
+            ctx.fillStyle = '#222';
+            ctx.fillRect(-5, 5, 10, 50);
+            ctx.beginPath();
+            ctx.arc(0, 55, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function animate(time) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            state.time += 0.016 * state.params.speed;
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2 + 100;
+            const targetDist = 400;
+
+            // Calculate Beam Position based on mode
+            let tx, ty;
+            const centerX = cx;
+            const centerY = cy - 350;
+
+            if (state.mode === 'conical') {
+                // Circular nutation around center
+                const r = 80;
+                tx = centerX + Math.cos(state.time * 2) * r;
+                ty = centerY + Math.sin(state.time * 2) * r;
+            } else if (state.mode === 'circular') {
+                // Wide circle sweep
+                const r = 300;
+                tx = centerX + Math.cos(state.time * 0.5) * r;
+                ty = centerY + Math.sin(state.time * 0.5) * r;
+            } else if (state.mode === 'sector') {
+                // Vertical "Nodding" pattern as per description
+                const r = 150;
+                tx = centerX;
+                ty = centerY + Math.sin(state.time * 2) * r;
+            } else if (state.mode === 'raster') {
+                // Synchronized grid pattern (No random altitude jumps)
+                const width = 500;
+                const height = 250;
+                const lines = 6;
+                const sweepSpeed = 3;
+
+                // One full horizontal sweep (left to right) happens over 'period'
+                const period = Math.PI;
+                const localTime = state.time * sweepSpeed;
+                const sweepIndex = Math.floor(localTime / period);
+
+                // Horizontal position: linear back and forth
+                const progress = (localTime % period) / period;
+                const isEvenSweep = sweepIndex % 2 === 0;
+                const normalizedX = isEvenSweep ? progress : (1 - progress);
+
+                tx = centerX - width / 2 + normalizedX * width;
+
+                // Vertical position: steps only when sweep index changes
+                const currentRow = sweepIndex % lines;
+                ty = centerY - height / 2 + (currentRow * (height / (lines - 1)));
+            }
+
+            // Update state az/el for HUD
+            state.az = ((tx - cx) / 5).toFixed(1);
+            state.el = ((cy - ty) / 5).toFixed(1);
+            document.getElementById('val-az').innerText = state.az + '°';
+            document.getElementById('val-el').innerText = state.el + '°';
+
+            // Add to history
+            state.history.push({ x: tx, y: ty, o: 1 });
+            if (state.history.length > 100) state.history.shift();
+
+            // Draw Beam Path
+            ctx.beginPath();
+            ctx.strokeStyle = varColor('--path-color');
+            ctx.lineWidth = 2;
+            state.history.forEach((pt, i) => {
+                if (i === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.stroke();
+
+            // Draw Dish
+            drawRadarDish(cx, cy);
+
+            // Draw Beam (3D Perspective Cone)
+            const gradient = ctx.createRadialGradient(tx, ty, 0, tx, ty, state.params.width * 5);
+            gradient.addColorStop(0, `rgba(0, 255, 136, 0.4)`);
+            gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+
+            // The "Solid" Beam Core
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - 30);
+            ctx.lineTo(tx, ty);
+            ctx.strokeStyle = `rgba(0, 255, 136, ${0.1 + Math.random() * 0.1})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // The Beam "Head" (Volume hitting the sky)
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(tx, ty, state.params.width * 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Glow at dish center
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = varColor('--scan-color');
+            ctx.fillStyle = varColor('--scan-color');
+            ctx.beginPath();
+            ctx.arc(cx, cy - 30, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+
+            requestAnimationFrame(animate);
+        }
+
+        const varColor = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The "Gatling Gun" of Light — Frequency Hopping</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #05070a;
+            --text: #c8ddd5;
+            --brass: #b5a642;
+            --gold: #f5d57a;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas#c {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .hud {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .hud h1 {
+            font-family: 'Orbitron';
+            font-size: 1.5rem;
+            color: var(--brass);
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .hud p {
+            color: rgba(200, 221, 213, 0.6);
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        #step-indicator {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            font-family: 'Orbitron';
+            font-size: 0.7rem;
+            color: var(--brass);
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="c"></canvas>
+
+    <div class="hud">
+        <h1>Gatling Gun of Light</h1>
+        <p>Hedy Lamarr's Secret of Frequency Hopping</p>
+    </div>
+
+    <div id="step-indicator">BEAT 1 / 4</div>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let W, H;
+        let step = 0;
+        let t = 0;
+        let stepStartTime = 0;
+
+        const colors = [
+            '#ff3333', '#ff9933', '#ffff33', '#33ff33', '#33ffff',
+            '#3333ff', '#9933ff', '#ff33ff', '#ff3399', '#99ff33'
+        ];
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            W = window.innerWidth; H = window.innerHeight;
+            canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resize); resize();
+
+        function next() { if (step < 3) setStep(step + 1); }
+        function prev() { if (step > 0) setStep(step - 1); }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') next();
+            if (e.key === 'ArrowLeft') prev();
+        });
+
+        function setStep(n) {
+            step = n;
+            stepStartTime = t;
+            document.getElementById('step-indicator').innerText = `BEAT ${n + 1} / 4`;
+        }
+
+        function drawDisc(x, y, radius, angle, holeRadius) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+
+            // Disc body - using a single path with a counter-clockwise hole cutout
+            ctx.fillStyle = '#2a1a10'; // Cardboard-ish
+            ctx.beginPath();
+            // Outer edge (clockwise)
+            ctx.arc(0, 0, radius, 0, Math.PI * 2, false);
+            // Inner hole (counter-clockwise) at 84px to match filters
+            ctx.arc(84, 0, holeRadius, 0, Math.PI * 2, true);
+            ctx.fill();
+
+            // Stroke outer edge
+            ctx.strokeStyle = '#3a2a20'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Stroke inner hole edge to show it's a cutout
+            ctx.strokeStyle = '#1a0a00';
+            ctx.beginPath();
+            ctx.arc(84, 0, holeRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawFilterBoard(x, y, radius) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            // The Board
+            ctx.fillStyle = '#0a0a0a';
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 1.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // The Filters
+            colors.forEach((col, i) => {
+                const angle = (i / colors.length) * Math.PI * 2;
+                const fx = Math.cos(angle) * (radius * 0.7);
+                const fy = Math.sin(angle) * (radius * 0.7);
+
+                ctx.fillStyle = col;
+                ctx.globalAlpha = 0.3;
+                ctx.beginPath();
+                ctx.arc(fx, fy, 15, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+                ctx.strokeStyle = col;
+                ctx.stroke();
+            });
+            ctx.restore();
+        }
+
+        function loop() {
+            t += 0.016;
+            ctx.clearRect(0, 0, W, H);
+
+            const boardX = W * 0.32;  // Moved Transmitter complex to the left
+            const wallX = W * 0.72;   // Moved Receiver complex to the right
+            const centerY = H * 0.5;
+            const discR = 150;
+            const holeR = 15;
+
+            const flashlightX = boardX - 350;
+
+            // DISC ENTRY ANIMATION (Step 0)
+            let discTargetY = centerY;
+            let discOpacity = 1.0;
+            const elapsedSinceStepStart = t - stepStartTime;
+
+            if (step === 0) {
+                const slideDuration = 2.0;
+                const slideT = Math.min(elapsedSinceStepStart / slideDuration, 1.0);
+                discTargetY = H + 200 - (H + 200 - centerY) * Math.pow(slideT, 2);
+
+                if (slideT > 0.8) {
+                    discOpacity = 1.0 - (slideT - 0.8) * 0.75;
+                    if (discOpacity < 0.85) discOpacity = 0.85;
+                }
+            }
+
+            // DRAW FLASHLIGHT RAYS
+            ctx.save();
+            ctx.lineWidth = 2;
+            if (step === 0) {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.beginPath();
+                ctx.moveTo(flashlightX, centerY);
+                ctx.lineTo(boardX, centerY);
+                ctx.stroke();
+
+                const grad = ctx.createRadialGradient(boardX, centerY, 0, boardX, centerY, 50);
+                grad.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(boardX, centerY, 50, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.restore();
+
+            // SPINNING DISCS
+            let angleA = 0;
+            let angleB = 0;
+
+            if (step >= 1) {
+                angleA = t * 2;
+                if (step === 2) angleB = angleA;
+                if (step === 3) angleB = t * 1.2;
+                discOpacity = 0.85;
+            }
+
+            // Draw Board
+            drawFilterBoard(boardX, centerY, 120);
+
+            // Draw TX Spinner (Centered on board)
+            const txY = (step === 0) ? discTargetY : centerY;
+
+            ctx.globalAlpha = discOpacity;
+            drawDisc(boardX, txY, discR, angleA, holeR);
+            ctx.globalAlpha = 1.0;
+
+            // PROJECTED RESULTS
+            if (step >= 1) {
+                const normAngleTX = (angleA % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+                const filterIdx = Math.floor((normAngleTX / (Math.PI * 2)) * colors.length);
+                const colorTX = colors[filterIdx];
+
+                ctx.save();
+                ctx.translate(wallX, centerY);
+
+                let visible = true;
+                if (step >= 2) {
+                    const normAngleRX = (angleB % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+                    const rxFilterIdx = Math.floor((normAngleRX / (Math.PI * 2)) * colors.length);
+                    if (rxFilterIdx !== filterIdx) visible = false;
+                }
+
+                if (visible) {
+                    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, 80);
+                    grad.addColorStop(0, colorTX);
+                    grad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grad;
+                    ctx.shadowBlur = 30; ctx.shadowColor = colorTX;
+                    ctx.beginPath(); ctx.arc(0, 0, 60, 0, Math.PI * 2); ctx.fill();
+
+                    // Light beam from board to wall (The "Hop")
+                    ctx.globalCompositeOperation = 'lighter';
+                    ctx.strokeStyle = colorTX; ctx.globalAlpha = 0.15;
+                    ctx.setLineDash([5, 8]);
+                    ctx.beginPath();
+                    ctx.moveTo(boardX - wallX, 0);
+                    ctx.lineTo(0, 0);
+                    ctx.stroke();
+                } else {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+                    ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            // DRAW RX Spinner (Visual representation for Handshake beats)
+            if (step >= 2) {
+                ctx.globalAlpha = 0.5;
+                drawDisc(wallX - 50, centerY, discR * 0.8, angleB, holeR);
+                ctx.globalAlpha = 1.0;
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+    </script>
+</body>
+
+</html>

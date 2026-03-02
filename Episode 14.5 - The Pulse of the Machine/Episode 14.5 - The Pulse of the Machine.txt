@@ -1,0 +1,66 @@
+Episode 14.5: The Pulse of the Machine: TELINT
+
+### Cold Open: The Heartbeat of a Giant
+(Visual: A high-resolution fitness tracker on a human wrist. The heart rate spikes during a run. Graph: **BPM: 165**.)
+
+Narrator: "This is your body’s telemetry. It is a real-time stream of data reporting on your temperature, your heart rate, and your oxygen levels. It tells a story of how your internal systems are handling a external stress."
+
+(Visual: Cut to a massive Soviet SS-18 ICBM on a launchpad. A diagram reveals thousands of wires inside, connecting to sensors in the engine, the fuel tanks, and the guidance computer. Text: **TELINT / FISINT**.)
+
+Narrator: "A missile is no different. During a test flight, a rocket is 'screaming' its vital signs back to its creators. It is reporting on vibration, fuel consumption, and the precise moment its engine cuts off. This is **Telemetry**."
+
+Narrator: "But during the Cold War, the most interested audience for that data wasn't the Soviet engineers—it was the analysts at the NSA. Because if you can hear the 'Heartbeat' of your enemy's machines, you don't have to guess what they can do. You know. This is the story of Telemetry Intelligence."
+
+(Visual: Title Card: **Episode 14.5: The Pulse of the Machine**)
+
+---
+
+### Act 1: The Multiplexer Braid (The Science of the Stream)
+(Visual: A waterfall of data points: Temp-A, Pres-B, Accel-C, Fuel-D. They all flow into a small box labeled **MULTIPLEXER**.)
+
+Narrator: "In the engineering of a missile, you can't have a thousand different radio transmitters for a thousand different sensors. It would be too heavy, and the radio spectrum would be a mess."
+
+Narrator: "The fix is the **Multiplexer**. It takes hundreds of different measurements and 'braids' them into a single, high-speed digital stream. Like a deck of cards being shuffled perfectly, it sends one bit of temperature, then one bit of pressure, then one bit of speed, over and over, thousands of times a second."
+
+Narrator: "To get that data, the US didn't have to break into a lab. They just had to park a ship or fly a plane (like the **Cobra Ball**) close enough to 'catch' the radio signal as it was broadcast from the missile into the sky. Once you have the record, the real engineering challenge begins: The **De-Multiplexing**."
+
+---
+
+### Act 2: The MIRV Mystery (Reading the Intent)
+(Visual: A missile in space. A small payload 'bus' at the top fires tiny thrusters. We see a graph of the 'Acceleration' telemetry showing small, sharp spikes.)
+
+Narrator: "In the 1970s, the ultimate strategic question was: How many warheads are on that missile? We call them **MIRVs**—Multiple Independently Targetable Reentry Vehicles."
+
+Narrator: "You can't see the warheads on a satellite photo—they are hidden inside the nose cone. But you can see the **Telemetry**. Analysts noticed that after the main engine cut off, the payload 'bus' would go through a series of tiny, precise maneuvers. By measuring the fuel consumed and the shift in mass reported in the telemetry, engineers could calculate exactly how many warheads were being dropped off at different orbits."
+
+Narrator: "The data revealed the secret. We knew the 'capacity' of the Soviet arsenal not by spying on their factories, but by listening to their machines talk to themselves in space."
+
+---
+
+### Act 3: The Transparency Treaty (SALT and Encryption)
+(Visual: A grainy clip of the SALT I signing. A document highlights the phrase: **NATIONAL TECHNICAL MEANS OF VERIFICATION**.)
+
+Narrator: "Telemetry was so useful that it became a foundation of international law. In the **SALT treaties**, both the US and the USSR agreed to a radical rule: **Do not encrypt your test telemetry.**"
+
+Narrator: "They realized that 'Strategic Stability' requires certainty. If your enemy knows *exactly* how powerful your missile is, they don't have to over-build their own out of fear. Telemetry became the 'Agreed Transparency'—a digital handshake that kept the arms race from spinning out of control."
+
+---
+
+### Conclusion: The Governor of Peace
+Narrator: "Today, we live in a world of telemetry. From your car's OBD port to the 'black box' on an airliner, we are surrounded by machines that report on their own health."
+
+Narrator: "But in the world of national security, that data is the ultimate 'Truth'—the unbiased report of what a technology is truly capable of. It is the pulse of the machine that tells us if a crisis is real, or just a bluff. Thanks for watching."
+
+---
+
+### Science of Military Intelligence Key Concepts:
+1.  **TELINT (Telemetry Intelligence)**: The technical analysis of data transmitted by remote systems during testing.
+2.  **FISINT (Foreign Instrumentation Signals Intelligence)**: The broader category of machine-originated signals (missile telemetry, radar beacons, video links).
+3.  **Multiplexing**: The process of combining multiple data streams into one for transmission.
+4.  **The 'Bus'**: The final stage of a missile that carries and deploys multiple warheads.
+5.  **Throw-Weight**: The total weight of the payload a missile can deliver to a target.
+6.  **Cobra Ball (RC-135S)**: A specialized reconnaissance aircraft designed to collect optical and electronic data on ballistic missile flights.
+7.  **SALT (Strategic Arms Limitation Talks)**: Treaties where telemetry was recognized as a 'National Technical Mean' of treaty verification.
+8.  **Agreed Transparency**: The diplomatic concept of allowing an adversary to monitor technical data to build mutual confidence.
+9.  **De-Multiplexing**: The reverse engineering of a combined data stream to extract individual sensor values.
+10. **National Technical Means (NTM)**: The array of satellites, ships, and planes used to verify international treaties without physical inspections.

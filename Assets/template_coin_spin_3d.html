@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>3D Coin Spin Template</title>
+    <style>
+        body {
+            margin: 0;
+            background: #05040a;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="coinCanvas"></canvas>
+
+    <script>
+        /**
+         * 3D COIN SPIN TEMPLATE
+         * --------------------
+         * Features:
+         * - Simulated 3D thickness using layered rendering
+         * - "Friendly" organic rotation (easing + wobble)
+         * - Auto-zoom/cropping to fill circular clip
+         * - Support for Front and Rear face images
+         */
+
+        const canvas = document.getElementById('coinCanvas');
+        const ctx = canvas.getContext('2d');
+        let t = 0;
+
+        // --- CONFIGURATION ---
+        const config = {
+            coinSize: 340,
+            thickness: 18,
+            spinSpeed: 1.2,
+            organicWobble: 0.15,
+            fillScale: 1.45, // Increase this if your images have large margins
+            colors: {
+                edgeHigh: '#8d5a20',
+                edgeLow: '#6a4010',
+                facePlaceholder: '#b87333',
+                rimGlow: 'rgba(224, 138, 64, 0.4)'
+            },
+            images: {
+                front: 'SMI_Front.png',
+                rear: 'SMI_Rear.png'
+            }
+        };
+
+        const imgFront = new Image(); imgFront.src = config.images.front;
+        const imgRear = new Image(); imgRear.src = config.images.rear;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // 1. Calculate Eased Rotation & Wobble
+            const rot = t * config.spinSpeed;
+            const tilt = Math.sin(t * 0.5) * config.organicWobble;
+
+            const scaleX = Math.cos(rot);
+            const face = scaleX >= 0 ? 0 : 1;
+            const absScaleX = Math.abs(scaleX);
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(tilt);
+
+            // 2. Draw 3D Edge (Thickness)
+            const edgeSteps = 10;
+            for (let i = 0; i < edgeSteps; i++) {
+                const offset = (i / edgeSteps - 0.5) * config.thickness * (1 - absScaleX);
+                ctx.fillStyle = i < edgeSteps / 2 ? config.colors.edgeLow : config.colors.edgeHigh;
+                ctx.beginPath();
+                ctx.ellipse(offset, 0, absScaleX * config.coinSize / 2, config.coinSize / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 3. Draw Coin Face
+            ctx.save();
+            ctx.scale(absScaleX, 1);
+
+            const currentImg = face === 0 ? imgFront : imgRear;
+
+            // Apply Circular Clip
+            ctx.beginPath();
+            ctx.arc(0, 0, config.coinSize / 2, 0, Math.PI * 2);
+            ctx.clip();
+
+            if (currentImg.complete) {
+                // Scale image to fill the circle
+                ctx.drawImage(currentImg,
+                    -config.coinSize / 2 * config.fillScale, -config.coinSize / 2 * config.fillScale,
+                    config.coinSize * config.fillScale, config.coinSize * config.fillScale
+                );
+            } else {
+                ctx.fillStyle = config.colors.facePlaceholder;
+                ctx.fill();
+            }
+
+            // 4. Rim Glow Enhancement
+            const rimGrad = ctx.createRadialGradient(0, 0, config.coinSize / 2 - 10, 0, 0, config.coinSize / 2);
+            rimGrad.addColorStop(0, 'rgba(0,0,0,0)');
+            rimGrad.addColorStop(1, config.colors.rimGlow);
+            ctx.fillStyle = rimGrad;
+            ctx.beginPath(); ctx.arc(0, 0, config.coinSize / 2, 0, Math.PI * 2); ctx.fill();
+
+            ctx.restore();
+            ctx.restore();
+
+            t += 0.016;
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+
+</html>

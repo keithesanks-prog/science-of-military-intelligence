@@ -1,0 +1,238 @@
+[
+    {
+        "id": "1.0",
+        "title": "The Spark That Changed the World",
+        "arc": "The Electromagnetic Foundation",
+        "status": "Final",
+        "progress": 100,
+        "math": "Maxwell's Equations",
+        "path": "Episode 1 - The Spark That Changed the World/The Spark That Changed the World.txt",
+        "tasks": [
+            {
+                "id": "t1",
+                "text": "Draft Maxwell Act",
+                "status": "Done"
+            },
+            {
+                "id": "t2",
+                "text": "Hertz Visual Polish",
+                "status": "Done"
+            }
+        ]
+    },
+    {
+        "id": "1.1",
+        "title": "The Anatomy of the Pulse",
+        "arc": "The Electromagnetic Foundation",
+        "status": "Final",
+        "progress": 100,
+        "math": "Pulse Width/PRF",
+        "path": "Episode 1.1 - The Anatomy of the Pulse/Episode 1.1 - The Anatomy of the Pulse.txt",
+        "tasks": [
+            {
+                "id": "t3",
+                "text": "Block Diagram Draft",
+                "status": "Done"
+            },
+            {
+                "id": "t4",
+                "text": "Noise Floor Explanation",
+                "status": "Done"
+            }
+        ]
+    },
+    {
+        "id": "1.2",
+        "title": "The Armor-Piercing Ghost",
+        "arc": "The Electromagnetic Foundation",
+        "status": "Active",
+        "progress": 100,
+        "math": "X-Ray Diffraction",
+        "path": "Episode 1.2 - The Armor-Piercing Ghost/Episode 1.2 - The Armor-Piercing Ghost.txt",
+        "tasks": [
+            {
+                "id": "t5",
+                "text": "X-Ray History Research",
+                "status": "Done"
+            },
+            {
+                "id": "t6",
+                "text": "Submarine Hull B-Roll",
+                "status": "To Do"
+            }
+        ]
+    },
+    {
+        "id": "1.8",
+        "title": "The Shape of the Signal",
+        "arc": "The Electromagnetic Foundation",
+        "status": "Active",
+        "progress": 100,
+        "math": "Resonance/Polarization",
+        "path": "Episode 1.8 - The Shape of the Signal/Episode 1.8 - The Shape of the Signal.txt",
+        "tasks": [
+            {
+                "id": "t7",
+                "text": "Resonance Visualization",
+                "status": "In Progress"
+            },
+            {
+                "id": "t8",
+                "text": "Polarization Penalty Act",
+                "status": "To Do"
+            }
+        ]
+    },
+    {
+        "id": "1.9",
+        "title": "The Geometry of the Ghost",
+        "arc": "The Electromagnetic Foundation",
+        "status": "Active",
+        "progress": 100,
+        "math": "Waveguides/Diffraction",
+        "path": "Episode 1.9 - The Geometry of the Ghost/Episode 1.9 - The Geometry of the Ghost.txt",
+        "tasks": [
+            {
+                "id": "t9",
+                "text": "Waveguide Physics 3D Model",
+                "status": "In Progress"
+            }
+        ]
+    },
+    {
+        "id": "2.0",
+        "title": "Friend or Foe",
+        "arc": "The Electromagnetic Foundation",
+        "status": "Active",
+        "progress": 100,
+        "math": "Frequency Hopping",
+        "path": "Episode 2 - Friend or Foe/Episode 2 Friend or Foe.txt",
+        "tasks": []
+    },
+    {
+        "id": "2.5",
+        "title": "The Digital Lighthouse",
+        "arc": "The Electromagnetic Foundation",
+        "status": "Active",
+        "progress": 100,
+        "math": "AIS/TDMA",
+        "path": "Episode 2.5 - The Digital Lighthouse/Episode 2.5 - The Digital Lighthouse.txt",
+        "tasks": []
+    },
+    {
+        "id": "8.6",
+        "title": "Thermodynamics as an Intelligence Tool",
+        "arc": "The Invisible War",
+        "status": "Active",
+        "progress": 100,
+        "math": "E=hf / Wien's Law",
+        "path": "Episode 8.6 - Thermodynamics as an Intelligence Tool/Episode 8.6 - Thermodynamics as an Intelligence Tool.txt",
+        "tasks": [
+            {
+                "id": "t10",
+                "text": "Wien's Law Formula Overlay",
+                "status": "In Progress"
+            }
+        ]
+    },
+    {
+        "id": "8.7",
+        "title": "The Precision Map",
+        "arc": "The Invisible War",
+        "status": "Active",
+        "progress": 100,
+        "math": "TDOA / GPS History",
+        "path": "Episode 8.7 - The Precision Map/Episode 8.7 - The Precision Map.txt",
+        "tasks": []
+    },
+    {
+        "id": "8.8",
+        "title": "The Drone Boomerang",
+        "arc": "The Invisible War",
+        "status": "Active",
+        "progress": 100,
+        "math": "Attritional Logistics",
+        "path": "Episode 8.8 - The Drone Boomerang/Episode 8.8 - The Drone Boomerang.txt",
+        "tasks": []
+    },
+    {
+        "id": "8.9",
+        "title": "Borrowing the Bodyguard's Eyes",
+        "arc": "The Invisible War",
+        "status": "Active",
+        "progress": 100,
+        "math": "Sensor Fusion",
+        "path": "Episode 8.9 - Borrowing the Bodyguard's Eyes/Episode 8.9 - Borrowing the Bodyguard's Eyes.txt",
+        "tasks": []
+    },
+    {
+        "id": "15.5",
+        "title": "The Microwave Ghost",
+        "arc": "The Invisible War",
+        "status": "Active",
+        "progress": 100,
+        "math": "Asymmetric EMI",
+        "path": "Episode 15.5 - Asymmetric Warfare/Episode 15.5 - Asymmetric Warfare.txt",
+        "tasks": []
+    },
+    {
+        "id": "9.5",
+        "title": "The Taxonomy of Secrets",
+        "arc": "The Architecture of Information",
+        "status": "Active",
+        "progress": 100,
+        "math": "Classification Logic",
+        "path": "Episode 9.5 - The Human Firewall/Episode 9.5 - The Human Firewall.txt",
+        "tasks": []
+    },
+    {
+        "id": "9.7",
+        "title": "The Trigger and the Code",
+        "arc": "The Architecture of Information",
+        "status": "Active",
+        "progress": 100,
+        "math": "PAL/Authority",
+        "path": "Episode 9.7 - The Trigger and the Code/Episode 9.7 - The Trigger and the Code.txt",
+        "tasks": []
+    },
+    {
+        "id": "11.0",
+        "title": "The Web as Weapon",
+        "arc": "The Invisible War",
+        "status": "Active",
+        "progress": 100,
+        "math": "SCADA/Stuxnet",
+        "path": "Episode 11 - The Web as Weapon/Episode 11 - The Web as Weapon.txt",
+        "tasks": []
+    },
+    {
+        "id": "12.0",
+        "title": "Shadow Operations",
+        "arc": "The Architecture of Information",
+        "status": "Active",
+        "progress": 100,
+        "math": "Cyber Espionage",
+        "path": "Episode 12 - Shadow Operations/Episode 12 - Shadow Operations.txt",
+        "tasks": []
+    },
+    {
+        "id": "13.0",
+        "title": "The Price of Betrayal",
+        "arc": "The Human & Strategic Signal",
+        "status": "Active",
+        "progress": 100,
+        "math": "Espionage Fallout",
+        "path": "Episode 13 - The Price of Betrayal/Episode 13 - The Price of Betrayal.txt",
+        "tasks": []
+    },
+    {
+        "id": "14.0",
+        "title": "Greatest Hits of Technical Collection",
+        "arc": "Technical Collection \"Greatest Hits\"",
+        "status": "Active",
+        "progress": 100,
+        "math": "Project Azorian/Seal Bug",
+        "path": "Episode 14 - Greatest Hits/Episode 14 - Greatest Hits.txt",
+        "tasks": []
+    }
+]

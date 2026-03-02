@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Carrier Signal & Propagation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020408;
+            --panel-bg: rgba(5, 10, 20, 0.95);
+            --accent: #ff00ff;
+            --carrier-color: #00d2ff;
+            --envelope-color: #ffffff;
+            --text: #e0f2f1;
+            --border: rgba(255, 0, 255, 0.2);
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Orbitron', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image: linear-gradient(to bottom, #000, #1a0528);
+        }
+
+        header {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+
+        .brand h1 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .split-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 400px;
+            min-height: 400px;
+        }
+
+        .vis-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-header {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .canvas-area {
+            flex: 1;
+            background: #000;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .control-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.65rem;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .annotation {
+            position: absolute;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>Carrier Propagation & Modulation</h1>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.6;">
+            MODULE: SIGNAL-ANATOMY-303
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <div class="split-view">
+            <!-- Oscilloscope View (Time Domain) -->
+            <div class="vis-card">
+                <div class="card-header">
+                    <span>OSCILLOSCOPE VIEW</span>
+                    <span style="opacity: 0.5;">TIME DOMAIN</span>
+                </div>
+                <div class="canvas-area">
+                    <canvas id="scopeCanvas"></canvas>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--envelope-color)"></div> Pulse Envelope (Gate)
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot" style="background: var(--carrier-color)"></div> Carrier Wave (RF)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spatial View (Propagation) -->
+            <div class="vis-card">
+                <div class="card-header">
+                    <span>SPACE PROPAGATION</span>
+                    <span style="opacity: 0.5;">EM WAVE PACKET</span>
+                </div>
+                <div class="canvas-area">
+                    <canvas id="spaceCanvas"></canvas>
+                </div>
+                <div class="annotation"
+                    style="top: 50%; width: 100%; text-align: center; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 5px;">
+                    ANTENNA (SOURCE) &rarr; PROPAGATING TO TARGET
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-grid">
+            <div class="control-box">
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span>CARRIER FREQUENCY (Fc)</span>
+                        <span id="fcVal">500 MHz</span>
+                    </div>
+                    <input type="range" min="100" max="1000" step="10" value="500"
+                        oninput="updateParam('fc', this.value)">
+                    <p style="font-size: 0.6rem; opacity: 0.5;">The underlying RF frequency that carries the signal
+                        energy.</p>
+                </div>
+            </div>
+            <div class="control-box">
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span>PULSE WIDTH (PW)</span>
+                        <span id="pwVal">25 &mu;s</span>
+                    </div>
+                    <input type="range" min="5" max="80" step="1" value="25" oninput="updateParam('pw', this.value)">
+                    <p style="font-size: 0.6rem; opacity: 0.5;">Duration of the pulse "on" time. Determines spatial
+                        length.</p>
+                </div>
+            </div>
+            <div class="control-box">
+                <div class="slider-group">
+                    <div class="slider-header">
+                        <span>PULSE REC. FREQ (PRF)</span>
+                        <span id="prfVal">1.0 kHz</span>
+                    </div>
+                    <input type="range" min="0.2" max="3" step="0.1" value="1.0"
+                        oninput="updateParam('prf', this.value)">
+                    <p style="font-size: 0.6rem; opacity: 0.5;">How often pulses are fired. Higher PRF increases track
+                        rate.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scopeCanvas = document.getElementById('scopeCanvas');
+        const spaceCanvas = document.getElementById('spaceCanvas');
+        const sCtx = scopeCanvas.getContext('2d');
+        const pCtx = spaceCanvas.getContext('2d');
+
+        let state = {
+            params: {
+                fc: 500,
+                pw: 25,
+                prf: 1.0
+            },
+            time: 0,
+            pulses: [] // For space view
+        };
+
+        function updateParam(id, val) {
+            state.params[id] = parseFloat(val);
+            const labelMap = { fc: ' MHz', pw: ' \u00B5s', prf: ' kHz' };
+            document.getElementById(`${id}Val`).innerText = val + labelMap[id];
+        }
+
+        function resize() {
+            [scopeCanvas, spaceCanvas].forEach(c => {
+                c.width = c.parentElement.clientWidth;
+                c.height = c.parentElement.clientHeight;
+            });
+        }
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+            requestAnimationFrame(animate);
+        }
+
+        function animate(time) {
+            state.time += 0.016;
+
+            drawScope();
+            drawSpace();
+
+            // Emit pulses for space view based on PRF
+            const prfInterval = (2000 / state.params.prf);
+            if (Date.now() % Math.floor(prfInterval) < 20) {
+                if (state.pulses.length === 0 || state.pulses[state.pulses.length - 1].x > 100) {
+                    state.pulses.push({ x: 0, o: 1 });
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function drawScope() {
+            sCtx.clearRect(0, 0, scopeCanvas.width, scopeCanvas.height);
+            const w = scopeCanvas.width;
+            const h = scopeCanvas.height;
+            const cy = h / 2;
+
+            // Draw Grid
+            sCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            sCtx.lineWidth = 1;
+            for (let x = 0; x < w; x += w / 10) { sCtx.beginPath(); sCtx.moveTo(x, 0); sCtx.lineTo(x, h); sCtx.stroke(); }
+            for (let y = 0; y < h; y += h / 8) { sCtx.beginPath(); sCtx.moveTo(0, y); sCtx.lineTo(w, y); sCtx.stroke(); }
+
+            // Draw Pulsed Carrier
+            const pwPixels = state.params.pw * 4;
+            const offset = (state.time * 200) % (w * 0.8);
+
+            sCtx.beginPath();
+            sCtx.strokeStyle = '#00d2ff';
+            sCtx.lineWidth = 2;
+
+            for (let x = 0; x < w; x++) {
+                // Pulse envelope (on/off logic)
+                const inPulse = (x > 100 && x < 100 + pwPixels) || (x > 100 + 400 && x < 100 + 400 + pwPixels);
+                const amp = inPulse ? 80 : 0;
+
+                // Carrier sine component
+                const freq = state.params.fc / 20;
+                const y = cy + Math.sin(x * freq + state.time * 20) * amp;
+
+                if (x === 0) sCtx.moveTo(x, y);
+                else sCtx.lineTo(x, y);
+            }
+            sCtx.stroke();
+
+            // Draw Envelope Overlay (Translucent White)
+            sCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            sCtx.fillRect(100, cy - 100, pwPixels, 200);
+            sCtx.fillRect(500, cy - 100, pwPixels, 200);
+            sCtx.strokeStyle = '#fff';
+            sCtx.strokeRect(100, cy - 100, pwPixels, 200);
+        }
+
+        function drawSpace() {
+            pCtx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+            const w = spaceCanvas.width;
+            const h = spaceCanvas.height;
+            const cy = h / 2;
+
+            // Antenna Source
+            pCtx.fillStyle = '#ff00ff';
+            pCtx.fillRect(0, cy - 40, 20, 80);
+
+            // Move and Draw Pulses
+            for (let i = state.pulses.length - 1; i >= 0; i--) {
+                const p = state.pulses[i];
+                p.x += 3;
+
+                const packetW = state.params.pw * 2;
+
+                // Draw the internal carrier "wiggle" inside the packet
+                pCtx.beginPath();
+                pCtx.strokeStyle = '#00d2ff';
+                pCtx.lineWidth = 2;
+                for (let ix = p.x; ix < p.x + packetW; ix += 1) {
+                    const localX = ix - p.x;
+                    const y = cy + Math.sin(ix * (state.params.fc / 15)) * 30;
+                    if (ix === p.x) pCtx.moveTo(ix, y);
+                    else pCtx.lineTo(ix, y);
+                }
+                pCtx.stroke();
+
+                // Draw Packet Boundary (The "Packet of Energy")
+                pCtx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                pCtx.strokeRect(p.x, cy - 40, packetW, 80);
+
+                if (p.x > w) state.pulses.splice(i, 1);
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

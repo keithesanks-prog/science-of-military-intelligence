@@ -1,0 +1,65 @@
+Episode 3: Digital Mirage
+
+### COLD OPEN: The Highway Mirage
+(Visual: A high-contrast, cinematic shot of a long, straight highway baking under a midday sun. Heat waves shimmer off the asphalt. In the distance, a large, reflective pool of blue water appears to cover the road.)
+
+Narrator (calm, analytical): "Have you ever been driving on a day so hot the road ahead looks like it’s flooded? You can see the reflections of the sky, the shimmer of the water, the depth of the pool. Your eyes aren't failing you. They are telling you *exactly* what they see."
+
+(Visual: The camera moves forward. As we reach the 'water,' it vanishes instantly, leaving only dry, cracked pavement.)
+
+Narrator: "The 'water' wasn't there, but the light was. The heat simply bent the air, forcing your eyes to see the sky where the road should be. It was a mirage—a trick played not on your brain, but on the medium in between."
+
+(Visual: Transition to a grainier, tactical radar screen. Dozens of 'pips' are dancing across the screen.)
+
+Narrator: "This is the essence of Electronic Warfare. It’s not about breaking the enemy’s eyes; it’s about making the very air lie to them. Because in the world of the SMI, the most dangerous enemy isn't the one you can't see... it's the one who forces you to see exactly what they want you to. Welcome to the Digital Mirage."
+
+(Visual: Cut to BLACK. A digital screech—the sound of jamming—fades in. White text: **THE SCIENCE OF MILITARY INTELLIGENCE**)
+
+---
+
+Act 1: The Joan Curran Story (The Discovery of Chaff)
+(Visual: A split screen. On the left, a 10-ton British Lancaster bomber. On the right, a tiny, 10-centimeter strip of aluminum foil. A radar wave hits both. Both reflect an identical, bright red glow.)
+
+Narrator: "To win the war, you don't always need a bigger bomb. Sometimes, you just need a better ghost. The greatest trick in military history didn't come from a general, but from a physicist named Joan Curran. In 1942, she realized that radar didn't care about weight—it only cared about Resonance."
+
+### Mathematical Ghost Deep Dive: The Size of a Ghost
+(Visual: A large sheet of metal (1 meter square). A radar wave hits it and bounces off. Then, a tiny wire (exactly 26cm long). The radar wave hits the wire, and the wire begins to vibrate violently, glowing with energy and re-radiating a huge signal.)
+
+Narrator: "You would think a giant sheet of metal would reflect more energy than a tiny wire. But to a radar wave, the wire is a tuning fork. If the length of the wire matches the 'tempo' of the wave, it resonates. It absorbs the energy and screams it back into the sky. This is why a single handful of tinfoil can look like a squadron of heavy bombers. It's not about area; it's about **Resonance**."
+
+Act 2: The Potomac Mystery (The Invention of the Pulse)
+(Visual: 1930. The banks of the Potomac River. Two engineers, Hyland and Taylor, are testing a continuous radio link between two antennas. A small wooden plane flies across the river, intercepting the invisible beam.)
+
+Narrator: "Long before the war, there was the 'Potomac Mystery.' Two engineers noticed a flicker in their radio signal every time a plane crossed the river. It was the first 'Digital Mirage'—an accidental discovery that something was there. But there was a problem: They knew *where* the plane was on a line, but they didn't know how *far* away it was."
+
+### Mathematical Ghost Deep Dive: The Pulse-Echo Blueprint
+(Visual: An animation of a clock hand spinning incredibly fast. A radio wave (The Shout) leaves a transmitter. It hits a plane and bounces back (The Echo).)
+
+Narrator: "To find the distance, you have to stop shouting and start clicking. This is the math of Ranging. Radio waves travel at the speed of light—roughly 300 million meters every second. If you send a short 'pulse' and wait for the echo, you can calculate the range using a simple equation: **Range = (Speed of Light × Time) ÷ 2**."
+
+(Visual: A graphic appears: **R = (c × t) / 2**. A scale shows 1 microsecond (1 millionth of a second).)
+
+Narrator: "We divide by two because the wave has to travel there and back. In the world of the SMI, time is distance. We call this the **'Radar Mile.'** It takes roughly **12.36 microseconds** for a pulse to travel one nautical mile and return. If his 'ear' hears the echo at 12 microseconds, the ghost is one mile away. This is the blueprint for the precision of the modern world."
+
+Act 3: Operation Window (The First Mirage)
+(Visual: July 1943. High above Hamburg. British crews begin shoveling bundles of 'Window'—millions of these strips—into the slipstream. We see them expand into a massive, shimmering cloud.)
+
+Narrator: "The British called it 'Window.' On the night of the Hamburg raid, they finally pulled the trigger. German radar operators, who were used to seeing clear, sharp 'pips'—each one a bomber they could time and target—suddenly saw a wall of white noise."
+
+Narrator: "By turning Curran's 'Resonant Ghosts' into a blizzard, they didn't just hide the bombers; they killed the math of ranging. You can't time an echo if the entire sky is shouting back at once."
+
+Act 4: The Sledgehammer (Active Jamming)
+(Visual: A German 'Würzburg' radar dish tracking the sky. Suddenly, a massive, jagged British 'Mandrel' wave slams into it.)
+
+Narrator: "Active Electronic Warfare is the Sledgehammer. If you can't trick the eye, you shine a sun-strength spotlight into it. This is Active Jamming. By 1944, the air was a battlefield where no one could trust their eyes. For every move, there was a counter-move: Frequency Agility."
+
+Narrator: "This is where Hedy Lamarr’s 1942 patent finally left the shelf. To survive a sky filled with noise, your machines had to learn to 'hop' in perfect synchronization. If you didn't have the secret rhythm, you were blind."
+
+Act 5: The Stolen Ear (R.V. Jones)
+(Visual: A twin-engine Avro Anson 'Ferret' aircraft. Inside, a technician hunches over a Hallicrafters S-27 receiver.)
+
+Narrator: "In the world of the SMI, the most dangerous mirage is the one that tells you you're safe. In 1941, the British discovered the 'Knickebein'—invisible German radio beams that acted as a highway for bombers. R.V. Jones didn't jam the beams; he 'meaconed' them. He recorded the signal and re-broadcast it from a different location."
+
+Narrator: "German pilots, following a signal they believed was their own, were led into empty fields while their instruments told them they were over their target. It was the ultimate Digital Mirage: making the enemy's own technology lie to them."
+
+(Visual: Fade to BLACK. White text: **INFORMATION IS THE ONLY WEAPON THAT NEVER MISSES**)

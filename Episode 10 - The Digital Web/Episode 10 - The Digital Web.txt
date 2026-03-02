@@ -1,0 +1,408 @@
+Episode 10: The Digital Web
+
+### COLD OPEN: The Falling Glass
+(Visual: A high-definition, slow-motion shot of a glass of water sitting on a kitchen counter. The camera focuses on the condensation on the glass. Suddenly, the table vibrates. The glass slides. It hits the floor and shatters into a thousand pieces.)
+
+Narrator (quiet, intense): "When something is centered—when it has a single point of failure—it is fragile. If you hit it hard enough, the whole thing ceases to exist. A glass. A lightbulb. A government."
+
+(Visual: Transition to a map of a 1950s phone network. Lines radiate out from a single central 'Hub' in a major city. A 'Nuclear Blast' icon appears over the hub, and instantly, every line on the map goes dark.)
+
+Narrator: "In the 1960s, this was the military’s greatest nightmare. We had built the most powerful intelligence system in history, but it was anchored to a fragile skeleton. If the 'Center' was hit, the 'Ghost' would be silenced instantly. To survive the nuclear age, we didn't just need better radios; we needed to rethink the soul of connection itself. We needed a network that was already 'shattered'... but still worked."
+
+(Visual: Cut to BLACK. White text: **THE SCIENCE OF MILITARY INTELLIGENCE**)
+
+---
+
+Act 1: The Visionary (The Licklider Dream)
+(Visual: 1962. J.C.R. Licklider sitting at a desk littered with psychoacoustics reports. He is writing a memo titled 'Intergalactic Computer Network.')
+
+Narrator: "It began with a man who wasn't even an engineer. J.C.R. Licklider was a psychologist who understood something profound: the 'Mathematical Ghost' wasn't just for sending messages; it was for *thinking*. He envisioned a world where computers weren't just calculators, but a global 'Intergalactic Network' that shared human knowledge in real-time."
+
+### Practical Explainer: Circuit Switching vs. Packet Switching
+(Visual: A split-screen animation. LEFT: A single-lane highway with a toll booth. One car enters, and the entire road is RESERVED for that car until it reaches the other end. A line of 50 cars waits behind it. RIGHT: The same highway, but now it has 10 lanes. Cars merge, split, take exits, and rejoin. No one 'owns' the road.)
+
+Narrator: "But to understand why Licklider's dream was impossible in 1962, you need to understand how phone calls actually worked. It was called **Circuit Switching**, and here's the problem with it."
+
+Narrator: "Imagine you want to drive from Los Angeles to New York. In a circuit-switched system, the moment you pull onto the highway, *the entire highway is reserved just for you*. Nobody else can use it until you arrive and hang up. That's how a 1960s phone call worked — an actual, physical copper wire was locked to your conversation, coast to coast, for the entire duration. It was like renting a private highway every time you made a call."
+
+Narrator: "Now here's why that's a problem: it's incredibly wasteful. Studies showed that during an average phone call, the line is actually *silent* about 60% of the time — pauses between words, listening, thinking. All of that silence is occupying a wire that nobody else can use. And from a military standpoint, it's worse than wasteful — it's a *target*. If you cut that one wire, the call dies. Period."
+
+Act 2: The Survivors (Paul Baran and Leonard Kleinrock)
+(Visual: Split screen. On one side, Paul Baran at the RAND Corporation (1964). On the other, Leonard Kleinrock at UCLA (1962).)
+
+Narrator: "Two men, working independently, found the solution."
+
+### Practical Explainer: The RAND Corporation
+(Visual: A sleek, mid-century modern building in Santa Monica, California. The RAND logo appears. Inside, men in short-sleeved dress shirts stand around chalkboards filled with equations.)
+
+Narrator: "First, you need to know what **RAND** is, because it comes up a lot in military history. RAND — short for **Research ANd Development** — was essentially the Pentagon's homework contractor. After World War II, the Air Force realized it needed mathematicians and scientists on call, but it didn't want them in uniform. So it created RAND: a private think tank that could ask dangerous questions without the bureaucracy of a government agency. Questions like: *'If the Soviets launch a first strike, can we still communicate?'*"
+
+Narrator: "That question landed on the desk of **Paul Baran** in 1960. And his answer changed everything."
+
+(Visual: Paul Baran drawing three network diagrams on a chalkboard, labeled: CENTRALIZED, DECENTRALIZED, DISTRIBUTED. He crosses out the first two with a red X.)
+
+Narrator: "Baran looked at the American telephone network and saw a death trap. It was **centralized** — everything routed through a handful of major switching stations. Take out one hub in a nuclear strike, and entire regions go silent. He proposed something radical: a **Distributed Network** — a web where every node connects to at least three or four others. No center. No headquarters. No single point you can hit to kill the whole thing."
+
+Narrator: "But here's the engineering problem: a distributed network doesn't work if you're sending messages the old way. You can't 'reserve' a path through a web that's constantly rerouting around damage. You need a completely different way of moving information."
+
+### Practical Explainer: Packet Switching (The Shredded Letter)
+(Visual: A person writes a long letter — 10 pages. They tear it into strips. Each strip has a number: 1/10, 2/10, 3/10... They hand the strips to 10 different bicycle messengers. Each messenger takes a different route through a city. At the destination, another person collects the strips and reassembles the letter in order.)
+
+Narrator: "This is where **Leonard Kleinrock** at UCLA comes in. Imagine you need to send a 10-page letter across a city, but every road has traffic and some roads might be closed. In the old system — circuit switching — you'd hire one courier, who would carry all 10 pages on a single route and pray that route stays open the whole time."
+
+Narrator: "Kleinrock's idea was the opposite: **shred the letter.** Tear it into tiny strips — he called them **packets**. Number each strip. Then hand them to *different* couriers, each taking *whatever route is fastest right now*. Some strips might arrive out of order. Some might take a detour. But as long as they all eventually arrive, the recipient can reassemble the original message."
+
+Narrator: "And here's why that matters: if a road gets destroyed — if a bomb takes out a bridge — you only lose the packets *currently on that road*. The sender can resend those specific strips on a different route. The rest of the message is fine. You've turned a fragile, single-path system into something that can route around damage in real-time. Kleinrock proved this mathematically using **Queuing Theory**, and the key equation is beautifully simple: **$T = L / R$**. The delay ($T$) equals the packet size ($L$) divided by the transmission rate ($R$). Smaller packets, less delay, more resilience."
+
+### Practical Explainer: The IMP (The World's First Router)
+Narrator: "Now, to make this work, you need hardware. And here's where one of the most important — and most overlooked — machines in history comes in."
+
+(Visual: A large, gray, refrigerator-sized Honeywell DDP-516 minicomputer with blinking lights and thick cables. A label reads: **IMP #1 — UCLA**. An arrow points from a desk-sized computer to the IMP, labeled 'HOST → IMP.')
+
+Narrator: "An **IMP** — an **Interface Message Processor** — was basically the world's first router, but it's easier to think of it as a **local post office**. Here's how it worked: your computer — called a 'Host' — couldn't talk directly to the network. It was too dumb. It could only talk to its local IMP. So you'd hand your message to the IMP, and the IMP's job was three things: **chop it into packets, read the destination, and figure out which neighbor to hand it to next.**"
+
+Narrator: "And here's the key detail that answers the big question: *how did a packet know where to go if there were no website names?*"
+
+### Practical Explainer: Addressing Before the Internet (The Numeric Ghost)
+(Visual: A packet is shown as a small envelope. It zooms in to reveal a header with three fields: **DEST IMP: 3 | PORT: 2 | HOST: 1**. Beside it, a simple table shows: IMP 1 = UCLA, IMP 2 = SRI, IMP 3 = UCSB, IMP 4 = Utah.)
+
+Narrator: "There were no domain names. No 'google.com.' When you sent a message in 1969, you addressed it with a **number** — specifically, the IMP number of the destination. It's like addressing a letter not to a person's name, but to their ZIP code and apartment number. That was it. IMP 3, Port 2, Host 1. The network had *maybe* four locations in 1969. You could literally memorize them."
+
+Narrator: "But here's the clever part: the packets didn't just *broadcast* to everyone. The IMPs maintained something called a **Routing Table** — and this is really the brain of the whole system."
+
+(Visual: An animation of four IMPs arranged in a diamond. Each one has a small 'chalkboard' next to it showing distances to the other IMPs. Every 640 milliseconds, they exchange their chalkboards. One path gets 'cut' (a red X), and in the next exchange, all the chalkboards update to route around it.)
+
+Narrator: "Think of it like neighborhood gossip. Every 640 milliseconds — about half a second — each IMP would turn to its neighbors and say: *'Hey, I can reach IMP 3 in two hops, and IMP 4 in one hop.'* The neighbors would compare notes and update their own tables. So when a link went down, within *seconds*, the whole network knew about it and rerouted automatically. It wasn't magic — it was just gossip happening 24 hours a day, 7 days a week. And *that's* how packets found their way without names."
+
+Act 3: The First Breath (October 29, 1969)
+(Visual: A small, beige room at UCLA. A massive, gray metal box—the IMP (Interface Message Processor)—sits in the corner. Cables snake across the floor.)
+
+Narrator: "In 1969, **ARPA—the Advanced Research Projects Agency**, the Pentagon's blue-sky research arm (later renamed **DARPA**, the 'D' standing for 'Defense')—funded the experiment. On October 29th, at 10:30 PM, Leonard Kleinrock and his student Charley Kline prepared to send the first message to the Stanford Research Institute. The word was 'LOGIN.'"
+
+(Visual: A Teletype machine. We see the letters 'L' and 'O' being typed. Then, the screen glitches.)
+
+Narrator: "They typed the 'L.' It arrived. They typed the 'O.' It arrived. And then... the system crashed. The first message ever sent on the ancestor of the internet was 'LO.' It was as if the Ghost was just clearing its throat. But the proof was there: the distributed web breathed."
+
+Act 4: The Three Near-Death Moments (1970 – 1980)
+(Visual: A heartbeat monitor. The line pulses steadily... then flatlines. Title card: **"THE WEB ALMOST DIED. THREE TIMES."**)
+
+### Near-Death #1: The IMP Lockup (1970)
+(Visual: Animation of the 4-node ARPANET. Data packets begin flowing faster and faster, piling up at the IMPs like a traffic jam. The nodes start blinking red. One by one, they freeze.)
+
+Narrator: "Just months after that first 'LO,' the engineers who actually *built* the IMPs discovered a fatal flaw. And you need to know who these engineers were, because they don't get enough credit."
+
+### Practical Explainer: BBN (The Unsung Heroes)
+(Visual: A modest office building in Cambridge, Massachusetts. Inside, engineers are hunched over circuit boards and oscilloscopes. A sign reads: **Bolt, Beranek and Newman Inc.**)
+
+Narrator: "**BBN — Bolt, Beranek and Newman** — was a small acoustics consulting firm in Cambridge, Massachusetts. They started out designing concert halls. Seriously — their original business was making rooms sound good. But they had some of the sharpest engineers in the country, and when ARPA put out a contract to build the IMPs, BBN won the bid over much larger companies. They built the first four IMPs in *nine months*. These are the people who physically constructed the internet's first backbone, and most people have never heard of them."
+
+Narrator: "So when those IMPs started failing, it was BBN's problem to fix."
+
+(Visual: A close-up of an IMP's memory indicator, shown as a water tank filling up. Packets pour in from three directions. The tank overflows. The IMP's status light turns red. Neighboring IMPs, not knowing the problem, keep sending. Their tanks start filling too.)
+
+Narrator: "Here's what happened: the IMPs had a **flow control** problem. Think of each IMP as a bucket. Data pours in from multiple directions. If data arrives faster than the IMP can forward it, the bucket fills up. And in 1970, when the bucket overflowed, the IMP didn't send a warning — it just *froze*. And because it froze silently, its neighbors didn't know to stop sending. So *their* buckets filled up. And *their* neighbors' buckets. The entire network locked up like a traffic jam where every intersection is gridlocked."
+
+Narrator: "The fix was elegant: **back-pressure**. BBN redesigned the IMPs so that when a bucket was getting full, it could send a 'STOP' signal upstream — essentially telling the previous IMP, *'Hold on, I need a second.'* It's the same principle as a pressure relief valve on a boiler. And here's the lesson that still applies today: **Resilience isn't just about surviving a bomb. It's about surviving your own success.** Every network engineer who manages cloud infrastructure deals with this exact same problem."
+
+### Near-Death #2: The Mansfield Amendment (1973)
+(Visual: 1973. Capitol Hill. A gavel comes down. A document appears: **"Mansfield Amendment — Public Law 91-441."** Red lines are drawn through research budgets.)
+
+Narrator: "By 1973, the ARPANET had 40 nodes and was growing fast. But Congress had a question that nearly killed it: **'What does this have to do with the military?'**"
+
+Narrator: "To understand why this was an existential threat, you need to understand how DARPA's funding works. DARPA — the **Defense** Advanced Research Projects Agency — gets its money from the Department of Defense. That money comes with strings. And in 1973, Senator Mike Mansfield tightened those strings into a noose."
+
+(Visual: A simple animation: a pipeline labeled 'DOD BUDGET' flows into a building labeled 'DARPA.' A gate drops down, labeled 'MANSFIELD AMENDMENT.' Only projects stamped 'DIRECT MILITARY USE' pass through. Projects stamped 'BASIC RESEARCH' are blocked.)
+
+Narrator: "The **Mansfield Amendment** restricted all DARPA-funded research to projects with a *direct military application*. And that was a problem, because by 1973, the ARPANET was mostly being used by graduate students to share files and — believe it or not — the network's *killer app* was email. Three-quarters of all ARPANET traffic in 1973 was email. Professors emailing other professors. That doesn't exactly scream 'national defense.'"
+
+Narrator: "It's like if your landlord told you the apartment was only for business, and they walked in to find you hosting a book club. Technically, you're not wrong — knowledge is valuable — but that's not what the lease says."
+
+Narrator: "Larry Roberts, the ARPA program manager who had championed the network from day one, saw the writing on the wall. ARPA didn't even have the legal authority to *operate* a telecommunications network. The Mansfield Amendment gave Congress the leverage to shut it down."
+
+### Practical Explainer: The DCA Handoff (1975)
+(Visual: A timeline showing the handoff. An arrow moves from a building labeled 'DARPA (Research Lab)' to a building labeled 'DCA — Defense Communications Agency.' The DCA building has satellite dishes and telephone switchboards. A stamp appears: 'OPERATIONAL MILITARY UTILITY.')
+
+Narrator: "The compromise was this: in 1975, DARPA transferred ownership of ARPANET to the **DCA — the Defense Communications Agency**. Think of the DCA as the Pentagon's phone company — they ran the actual wires and satellites that the military used to communicate. Under the DCA, ARPANET was no longer an experiment; it was an *operational military utility*. They immediately started deploying **encryption devices** on the network for classified traffic."
+
+Narrator: "Meanwhile, BBN — the company that built the IMPs — could see the civilian potential slipping away. So they did something brilliant: they spun off a subsidiary called **Telenet**, which became the *first commercial packet-switching service*. They essentially took the technology the government was about to lock behind a classified door and sold it to the private sector. Telenet is one of the reasons the internet eventually became a public thing instead of dying as a military-only tool."
+
+Narrator: "The Mansfield Amendment didn't kill the Web. But it split it into two identities: a **military backbone** that would evolve into today's classified networks, and a **civilian idea** that would have to find its own funding, its own champions, and its own way to survive."
+
+### Near-Death #3: The IMP29 Cascade (October 27, 1980)
+(Visual: A map of the ARPANET in 1980, now spanning the continent with dozens of nodes. A single node in the center — **IMP 29** — begins flashing red. A corrupted packet leaves it. It infects the next node. Then the next. The red spreads like ink dropped in water until every node is dark.)
+
+Narrator: "And this is the one that should scare you, because it's the failure mode that still haunts the modern internet."
+
+Narrator: "On October 27, 1980, a tiny hardware glitch in **IMP 29** corrupted a single status message. Remember those routing tables — the ones where IMPs gossip with their neighbors every half-second? IMP 29 sent out a *corrupted* gossip message. Garbage data."
+
+(Visual: A game of 'Telephone' played by children in a circle. The first child whispers a message. Each child passes it on. But the first child's message was already wrong. By the time it goes around the circle, every child has the wrong message. Now imagine the circle is the entire United States.)
+
+Narrator: "Think of it like the children's game 'Telephone,' except there's no one checking whether the message makes sense. Normally, the network had an **error-checking system** — a sanity filter that would catch corrupted messages and throw them away. But on that day, someone had **turned it off for maintenance**. So the corrupted message passed from IMP to IMP, and each one dutifully forwarded the poison to its neighbors, who forwarded it to *their* neighbors."
+
+Narrator: "Within minutes, the entire ARPANET — every node, coast to coast — went **silent.** Not because of a bomb. Not because of an attack. Because of a single bad bit and a safety switch that was turned off."
+
+Narrator: "It took **four hours** of manual shutdowns and restarts — engineers physically rebooting machines one by one — to bring the network back online. This was the ARPANET's '**Chernobyl Moment**.' And the lesson is one that every network engineer, every cybersecurity analyst, learns on day one: a distributed network can survive an external attack, but it can be destroyed from **within** by its own *trust*. The same mechanism that makes the network fast — blind, automatic forwarding — is the mechanism that can kill it if the data is bad. That tension between *speed* and *verification* is still the fundamental tradeoff of the internet today."
+
+---
+
+Act 5: The TCP/IP Handshake (Cerf and Kahn)
+(Visual: Vint Cerf and Bob Kahn in a lab, drawing a diagram on a chalkboard. They are connecting two different 'clouds' — one labeled 'ARPANET' and one labeled 'SATELLITE NET' — with a single line labeled 'TCP/IP.')
+
+Narrator: "But the Web survived all three near-death moments. And by the late 1970s, a new problem had emerged: it wasn't enough to have *one* network. The military had ARPANET. The Navy had a packet radio network. There were satellite networks. And none of them could talk to each other."
+
+### Practical Explainer: TCP/IP (The Universal Shipping Label)
+(Visual: Three different delivery services — FedEx, UPS, and a bicycle courier — are each carrying packages. The packages are all different sizes, wrapped differently, with different label formats. They arrive at a central sorting facility. A worker slaps a standardized label on each one. Now they can all be sorted and forwarded through the same system.)
+
+Narrator: "This is where **TCP/IP** comes in, and it might be the most important acronym in human history, so let's break it down piece by piece."
+
+Narrator: "**IP — the Internet Protocol** — is the *address label*. It's the standardized format that every network agrees to put on every packet. Think of it like this: FedEx has their own tracking system, UPS has theirs, the postal service has theirs. IP is the agreement that says: 'No matter whose truck you're riding in, the label on the box will *always* look like this.' That's what makes it possible for packets to jump between different types of networks."
+
+Narrator: "**TCP — the Transmission Control Protocol** — is the *quality control manager*. Its job is to make sure every packet actually arrives, and to reassemble them in the right order. If a packet gets lost — maybe a link went down, maybe there was congestion — TCP notices it's missing and requests a resend. It's the protocol that turns an unreliable network into a reliable service."
+
+Narrator: "Vint Cerf and Bob Kahn designed these two protocols to work together. And here's why it mattered: with TCP/IP, it didn't matter what was *inside* the packet — a bank transfer, a classified intelligence report, or a family photo — and it didn't matter what kind of network carried it — copper wire, satellite, radio. As long as the label was right, the system would deliver it. That's what turned a single military experiment into the **Internet** — capital 'I' — a *network of networks.*"
+
+### Practical Explainer: The Address Crisis (IPv4 vs. IPv6)
+(Visual: A close-up of an IP address: **192.168.1.1**. Each of the four numbers is shown as a slot with values 0–255. A counter beneath it reads: **Total Possible Addresses: 4,294,967,296**.)
+
+Narrator: "Now, here's a detail that seems small but turned into one of the biggest engineering miscalculations of the 20th century. Remember, IP is the *address label*. Every device on the network needs a unique one. So when Cerf and Kahn were designing this system in the 1970s, they had to answer a basic question: *how many addresses do we need?*"
+
+Narrator: "They chose **32 bits**. That's 32 ones-and-zeros, which gives you a number between 0 and about 4.3 billion. Written out, an IP address looks like four numbers separated by dots: **192.168.1.1**. Each number can go from 0 to 255, because each one is 8 bits — and 8 bits times 4 groups equals 32 bits total."
+
+(Visual: An animation of 4.3 billion dots appearing, filling the screen. A label reads: "That's one address for every human on Earth... in 1970." Then the dots start getting claimed — computers, then laptops, then phones, then smart fridges, smart watches, security cameras, thermostats — the dots disappear faster and faster until the screen is nearly empty.)
+
+Narrator: "**4.3 billion.** In the early 1980s, that number felt *absurd*. There were maybe a few hundred computers on the entire ARPANET. The idea that four billion addresses could ever run out was like worrying about running out of grains of sand. Vint Cerf himself has said he thought 32 bits was *'an experiment'* — they'd fix it later if they needed to. He's also joked that he never imagined the internet would be used by *toasters.*"
+
+Narrator: "But here's what they didn't predict: **smartphones.** In 1980, there were roughly 200 networked computers in the world. By 2010, there were **5 billion mobile phones**, and every single one wanted an IP address. Add laptops, tablets, smart TVs, security cameras, thermostats, cars, industrial sensors — suddenly, 4.3 billion wasn't absurd. It was a *crisis.*"
+
+(Visual: A split-screen comparison. LEFT: An IPv4 address — **192.168.1.1** — four short numbers. RIGHT: An IPv6 address — **2001:0db8:85a3:0000:0000:8a2e:0370:7334** — eight groups of hexadecimal. A counter beneath the right side reads: **Total: 340 undecillion addresses.**)
+
+Narrator: "The fix is called **IPv6**, and it's about as elegant as you can get: instead of 32 bits, they went to **128 bits**. That's not four times as many addresses — because of the way exponential math works, it's *trillions of trillions* more. The exact number is **340 undecillion** — that's a 34 followed by 37 zeros. Enough to assign an IP address to every atom on the surface of the Earth and still have leftovers."
+
+Narrator: "The transition from IPv4 to IPv6 has been happening slowly since the late 1990s, and we're *still* not done. Both systems run in parallel today. It's like trying to change the plumbing in a building while everyone is still showering. And the reason it took so long is the same reason every infrastructure upgrade takes so long: the old system *technically still works*, and nobody wants to be the first to break something. That tension — between 'good enough' and 'future-proof' — is an engineering lesson as old as the aqueducts."
+
+### Practical Explainer: Who Owns the Internet? (The Man With the Notebook)
+(Visual: A modest office at USC. A bearded man in a Hawaiian shirt sits at a cluttered desk. On the desk is a spiral-bound notebook with columns of numbers. A label reads: **Jon Postel — The Man Who Ran the Internet's Address Book.**)
+
+Narrator: "So here's a question that sounds absurd but is completely real: who decides which numbers belong to whom? In the 1970s and 80s, the answer was *one guy*. His name was **Jon Postel**, and he literally managed the internet's entire address book from a notebook at the University of Southern California."
+
+Narrator: "If you needed a block of IP addresses — and you were, say, MIT, or the Department of Defense, or IBM — you called Jon. He'd write down your assignment in his notebook and that was it. No contracts. No lawyers. No governing body. Just Jon."
+
+(Visual: A simple diagram shows Jon Postel's notebook opening to reveal a table: **Class A** blocks — each one containing **16.7 million** addresses. Names appear beside them: MIT, Ford, Apple, General Electric, U.S. Army, U.S. Navy, DoD. The military column keeps growing.)
+
+Narrator: "And this is where it gets interesting for this series. In those early days, addresses were handed out in **classes**. A **Class A** block — the biggest — gave you **16.7 million** addresses. And they were handed out like candy. MIT got one. Ford Motor Company got one. Apple got one. IBM got one. And the **Department of Defense** didn't just get one — they got *at least thirteen*."
+
+Narrator: "Do the math: thirteen blocks times 16.7 million addresses each. The U.S. military controls over **200 million IP addresses**. That's more than China had for its entire population until the 2010s. And those military blocks — like **7.0.0.0**, **11.0.0.0**, **21.0.0.0**, **22.0.0.0** — those aren't public. They're behind classified firewalls, running networks you and I will never see. The ghosts from Episode 9 — those SIGINT satellites and NSA collection systems — they live *inside* those address blocks."
+
+### Practical Explainer: The Five Registries (Carving Up Digital Territory)
+(Visual: A world map. Five colored regions appear, each with a logo: ARIN (North America — blue), RIPE NCC (Europe/Middle East — green), APNIC (Asia-Pacific — red), LACNIC (Latin America — orange), AFRINIC (Africa — yellow). Lines connect them all to a central point labeled **IANA**.)
+
+Narrator: "By the 1990s, the internet was growing so fast that one man with a notebook simply couldn't keep up. Jon Postel's informal system became the **IANA — the Internet Assigned Numbers Authority** — which still exists today. But IANA doesn't hand addresses to individual companies anymore. Instead, it divides the world's supply of IP addresses among **five Regional Internet Registries**, or **RIRs**. Think of it like the United Nations of internet addresses."
+
+Narrator: "Here's how the system works — and it's remarkably similar to how countries manage land:"
+
+Narrator: "**ARIN** — the **American Registry for Internet Numbers** — manages addresses for the United States, Canada, and the Caribbean. If you're an American company or government agency that needs IP addresses, you go to ARIN. **RIPE NCC** handles Europe, the Middle East, and Central Asia. **APNIC** covers Asia and the Pacific. **LACNIC** covers Latin America. And **AFRINIC** covers the African continent."
+
+(Visual: An animation showing IANA as a 'vault' of address blocks. It pushes large blocks to each of the five RIRs. Each RIR then subdivides its blocks and distributes them to ISPs and governments in its region. The ISPs then assign individual addresses to homes and businesses. It looks like a pyramid — from global, to regional, to local, to individual.)
+
+Narrator: "IANA gives large blocks to the RIRs. The RIRs give smaller blocks to internet service providers and governments in their region. Those ISPs assign individual addresses to your home, your phone, your laptop. It's a hierarchy — from global, to regional, to local, to *you* — and it's the reason your IP address starts with certain numbers depending on *where you are on the planet.*"
+
+Narrator: "And here's the lesson for the series: the *internet itself* became territory. Countries don't just fight over land and airspace anymore — they fight over **address space**. Who controls IP blocks controls who can be online and who can't. It's the next evolution of spectrum sovereignty — the same fight we explored in Episode 5, but now it's not about radio frequencies. It's about the numbers that make you *exist* on the digital map."
+
+### Practical Explainer: ICANN and the Death of the Gatekeeper (1998)
+(Visual: October 16, 1998. A hospital room. A simple text memorial appears: **Jon Postel — 1943–1998.** Then, nine days later, a new organization's logo appears: **ICANN — Internet Corporation for Assigned Names and Numbers. Founded: October 25, 1998.**)
+
+Narrator: "And then Jon Postel died."
+
+Narrator: "On **October 16, 1998**, the man who had run the internet's address book from a notebook at USC — the man who had personally assigned IP addresses to MIT, to the Pentagon, to Apple — died of heart complications after surgery. He was 55 years old. And with his death came a question that had been building for years: *who takes over?*"
+
+Narrator: "The answer came **nine days later**. On October 25, 1998, the U.S. Department of Commerce chartered a new organization: **ICANN — the Internet Corporation for Assigned Names and Numbers**. ICANN inherited Jon Postel's IANA functions — the same address book, the same authority — but now it was a formal nonprofit corporation with a board of directors, bylaws, and *accountability*."
+
+(Visual: A diagram showing the full governance stack: **ICANN** at the top, managing domain names (.com, .org, .gov) and overseeing **IANA**. IANA distributes IP blocks to the five **RIRs**. The RIRs distribute to **ISPs** and governments. ISPs assign to individuals. Beside the stack, a parallel column shows: **Internet Society (ISOC, 1992)** — promoting open internet standards. **IETF** — the engineers who write the actual technical standards (RFCs). A label reads: 'The Internet's Government — Built by Nobody, Answerable to Everyone.')
+
+Narrator: "ICANN also manages **domain names** — the **.com**, **.org**, **.gov** addresses that replaced those numeric IMP coordinates we talked about earlier. When you type 'google.com,' a system called **DNS — the Domain Name System** — translates that human-readable name into an IP address. ICANN oversees *that entire translation system*. They're the reason your browser knows where to go."
+
+Narrator: "And then there's the **Internet Society**, founded in **1992** — think of it as the internet's *constitution writers*. They don't run anything directly, but they champion the principle that the internet should remain *open* — no single government, no single corporation should control it. The technical standards themselves — the actual rules that make the internet work — are written by volunteers in the **IETF**, the Internet Engineering Task Force, where the old ARPANET ethos still lives: *'rough consensus and running code.'*"
+
+Narrator: "What's remarkable about all of this is that the internet — the most powerful communication system in human history — is governed by *nobody and everybody*. There is no president of the internet. No single government controls it. It's a patchwork of nonprofits, registries, engineering groups, and treaties. And it works. Mostly. The same distributed, centerless design that Paul Baran proposed in 1960 to survive a nuclear attack is now the *governance model* for the entire system."
+
+### Practical Explainer: The OSI Model (The 7-Layer Assembly Line)
+(Visual: A vertical stack of seven colored blocks, labeled from bottom to top: **1. Physical**, **2. Data Link**, **3. Network**, **4. Transport**, **5. Session**, **6. Presentation**, **7. Application**. Each layer lights up as it's described. An envelope analogy shows a message being wrapped in layer after layer, like a package in a box in a crate in a shipping container.)
+
+Narrator: "Now, by the late 1970s, the internet was no longer just an American experiment. Companies and governments around the world were building their own networks — IBM had one, the French had one, the British had one — and *none of them could talk to each other*. It was like everyone had invented their own railroad, but nobody's trains fit on anyone else's tracks."
+
+Narrator: "So in 1977, the **ISO — the International Organization for Standardization** — decided to fix this once and for all. They asked: *'What if we wrote down every single thing that has to happen when two computers communicate, from the electricity on the wire all the way up to the email you read?'* The result, published in **1984**, was the **OSI Model — the Open Systems Interconnection model** — and it has **seven layers**."
+
+Narrator: "Here's the easiest way to think about it: imagine a factory assembly line where a letter is being prepared for international shipping."
+
+(Visual: An animation of a letter going through a factory. At each station, something is added.)
+
+Narrator: "**Layer 7 — Application** — you write the letter. This is the software you interact with: your email program, your web browser, your chat app.
+**Layer 6 — Presentation** — a translator reads your letter and converts it to a language both sides understand. This layer handles encryption, compression, and data formatting.
+**Layer 5 — Session** — a manager opens a conversation channel and keeps it open until you're done talking. Think of it as the person who says 'Hold on, I'm still sending.'
+**Layer 4 — Transport** — the letter gets chopped into packets and numbered. This is the TCP layer — it guarantees every piece arrives and reassembles them in order.
+**Layer 3 — Network** — the address is stamped on. This is the IP layer — routing, addressing, figuring out which path to take through the maze.
+**Layer 2 — Data Link** — the packet is put into a 'frame' for the *local* network. Think of this as the label that gets your package from the loading dock to the truck. This is where MAC addresses live.
+**Layer 1 — Physical** — the actual wire, the radio wave, the fiber-optic cable. The electricity. The light. The physics. This is the layer where bits become *real*."
+
+Narrator: "Now, here's the twist: the OSI model was supposed to *replace* TCP/IP. The ISO wanted the whole world to adopt their seven-layer protocol stack. But TCP/IP was already running. It was already deployed. It was already battlefield-tested. And the engineers who built the internet had a saying: *'We reject kings, presidents, and voting. We believe in rough consensus and running code.'*"
+
+Narrator: "TCP/IP won. But the OSI model survived as the *teaching tool* — the blueprint that every network engineer, every IT professional, every cybersecurity analyst uses to *think about* how networks work. When your IT help desk says 'it's a Layer 3 issue,' they're speaking OSI. It's the universal language for diagnosing what went wrong and where."
+
+### Practical Explainer: The Birth of Wireless Networking (ALOHAnet — 1971)
+(Visual: A map of the Hawaiian islands. Radio towers appear on Oahu, Maui, and the Big Island. Radio waves arc between them — not through cables, but through the air. A label reads: **ALOHAnet — University of Hawaiʻi, 1971.**)
+
+Narrator: "And now we need to talk about something that didn't happen in a Pentagon basement or a Cambridge lab. It happened on a beach. Well, *near* a beach."
+
+Narrator: "In 1970, a professor named **Norman Abramson** at the University of Hawaiʻi had a problem that was unique to his geography: he needed to connect the university's computers across *multiple islands*. Running cables across the ocean floor between Hawaiian islands was absurdly expensive. So Abramson asked a radical question: *what if we skip the wires entirely and send the packets over radio?*"
+
+### Practical Explainer: The Frequencies (Why 407 MHz?)
+(Visual: A radio spectrum diagram. The UHF band is highlighted between 300 MHz and 3 GHz. Two specific frequencies are circled: **407.350 MHz** and **413.375 MHz**. An arrow shows the 100 kHz channel width — a narrow sliver of the spectrum.)
+
+Narrator: "But you can't just shout data into the air on any frequency. You need a slice of the **radio spectrum** — and everything about that slice determines how fast you can send data, how far it can travel, and who else is allowed to use it. This is where the physics from the earlier episodes comes back."
+
+Narrator: "Abramson chose the **UHF band** — Ultra High Frequency — specifically **407.350 MHz** for sending data *to* the central hub, and **413.375 MHz** for receiving data *from* it. Two separate channels, each **100 kilohertz** wide. And that choice wasn't random — it was driven by three engineering factors."
+
+(Visual: An animation showing three factors as dials on a dashboard: **RANGE**, **BANDWIDTH**, **INTERFERENCE**.)
+
+Narrator: "**Factor one: range.** UHF signals in the 400 MHz range can travel **50 to 100 miles** with the right antenna power — far enough to reach between Hawaiian islands. Higher frequencies like microwave would give you more data capacity, but the signal would be absorbed by rain and humidity. Lower frequencies like HF could travel farther, but the bandwidth would be too narrow to carry useful data. UHF was the sweet spot."
+
+Narrator: "**Factor two: bandwidth.** Each channel was only **100 kHz** wide. That's the 'pipe' through which data flows. And this is where **Claude Shannon's theorem** — arguably the most important equation in the history of communications — sets the speed limit."
+
+### Practical Explainer: Shannon's Speed Limit (C = B × log₂(1 + S/N))
+(Visual: A highway analogy. The number of lanes = Bandwidth. The speed limit = Signal-to-Noise Ratio. The total traffic flow = Channel Capacity. The equation appears: **C = B × log₂(1 + S/N)**)
+
+Narrator: "In 1948, Claude Shannon — who we met back in the encryption episode — proved something that every wireless engineer lives by: there is a **maximum speed** at which you can push data through any channel, and it is set by exactly two things."
+
+Narrator: "Think of it as a highway. The **bandwidth** (B) is the number of lanes. The **signal-to-noise ratio** (S/N) is the speed limit — how 'clean' the signal is compared to the background static. Shannon's equation says: **Channel Capacity = Bandwidth × log₂(1 + Signal-to-Noise Ratio)**. That's it. That's the universal speed limit of information. You cannot beat it. No amount of engineering cleverness can push data faster than Shannon's limit for a given channel."
+
+Narrator: "For ALOHAnet, with 100 kHz of bandwidth and the signal quality available in 1971, the result was a data rate of **9,600 bits per second**. To put that in perspective: a single high-resolution photo on your phone is about 5 megabytes — that's 40 million bits. At ALOHAnet speeds, it would take over **an hour** to send one photo. But in 1971, they weren't sending photos. They were sending lines of text — and 9,600 bps was more than enough."
+
+Narrator: "**Factor three: efficiency.** The ALOHA protocol — that 'shout and pray' method — had a theoretical efficiency of only **18.4%**. That means 82% of the time, the channel was wasted on collisions. A later version called **Slotted ALOHA** divided time into fixed slots, doubling the efficiency to **36.8%**. Still not great by modern standards — but it was proof of concept."
+
+(Visual: An animation of multiple computers on different islands, each with a small radio antenna. One computer 'shouts' a packet into the air. It arrives at a central hub on Oahu. But then two computers shout at the same time — the signals collide, and neither message gets through. A red X appears. Both computers wait a random amount of time, then reshout. This time, one gets through.)
+
+Narrator: "What Abramson built — funded by **DARPA**, of course — was called **ALOHAnet**, and it became operational in **June 1971**. The central hub was an HP 2100 minicomputer nicknamed **MENEHUNE** — Hawaiian for 'little people,' the mythical craftsmen of Hawaiian legend. It was the first wireless packet data network in history, and it ran on two narrow UHF channels from a rooftop in Honolulu."
+
+Narrator: "And here's why this matters for our story: in **April 1973**, ALOHAnet achieved the first **satellite connection to ARPANET**. A computer in Hawaii, beaming data over radio to a satellite, which bounced it to a ground station on the mainland, which fed it into the ARPANET. That's *three different types of network* — radio, satellite, and wired — all carrying the same packet. And *that* is precisely the problem that TCP/IP was invented to solve."
+
+### Practical Explainer: From 407 MHz to 2.4 GHz — How We Got Wi-Fi
+(Visual: A timeline from 1971 to today. Frequency markers appear: **407 MHz (ALOHAnet)** → **900 MHz (early cordless phones)** → **2.4 GHz (Wi-Fi, 1997)** → **5 GHz (Wi-Fi, 2009)** → **6 GHz (Wi-Fi 6E, 2021)**. Each step shows wider bandwidth and faster speeds.)
+
+Narrator: "So if ALOHAnet ran at 407 MHz, why does your Wi-Fi router run at **2.4 GHz** — six times higher? The answer goes back to Shannon's theorem and a decision by the FCC that changed everything."
+
+Narrator: "Remember: bandwidth is lanes on a highway. At 407 MHz, Abramson only had 100 kHz of bandwidth — a single lane. But at higher frequencies, there's *more room*. The 2.4 GHz band has **83.5 MHz** of usable bandwidth — that's **835 times** more lanes than ALOHAnet had. More lanes means more data."
+
+(Visual: A comparison graphic. LEFT: A garden hose labeled '100 kHz — ALOHAnet — 9,600 bps.' RIGHT: A fire hose labeled '83.5 MHz — Wi-Fi — 600,000,000 bps.' The fire hose is comically larger.)
+
+Narrator: "But here's the catch: higher frequencies don't travel as far, and they don't go through walls as well. That's the fundamental tradeoff that every wireless engineer has to make. **Lower frequency = longer range, less data. Higher frequency = more data, shorter range.** Your 2.4 GHz Wi-Fi signal can reach the far side of your house because 2.4 GHz is *just* low enough to penetrate a couple of walls. Your 5 GHz signal is faster but dies when it hits the bathroom door."
+
+Narrator: "And the reason Wi-Fi uses 2.4 GHz specifically? It's because of **microwave ovens**."
+
+Narrator: "I'm serious. In **1985**, the **FCC** — the Federal Communications Commission — made a decision that might be the most important regulatory ruling in tech history. They opened up the **ISM bands** — Industrial, Scientific, and Medical — for *unlicensed* communication. These were frequencies already being used by industrial equipment, scientific instruments, and — yes — **microwave ovens**, which heat food by blasting it with 2.45 GHz radio waves."
+
+Narrator: "The FCC's logic was: these frequencies are already 'noisy' from all the industrial equipment using them, so we'll let anyone build communication devices here without needing an expensive license. Nobody has to pay. Nobody has to apply. Just build and go."
+
+Narrator: "That single decision — opening 2.4 GHz for unlicensed use — is why Wi-Fi exists. It's why Bluetooth exists. It's why your baby monitor, your garage door opener, and your wireless keyboard all work. And it's also why your Wi-Fi sometimes gets slower when you run the microwave — because they're *literally fighting for the same frequency*."
+
+(Visual: A timeline showing three branches from ALOHAnet: one leads to **Ethernet** (1973 — Bob Metcalfe at Xerox PARC, inspired by ALOHA), one leads to **Wi-Fi** (1997 — IEEE 802.11, using ALOHA principles and ISM bands), and one leads to **Cellular Networks** (every phone you've ever owned). Speed comparisons appear: **ALOHAnet: 9,600 bps → Wi-Fi 6: 9,600,000,000 bps**. A label reads: "A million times faster, using the same fundamental math.")
+
+Narrator: "The ALOHA protocol — that 'shout and pray' method from a Hawaiian island in 1971 — directly inspired **Ethernet**, which is how most wired networks work today. It directly inspired **Wi-Fi**, which uses a refined version of the same random-access protocol. And every time your cell phone connects to a tower, the initial handshake uses a descendant of ALOHA. A professor on a beach in Hawaii, funded by a military research agency, running on two narrow UHF channels at 9,600 bits per second, built the protocol that connects *every wireless device on Earth*."
+
+Narrator: "And Shannon's equation? It's still the speed limit. When your phone company advertises '5G speeds,' what they're really saying is: *'We found more bandwidth and better signal-to-noise ratios.'* The math hasn't changed since 1948. We just keep finding wider highways."
+
+Narrator: "So when we talk about the internet, remember: it wasn't just cables. The wireless web was born two years *after* the wired one — and it was born in paradise, on two 100-kilohertz channels, at the speed of a slow printer."
+
+---
+
+Act 6: The Worm (November 2, 1988)
+(Visual: A dorm room at Cornell University. A 23-year-old man with glasses sits at a terminal. The room is dark except for the green glow of the monitor. He types one command and hits Enter. The camera slowly zooms into the screen as lines of code begin scrolling.)
+
+Narrator: "And now we end where the internet lost its innocence. Not with a bomb. Not with a foreign adversary. With a 23-year-old graduate student in a dorm room at Cornell — and a program that was never supposed to do what it did."
+
+### Practical Explainer: Robert Tappan Morris (The Insider's Son)
+(Visual: A split-screen. LEFT: A formal portrait of **Robert Morris Sr.** — a serious man in a suit. A label reads: **Chief Scientist, National Computer Security Center, National Security Agency (NSA). Co-author of Unix.** RIGHT: A photo of a young Robert Tappan Morris — glasses, unassuming, looks like any other grad student.)
+
+Narrator: "To understand this story, you need to understand the family. **Robert Tappan Morris** was born into the internet. His father, **Robert Morris Senior**, was one of the *co-authors of Unix* — the operating system that ran every machine on the ARPANET. The same Unix whose vulnerabilities his son would exploit. And the father's *day job*? He was the **chief scientist of the National Computer Security Center** — a division of the **NSA**, the National Security Agency."
+
+Narrator: "Let that sink in. The man responsible for *securing* America's computer networks was the father of the man who would bring those networks to their knees. The son grew up with root access to the most powerful computers in the country. He was a Harvard undergrad. A Cornell graduate student. And on the evening of **November 2, 1988**, he released a program from a computer at MIT — not Cornell, because he didn't want it traced back to him."
+
+Narrator: "He later said he just wanted to find out how big the internet was — to measure it. He called it an *experiment*. But what he built was a **worm** — a self-replicating program that didn't need a human to spread it. It moved on its own. And it had a flaw."
+
+### Practical Explainer: How the Morris Worm Worked (The Four Unlocked Doors)
+(Visual: A house with four doors, each with a different label. The worm — shown as a small, glowing digital snake — tries each door in sequence.)
+
+Narrator: "Here's how the Morris Worm worked, and this is where the Practical Engineering gets really instructive, because every one of these vulnerabilities is the kind of thing that still gets exploited today — just in more sophisticated forms."
+
+Narrator: "The worm attacked Unix computers, and it had **four** different methods for getting in. Think of each one as an unlocked door on a house."
+
+### Door #1: The Sendmail Backdoor
+(Visual: The first door opens. A mail slot is visible. The worm pushes a tiny scroll through the mail slot — but the scroll contains hidden instructions.)
+
+Narrator: "**Door one: Sendmail.** Every Unix computer on the internet ran a program called **sendmail** — it was the email server. It had a feature called **'debug mode'** that was meant for testing — it let administrators send special commands to the mail server for diagnostics. The problem? Debug mode was *left on in production*. On the actual internet. It's like leaving a service entrance to your house unlocked because you used it once during construction and forgot about it."
+
+Narrator: "The worm exploited this by sending a specially crafted email to the sendmail program that didn't contain a *message* — it contained *instructions*. The mail server executed those instructions, and just like that, the worm was inside."
+
+### Door #2: The Fingerd Buffer Overflow
+(Visual: The second door. A tiny window next to it has a sign: "Ask who's home." The worm pushes an oversized message through the window — so long that it overflows the frame and spills into the lock mechanism, popping the door open.)
+
+Narrator: "**Door two: Fingerd.** This is the one that's technically beautiful and terrifying. Unix systems had a service called **'finger'** — you could ask a remote computer *'who is logged in right now?'* and it would tell you. Harmless, right?"
+
+Narrator: "Here's the problem. The **fingerd** program had a fixed-size memory buffer — a box designed to hold a name that was, say, 512 characters long. The worm sent a 'name' that was **much longer** than 512 characters. The excess characters **overflowed the buffer** and spilled into the *adjacent memory* — the part of memory that contained the program's *instructions*."
+
+(Visual: A simplified memory diagram. A box labeled 'BUFFER (512 bytes)' sits next to a box labeled 'RETURN ADDRESS.' An oversized input pours over the buffer wall and overwrites the return address with the worm's own address.)
+
+Narrator: "This is called a **buffer overflow**, and you need to understand it because it is *still* one of the most common vulnerabilities in software 35 years later. The worm overwrote the program's 'return address' — the instruction that tells the computer *where to go next* — with the address of the worm's own code. The computer *thought* it was returning to normal operations. Instead, it executed the worm. It's like replacing the 'return home' address on a GPS with a destination of the worm's choosing."
+
+### Door #3: The Password Dictionary
+(Visual: The third door has a combination lock. The worm pulls out a notebook and starts trying combinations: 'password,' '12345,' the username itself, the username backwards...)
+
+Narrator: "**Door three: Weak passwords.** The worm carried a built-in dictionary of **432 common passwords** — plus it tried every user's *username* as their password, and the username *spelled backwards*. In 1988, a staggering number of accounts had passwords like 'password,' 'guest,' or literally their own name. The worm guessed its way in through sheer laziness on the part of users."
+
+### Door #4: Trusted Hosts
+(Visual: The fourth door has no lock at all — just a sign that reads: "If IMP 3 trusts you, come right in.")
+
+Narrator: "**Door four: Trusted hosts.** Unix systems had a feature called **rsh** — remote shell — that let certain 'trusted' computers log in *without a password*. If Computer A trusted Computer B, then anyone on Computer B could access Computer A automatically. The worm exploited this chain of trust. Once it infected one machine, it could waltz into every machine that trusted it, no password required. It's the networking equivalent of a copied master key."
+
+### The Fatal Flaw: Replication Without Restraint
+(Visual: The worm enters one computer. It copies itself. The copies go to other computers. They copy themselves. The copies copy themselves. The screen fills with thousands of worms. The computers slow to a crawl, then freeze. Load indicators go from green to yellow to red to dark.)
+
+Narrator: "Morris built in a safety mechanism — or tried to. The worm was supposed to check: *'Am I already running on this machine?'* If yes, stop. Don't duplicate. The idea was to make it silent and invisible — a headcount, not an attack."
+
+Narrator: "But Morris was worried that system administrators would figure out the trick and create fake 'I'm already here' signals to immunize their machines. So he added a fatal override: **one out of every seven times**, the worm would copy itself onto a machine *even if it was already there*."
+
+Narrator: "That ratio — one in seven — was catastrophic. A worm that lands on a machine once is invisible. A worm that copies itself *dozens of times* on the same machine consumes all its memory, all its processing power, until the machine *freezes*. And that's exactly what happened."
+
+(Visual: A map of the United States in 1988. The internet has ~60,000 connected computers. Starting from MIT, red nodes begin appearing — first slowly, then exponentially. Within hours, **6,000 computers** — 10% of the entire internet — are frozen. Universities. Military bases. Research labs. All dark.)
+
+Narrator: "Within hours, approximately **6,000 computers** — roughly **10% of the entire internet** — were either frozen or crawling. Universities went offline. Military installations lost connectivity. NASA's Ames Research Center was hit. Lawrence Livermore National Laboratory — the nuclear weapons lab — was hit. The internet, for the first time in its 19-year history, was *on its knees*. Not from a Soviet attack. From a **grad student's homework that got out of hand.**"
+
+Narrator: "Morris panicked. He asked a friend at Harvard to post an anonymous message with instructions on how to kill the worm. But the network was so congested that the message couldn't get through. The cure couldn't reach the patient because the disease was clogging the arteries."
+
+### The Aftermath
+(Visual: A courtroom. Robert Tappan Morris in a suit. A gavel comes down. A verdict appears: **GUILTY — First conviction under the Computer Fraud and Abuse Act of 1986.**)
+
+Narrator: "Robert Tappan Morris became the **first person convicted** under the **Computer Fraud and Abuse Act** — a law that was only two years old. He was sentenced to three years' probation, 400 hours of community service, and a $10,050 fine. No jail time. The judge believed it was never meant to cause harm."
+
+Narrator: "And here's where the story takes its most ironic turn: Morris was *also* the catalyst for the creation of **CERT — the Computer Emergency Response Team** — the first organized rapid-response unit for internet security incidents. It was founded at Carnegie Mellon University within *days* of the worm. The internet's immune system was born because of the disease."
+
+(Visual: A timeline showing Morris's later life. PhD from Harvard. Professor at MIT. Co-founder of **Viaweb** — one of the first web-based e-commerce platforms, later acquired by Yahoo. Co-founder of **Y Combinator** — the startup accelerator that launched Airbnb, Dropbox, Stripe, and Reddit.)
+
+Narrator: "And Robert Tappan Morris? He got his PhD from Harvard. He became a tenured professor at MIT. He co-founded **Y Combinator** — the startup accelerator that launched Airbnb, Dropbox, Stripe, and Reddit. The man who accidentally broke the internet went on to *fund the companies that define it*."
+
+---
+
+Act 7: The Object Lesson (The Invisible Skeleton)
+(Visual: 2024. A busy city street. Everyone is on their phones. We zoom in on a single phone, then through the signal into a fiber-optic cable, into a massive data center.)
+
+Narrator: "We often think of the internet as a public space, a luxury for streaming and social media. But we forget its skeleton. The internet was born in a bunker.  It was designed to survive the end of the world. It was nearly killed by its own success, by a congressional amendment, by a single corrupted bit, and by a 23-year-old who just wanted to know how big it was."
+
+Narrator: "The lesson of DARPA, BBN, Cerf, Kahn, Baran, Kleinrock, Abramson, Postel, and Morris is this: **the strongest network is the one that assumes it will be broken.** Not 'if.' *When.* The Web isn't a single thing; it is the relationship between a million different points. And in the Science of Military Intelligence, the strongest connection is the one that has no center — and the most dangerous threat is the one that comes from *inside*."
+
+(Visual: The 'SMI' coin appears. One side has a 1969 IMP, the other has a modern fiber-optic cable. The dates 1969 and 1988 are linked by a glowing line.)
+
+Narrator: "Next time, we look at how this 'Web' became a weapon. How the Morris Worm's lesson — that the internet can be destroyed from *within* — led the military to build an entirely new kind of warfare. In **2009**, the Pentagon created **U.S. Cyber Command** — a full military branch dedicated to *fighting through the internet*. In **2018**, Congress created **CISA — the Cybersecurity and Infrastructure Security Agency** — to protect the nation's power grids, water systems, and hospitals from the kind of attacks that started with one grad student's worm."
+
+Narrator: "And every nation followed. The UK has its **NCSC**. Israel has **Unit 8200**. Russia has its cyber units. China has its own. What started as CERTs — emergency response teams born from the Morris Worm — evolved into **cyber armies**. The internet isn't just a network anymore. It's a *battlefield*."
+
+Narrator: "That story — from Stuxnet to surveillance to the weaponization of everything we've built — is next. This is the Science of Military Intelligence."
+

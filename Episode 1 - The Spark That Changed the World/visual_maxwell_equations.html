@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Act 1 — Maxwell's Mathematical Ghost (1865)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&family=IM+Fell+English+SC&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #000;
+            --gold: #c9a84c;
+            --gold-bright: #f5d57a;
+            --text: #fff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Cinematic Stages */
+        .stage {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .stage.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Step 0: 1865 */
+        #stage-0 h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8rem;
+            letter-spacing: 20px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            animation: glow 3s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            }
+
+            to {
+                text-shadow: 0 0 50px rgba(255, 255, 255, 1);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Step 1: Maxwell Portrait */
+        #stage-1 .portrait-container {
+            position: relative;
+            width: 500px;
+            height: 600px;
+            box-shadow: 0 0 100px rgba(201, 168, 76, 0.2);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            overflow: hidden;
+            background: #050505;
+        }
+
+        #stage-1 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.2) contrast(1.1) brightness(1.1);
+        }
+
+        #stage-1 .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, transparent 40%, #000 100%);
+        }
+
+        /* Step 2 & 3: Equations */
+        #stage-2 {
+            flex-direction: column;
+            background: radial-gradient(circle, #08051a 0%, #000 70%);
+        }
+
+        .eq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1000px;
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1), gap 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .eq-item {
+            padding: 30px;
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            background: rgba(201, 168, 76, 0.03);
+            text-align: center;
+            transition: all 0.8s ease;
+        }
+
+        .eq-item.highlight {
+            transform: scale(1.2);
+            border-color: var(--gold);
+            background: rgba(201, 168, 76, 0.1);
+            box-shadow: 0 0 50px rgba(201, 168, 76, 0.3);
+            z-index: 10;
+        }
+
+        .eq-item.dim {
+            opacity: 0.2;
+            filter: blur(2px);
+        }
+
+        .eq-label {
+            font-family: 'IM Fell English SC', serif;
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .eq-math {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            color: var(--gold-bright);
+            text-shadow: 0 0 15px rgba(201, 168, 76, 0.5);
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
+
+        .eq-item.shake {
+            animation: shake 0.3s infinite;
+        }
+
+        /* Step 4: speed */
+        #stage-speed {
+            flex-direction: column;
+            z-index: 20;
+            background: transparent;
+        }
+
+        .speed-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: var(--gold-bright);
+            text-shadow: 0 0 50px var(--gold);
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s ease;
+        }
+
+        .stage.active .speed-val {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .light-beam {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, #fff, transparent);
+            box-shadow: 0 0 30px #fff;
+            transition: width 2s ease-in-out;
+        }
+
+        .stage.active .light-beam {
+            width: 100vw;
+        }
+
+        /* Step 5: Quote */
+        #stage-quote {
+            z-index: 30;
+            background: transparent;
+        }
+
+        .quote-container {
+            max-width: 800px;
+            background: #fff8e1;
+            /* Warm parchment color */
+            padding: 60px 80px;
+            border-radius: 2px;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(201, 168, 76, 0.1);
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            line-height: 1.4;
+            color: #1a1a1a;
+            /* Deeper ink */
+            text-shadow: none;
+            opacity: 0;
+            transform: translateY(30px) rotate(-1.5deg);
+            transition: all 2.5s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+        }
+
+        .stage.active .quote-container {
+            opacity: 1;
+            transform: translateY(0) rotate(-1deg);
+        }
+
+        .quote-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/papyros.png');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Step 6: Displacement */
+        #stage-displacement {
+            background: #000;
+        }
+
+        #displacement-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .displacement-overlay {
+            position: absolute;
+            bottom: 15%;
+            text-align: center;
+            width: 100%;
+            font-family: 'IM Fell English SC', serif;
+            color: var(--gold);
+            font-size: 2.4rem;
+            text-shadow: 0 0 20px #000;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+        }
+
+        .stage.active .displacement-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Step 0: 1865 -->
+    <div id="stage-0" class="stage active">
+        <h1>1865</h1>
+    </div>
+
+    <!-- Step 1: Portrait -->
+    <div id="stage-1" class="stage">
+        <div class="portrait-container">
+            <img src="maxwell_portrait.jpg" alt="James Clerk Maxwell Portrait">
+            <div class="vignette"></div>
+        </div>
+    </div>
+
+    <!-- Step 2 & 3: Equations Grid -->
+    <div id="stage-2" class="stage">
+        <div class="eq-grid" id="eq-grid">
+            <div class="eq-item" id="eq-1">
+                <div class="eq-label">Gauss's Law</div>
+                <div class="eq-math">∇ · E = ρ / ε₀</div>
+            </div>
+            <div class="eq-item" id="eq-2">
+                <div class="eq-label">Gauss's Law for Magnetism</div>
+                <div class="eq-math">∇ · B = 0</div>
+            </div>
+            <div class="eq-item" id="eq-3">
+                <div class="eq-label">Faraday's Law</div>
+                <div class="eq-math">∇ × E = −∂B/∂t</div>
+            </div>
+            <div class="eq-item" id="eq-4">
+                <div class="eq-label">Ampère-Maxwell Law</div>
+                <div class="eq-math">∇ × B = μ₀(J + ε₀∂E/∂t)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4: Discovery Speed -->
+    <div id="stage-speed" class="stage">
+        <div class="speed-val">186,000 mi/s</div>
+        <div class="light-beam"></div>
+    </div>
+
+    <!-- Step 5: Quote -->
+    <div id="stage-quote" class="stage">
+        <div class="quote-container">
+            "The velocity is so nearly that of light, that we have strong reason to conclude that light itself... is an
+            electromagnetic disturbance."
+            <div
+                style="margin-top:20px; font-family:'IM Fell English SC', serif; font-size: 1.2rem; color: var(--gold);">
+                — James Clerk Maxwell, 1865</div>
+        </div>
+    </div>
+
+    <!-- Step 6: Displacement -->
+    <div id="stage-displacement" class="stage">
+        <canvas id="displacement-canvas"></canvas>
+        <div class="displacement-overlay">Self-Sustaining Electromagnetic Displacement</div>
+    </div>
+
+
+    <script>
+        let step = 0;
+        const stages = document.querySelectorAll('.stage');
+        const eqGrid = document.getElementById('eq-grid');
+        const eqItems = document.querySelectorAll('.eq-item');
+
+        // Cinematic Particles (Golden Dust)
+        const pCanvas = document.createElement('canvas');
+        pCanvas.style.position = 'fixed';
+        pCanvas.style.inset = '0';
+        pCanvas.style.zIndex = '-1';
+        pCanvas.style.pointerEvents = 'none';
+        document.body.appendChild(pCanvas);
+        const pCtx = pCanvas.getContext('2d');
+        let particles = [];
+
+        function initParticles() {
+            pCanvas.width = window.innerWidth;
+            pCanvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * pCanvas.width,
+                    y: Math.random() * pCanvas.height,
+                    s: Math.random() * 2 + 0.5,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: -(Math.random() * 0.5 + 0.1),
+                    a: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function animateParticles() {
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            pCtx.fillStyle = 'rgba(201, 168, 76, 0.4)';
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.y < 0) p.y = pCanvas.height;
+                if (p.x < 0 || p.x > pCanvas.width) p.x = Math.random() * pCanvas.width;
+                pCtx.globalAlpha = p.a;
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+                pCtx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+        function updateUI() {
+            // Updated persistent stage logic for the Discovery arc
+            stages.forEach((s, i) => {
+                let active = false;
+                if (step === 0 && s.id === 'stage-0') active = true;
+                if (step === 1 && s.id === 'stage-1') active = true;
+                // Keep equations grid (stage-2) from step 2 through step 4 (fades in 4)
+                if ((step === 2 || step === 3 || step === 4) && s.id === 'stage-2') active = true;
+                // Keep speed/light beam (stage-speed) for step 4 only
+                if (step === 4 && s.id === 'stage-speed') active = true;
+                if (step === 5 && s.id === 'stage-quote') active = true;
+                if (step === 6 && s.id === 'stage-displacement') active = true;
+                s.classList.toggle('active', active);
+            });
+
+            // Stage 3 & 4 Highlights / Dimming
+            if (step === 3 || step === 4) {
+                eqItems.forEach((item, i) => {
+                    if (i === 2 || i === 3) {
+                        item.classList.add('highlight');
+                        item.classList.remove('dim');
+                        item.classList.toggle('shake', step === 4);
+                    } else {
+                        item.classList.add('dim');
+                        item.classList.remove('highlight', 'shake');
+                    }
+                });
+                eqGrid.style.gap = '140px';
+                // Fade equations almost completely out in step 4 so speed is "by itself"
+                eqGrid.style.opacity = step === 4 ? '0.05' : '1';
+                eqGrid.style.transform = 'scale(1.15) translateY(20px)';
+            } else if (step === 2) {
+                eqItems.forEach(item => item.classList.remove('highlight', 'dim', 'shake'));
+                eqGrid.style.gap = '40px';
+                eqGrid.style.transform = 'scale(1)';
+                eqGrid.style.opacity = '1';
+            } else {
+                eqGrid.style.opacity = '1';
+            }
+
+            const speedVal = document.querySelector('.speed-val');
+            if (speedVal) {
+                speedVal.style.transform = step === 5 ? 'scale(0.7) translateY(-50px)' : (step === 4 ? 'scale(1)' : 'scale(0.8)');
+                speedVal.style.opacity = step === 5 ? '0.3' : (step === 4 ? '1' : '0');
+            }
+
+            // Stage 6 triggers animation
+            if (step === 6) {
+                initDisplacement();
+            } else {
+                if (aniId) {
+                    cancelAnimationFrame(aniId);
+                    aniId = null;
+                }
+            }
+        }
+
+        function next() { if (step < 6) step++; updateUI(); }
+        function prev() { if (step > 0) step--; updateUI(); }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') next();
+            if (e.key === 'ArrowLeft') prev();
+        });
+
+        // Electromagnetic Displacement Animation
+        const canvas = document.getElementById('displacement-canvas');
+        const ctx = canvas.getContext('2d');
+        let aniId;
+
+        function initDisplacement() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let time = 0;
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const cy = canvas.height / 2;
+                const amp = 180;
+                const speed = 0.02;
+                const freq = 0.008;
+
+                // Electric Field (Blue, Vertical)
+                ctx.save();
+                ctx.strokeStyle = '#4A90E2';
+                ctx.shadowBlur = 25;
+                ctx.shadowColor = '#4A90E2';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                for (let x = 0; x < canvas.width; x += 10) {
+                    const y = cy + Math.sin(x * freq - time) * amp;
+                    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+
+                    if (x % 60 === 0) {
+                        ctx.moveTo(x, cy);
+                        ctx.lineTo(x, y);
+                        const dir = y > cy ? 1 : -1;
+                        ctx.moveTo(x - 6, y - 10 * dir); ctx.lineTo(x, y); ctx.lineTo(x + 6, y - 10 * dir);
+                    }
+                }
+                ctx.stroke();
+                ctx.restore();
+
+                // Magnetic Field (Gold, Z-axis / Isometric Projection)
+                ctx.save();
+                ctx.strokeStyle = '#f5d57a';
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#c9a84c';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for (let x = 0; x < canvas.width; x += 10) {
+                    const phaseOffset = Math.PI / 2; // 90 deg shift
+                    const z = Math.sin(x * freq - time + phaseOffset) * amp;
+
+                    // Isometric projection trick
+                    const projX = x + z * 0.7;
+                    const projY = cy + z * 0.4;
+
+                    if (x === 0) ctx.moveTo(projX, projY); else ctx.lineTo(projX, projY);
+
+                    if (x % 60 === 0) {
+                        ctx.moveTo(x, cy);
+                        ctx.lineTo(projX, projY);
+                        const dx = projX - x;
+                        const dy = projY - cy;
+                        const mag = Math.sqrt(dx * dx + dy * dy);
+                        if (mag > 10) {
+                            const ux = dx / mag, uy = dy / mag;
+                            ctx.moveTo(projX - ux * 10 - uy * 6, projY - uy * 10 + ux * 6);
+                            ctx.lineTo(projX, projY);
+                            ctx.lineTo(projX - ux * 10 + uy * 6, projY - uy * 10 - ux * 6);
+                        }
+                    }
+                }
+                ctx.stroke();
+                ctx.restore();
+
+                time += speed * 0.4;
+                aniId = requestAnimationFrame(draw);
+            }
+            if (!aniId) draw();
+        }
+
+        window.addEventListener('resize', () => {
+            initParticles();
+            if (step === 6) initDisplacement();
+        });
+    </script>
+</body>
+
+</html>

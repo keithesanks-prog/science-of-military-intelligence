@@ -1,0 +1,468 @@
+{
+    "SMI_MASTER_INDEX_V1.2": {
+        "Metadata": {
+            "Total_Entries": 46,
+            "Storage_Root": "Assets/References/People/"
+        },
+        "Categories": {
+            "PI": "Scientific Pillars",
+            "IV": "Inventors & Theorists",
+            "HE": "The Human Signal (Heroes/Deceptors)",
+            "SL": "Shadow List (Traitors/Moles)",
+            "MI": "Military & Strategy",
+            "CX": "Historical Context"
+        },
+        "Characters": {
+            "SMI_PI_MAXWELL": {
+                "ID": "SMI_PI_MAXWELL",
+                "Name": "James Clerk Maxwell",
+                "Category": "PI",
+                "Image_Path": "Assets/References/People/Scientific/james_clerk_maxwell.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_PI_HERTZ": {
+                "ID": "SMI_PI_HERTZ",
+                "Name": "Heinrich Hertz",
+                "Category": "PI",
+                "Image_Path": "Assets/References/People/Scientific/heinrich_hertz.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_PI_RONTGEN": {
+                "ID": "SMI_PI_RONTGEN",
+                "Name": "Wilhelm Rontgen",
+                "Category": "PI",
+                "Image_Path": "Assets/References/People/Scientific/wilhelm_rontgen.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_PI_HERSCHEL": {
+                "ID": "SMI_PI_HERSCHEL",
+                "Name": "William Herschel",
+                "Category": "PI",
+                "Image_Path": "Assets/References/People/Scientific/william_herschel.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_PI_LANGEVIN": {
+                "ID": "SMI_PI_LANGEVIN",
+                "Name": "Paul Langevin",
+                "Category": "PI",
+                "Image_Path": "Assets/References/People/Scientific/paul_langevin.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_PI_MCLEAN": {
+                "ID": "SMI_PI_MCLEAN",
+                "Name": "Bill McLean",
+                "Category": "PI",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_MARCONI": {
+                "ID": "SMI_IV_MARCONI",
+                "Name": "Guglielmo Marconi",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/guglielmo_marconi.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_HULSMEYER": {
+                "ID": "SMI_IV_HULSMEYER",
+                "Name": "Christian Hulsmeyer",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/christian_hulsmeyer.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_LAMARR": {
+                "ID": "SMI_IV_LAMARR",
+                "Name": "Hedy Lamarr",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/hedy_lamarr.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_ANTHEIL": {
+                "ID": "SMI_IV_ANTHEIL",
+                "Name": "George Antheil",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/george_antheil.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_THEREMIN": {
+                "ID": "SMI_IV_THEREMIN",
+                "Name": "Leon Theremin",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/leon_theremin.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_BARAN": {
+                "ID": "SMI_IV_BARAN",
+                "Name": "Paul Baran",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/paul_baran.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_DIFFIE": {
+                "ID": "SMI_IV_DIFFIE",
+                "Name": "Whitfield Diffie",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/whitfield_diffie.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_HELLMAN": {
+                "ID": "SMI_IV_HELLMAN",
+                "Name": "Martin Hellman",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/martin_hellman.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_IV_TURING": {
+                "ID": "SMI_IV_TURING",
+                "Name": "Alan Turing",
+                "Category": "IV",
+                "Image_Path": "Assets/References/People/Inventors/alan_turing.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_HE_HALL": {
+                "ID": "SMI_HE_HALL",
+                "Name": "Virginia Hall",
+                "Category": "HE",
+                "Image_Path": "Assets/References/People/The/virginia_hall.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_HE_SORGE": {
+                "ID": "SMI_HE_SORGE",
+                "Name": "Richard Sorge",
+                "Category": "HE",
+                "Image_Path": "Assets/References/People/The/richard_sorge.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_HE_COHEN": {
+                "ID": "SMI_HE_COHEN",
+                "Name": "Eli Cohen",
+                "Category": "HE",
+                "Image_Path": "Assets/References/People/The/eli_cohen.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_HE_WAKE": {
+                "ID": "SMI_HE_WAKE",
+                "Name": "Nancy Wake",
+                "Category": "HE",
+                "Image_Path": "Assets/References/People/The/nancy_wake_1945.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_HE_GARCIA": {
+                "ID": "SMI_HE_GARCIA",
+                "Name": "Juan Pujol Garcia",
+                "Category": "HE",
+                "Image_Path": "Assets/References/People/The/juan_pujol_garcia.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_FUCHS": {
+                "ID": "SMI_SL_FUCHS",
+                "Name": "Klaus Fuchs",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/klaus_fuchs.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_ROSENBERG": {
+                "ID": "SMI_SL_ROSENBERG",
+                "Name": "Julius Rosenberg",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/julius_rosenberg.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_AMES": {
+                "ID": "SMI_SL_AMES",
+                "Name": "Aldrich Ames",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/aldrich_ames.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_HANSSEN": {
+                "ID": "SMI_SL_HANSSEN",
+                "Name": "Robert Hanssen",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/robert_hanssen.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_MANNING": {
+                "ID": "SMI_SL_MANNING",
+                "Name": "Chelsea Manning",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/chelsea_manning.jpeg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_SNOWDEN": {
+                "ID": "SMI_SL_SNOWDEN",
+                "Name": "Edward Snowden",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/edward_snowden.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_WALKER": {
+                "ID": "SMI_SL_WALKER",
+                "Name": "John Anthony Walker",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/john_anthony_walker.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_PELTON": {
+                "ID": "SMI_SL_PELTON",
+                "Name": "Ronald Pelton",
+                "Category": "SL",
+                "Image_Path": "Assets/References/People/Shadow/ronald_pelton.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_CURVEBALL": {
+                "ID": "SMI_SL_CURVEBALL",
+                "Name": "Curveball",
+                "Category": "SL",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_BOYCE": {
+                "ID": "SMI_SL_BOYCE",
+                "Name": "Christopher Boyce",
+                "Category": "SL",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_LEE": {
+                "ID": "SMI_SL_LEE",
+                "Name": "Andrew Daulton Lee",
+                "Category": "SL",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_SL_TOEBBE": {
+                "ID": "SMI_SL_TOEBBE",
+                "Name": "Diana Toebbe",
+                "Category": "SL",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_HINDENBURG": {
+                "ID": "SMI_MI_HINDENBURG",
+                "Name": "Paul von Hindenburg",
+                "Category": "MI",
+                "Image_Path": "Assets/References/People/Military/paul_von_hindenburg.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_RIPLEY": {
+                "ID": "SMI_MI_RIPLEY",
+                "Name": "General James Ripley",
+                "Category": "MI",
+                "Image_Path": "Assets/References/People/Military/general_james_ripley.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_TYLER": {
+                "ID": "SMI_MI_TYLER",
+                "Name": "Kermit Tyler",
+                "Category": "MI",
+                "Image_Path": "Assets/References/People/Military/kermit_tyler.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_RAGLAN": {
+                "ID": "SMI_MI_RAGLAN",
+                "Name": "Lord Raglan",
+                "Category": "MI",
+                "Image_Path": "Assets/References/People/Military/lord_raglan.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_LUCAN": {
+                "ID": "SMI_MI_LUCAN",
+                "Name": "Lord Lucan",
+                "Category": "MI",
+                "Image_Path": "Assets/References/People/Military/lord_lucan.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_CARDIGAN": {
+                "ID": "SMI_MI_CARDIGAN",
+                "Name": "Lord Cardigan",
+                "Category": "MI",
+                "Image_Path": "Assets/References/People/Military/lord_cardigan.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_PHILLIPS": {
+                "ID": "SMI_MI_PHILLIPS",
+                "Name": "Jack Phillips",
+                "Category": "MI",
+                "Image_Path": "Assets/References/People/Military/jack_phillips.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_MI_SAMSONOV": {
+                "ID": "SMI_MI_SAMSONOV",
+                "Name": "Alexander Samsonov",
+                "Category": "MI",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_CX_HARRIMAN": {
+                "ID": "SMI_CX_HARRIMAN",
+                "Name": "Averell Harriman",
+                "Category": "CX",
+                "Image_Path": "Assets/References/People/Historical/averell_harriman.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_CX_HUGHES": {
+                "ID": "SMI_CX_HUGHES",
+                "Name": "Howard Hughes",
+                "Category": "CX",
+                "Image_Path": "Assets/References/People/Historical/howard_hughes.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_CX_MAYER": {
+                "ID": "SMI_CX_MAYER",
+                "Name": "Louis B Mayer",
+                "Category": "CX",
+                "Image_Path": "Assets/References/People/Historical/louis_b_mayer.jpg",
+                "Status": "READY",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_CX_TIZARD": {
+                "ID": "SMI_CX_TIZARD",
+                "Name": "Henry Tizard",
+                "Category": "CX",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            },
+            "SMI_CX_MANDL": {
+                "ID": "SMI_CX_MANDL",
+                "Name": "Friedrich Mandl",
+                "Category": "CX",
+                "Image_Path": "⚠️ MISSING",
+                "Status": "MISSING",
+                "Visual_Tokens": [
+                    "Add visual descriptions as needed"
+                ]
+            }
+        }
+    }
+}

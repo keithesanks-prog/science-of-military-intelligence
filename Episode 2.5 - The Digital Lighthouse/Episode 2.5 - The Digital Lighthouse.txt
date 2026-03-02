@@ -1,0 +1,82 @@
+Episode 2.5: The Digital Lighthouse: The Engineering of Safety
+
+### Cold Open: The Insurance of the Sea
+(Visual: A foggy, dark ocean. A massive container ship looms out of the mist. We see a small spinning radar dish on top of its bridge. Text: **SOLAS REGULATION 19**)
+
+Narrator: "When you drive a car, you are required by law to have insurance. It’s not just to protect your vehicle; it’s to protect the people around you in case you become a danger to them. On the high seas, the law is even more literal."
+
+Narrator: "Every major ship at sea is required by international law to carry a working navigation radar. It isn't just a luxury for the captain; it is a 'Legal Mandate for Safety.' It is the 'Digital Lighthouse' that tells the world exactly where you are and how fast you’re moving."
+
+Narrator: "Today, we explore the 'Engineering of Safety'—how a theory from the 1800s became the mandatory heartbeat of global trade. This is the Science of the Digital Lighthouse."
+
+(Visual: Title Card: **Episode 2.5: The Digital Lighthouse**)
+
+---
+
+### Act 1: The Invisible Lighthouse (Navigational Radar)
+(Visual: A split screen showing two radar displays. One is sharp and detailed (X-band), the other is broader and cuts through rain (S-band).)
+
+Narrator: "Under the SOLAS convention—the 'Safety of Life at Sea'—any ship over 300 tons is a 'Regulated Entity.' They must carry a 9 GHz **X-band radar**. Why? Because it’s the highest resolution 'eye' we have for seeing small boats, buoys, and shorelines."
+
+Narrator: "Larger ships carry a second 'ear'—the 3 GHz **S-band**. While the X-band sees the detail, the S-band cuts through the 'Noise' of heavy rain and crashing waves. Together, they ensure that the 'Fog of War' doesn't become the 'Fog of Collision.'"
+
+---
+
+### Act 2: The Digital Handshake (AIS)
+(Visual: A digital map of the English Channel. Thousands of little green triangles are moving in orderly lanes. When you click one, a window pops up: **MV EVER GIVEN, Speed: 12kts, Destination: Rotterdam**)
+
+Narrator: "But the SMI doesn't just watch; it 'Listens.' This is **AIS—the Automatic Identification System.** While radar is a 'Shout and Echo,' AIS is a 'Handshake.' Every few seconds, a ship's transponder broadcasts a packet of data: its name, its cargo, its destination, and its exact GPS path."
+
+Narrator: "It is a cooperative 'Engineering of Presence.' By sharing their 'Digital Identity,' ships turn a chaotic ocean into a synchronized dance. It’s the reason why you can go to websites like MarineTraffic and see the entire heartbeat of global commerce in real-time."
+
+---
+
+### Act 2.5: The "Search" in Search and Rescue (Object Lessons)
+(Visual: A split screen. On the left, a grainy radar image of a small blip in a storm. On the right, a satellite view of the Southern Ocean with a single green AIS triangle labeled **YACHT DISTRESS**. Text: **SOUTHERN OCEAN 2013**)
+
+Narrator: "But these aren't just dots on a map. They are lives. In SEARCH and RESCUE, the 'Search' is often the deadliest part. In 2013, a solo sailor was de-masted in the frozen middle of the Southern Ocean. He was in a life raft for 56 hours. To the human eye, he was a grain of sand in a desert of waves."
+
+Narrator: "But the Australian Maritime Safety Authority didn't look with eyes. They looked with **S-AIS (Satellite AIS)**. They saw his last position and, more importantly, they saw every other ship within 500 miles. They were able to instantly direct the cruise ship *Orion* like a chess piece, leading to a perfect rescue."
+
+Narrator: "And when the mist turns into a wall? In 2017, a Newquay Coastguard helicopter had to evacuate a critically ill sailor from a tanker in fog so thick the pilots couldn't see their own rotors. They used the 'Radio Eye' of their onboard radar to 'feel' their way down to the deck. Without that Hertzian echo, the mission would have been grounded. In the SMI, technology doesn't just find the signal; it finds the person."
+
+---
+
+### Act 3.5: The Upward Leakage (The View from Space)
+(Visual: We zoom out from the ship in the English Channel. The green triangles of AIS signals aren't just flat on the map; they are vertical beams of light shooting straight up through the atmosphere. We see a satellite orbiting 400km above, "catching" these beams.)
+
+Narrator: "But here is the 'Physics Paradox' of the sea: These signals don't just travel horizontally across the water. Radio waves are indifferent to the horizon. Every AIS ping and every radar sweep sends a pulse of energy straight up, through the clouds, and out into the vacuum of space."
+
+Narrator: "Because of this 'Upward Leakage,' the ocean isn't just monitored by other ships; it is under constant watch from above. Satellites traveling at seventeen thousand miles per hour are positioned directly in the path of these signals. They act as 'Space-Based Ears,' capturing the digital heartbeat of every vessel on the planet at the speed of light."
+
+Narrator: "In the 1800s, Maxwell knew the math said these waves were infinite. Today, we prove it by tracking a ship in the middle of the Pacific from a sensor in Low Earth Orbit. The 'Digital Lighthouse' doesn't just guide the neighbor; it informs the heavens."
+
+---
+
+### Act 4: The Scientific Bedrock (Maxwell & Hertz)
+(Visual: A portrait of James Clerk Maxwell morphing into a diagram of a wave. Then to Heinrich Hertz’s laboratory sparks. Text: **THE GHOSTS OF THE 1800s**)
+
+Narrator: "This entire global network—the radars, the AIS pings, the satellite tracking—rests on two names from the 19th century. **James Clerk Maxwell**, the man who used pure mathematics to predict that light and radio were the same 'Force.' And **Heinrich Hertz**, the man who proved it by jumping a spark across a room."
+
+Narrator: "When a captain looks at his radar screen today, he is looking at the 'Proven Math' of 1887. The 'Hertzian Wave' doesn't care if it's 1887 or 2026; it still travels at the speed of light, it still bounces off steel, and it still saves lives."
+
+---
+
+### Conclusion: The Engineering of Order
+Narrator: "We call it 'Traffic,' but it’s actually a 'Symphony of Signals.' By mandating that every ship carry a 'Radio Eye,' we’ve turned the most dangerous environment on Earth into a mapped, measured, and managed space."
+
+Narrator: "Because in the Science of Military Intelligence, the greatest victory isn't catching an enemy—it's ensuring that everyone gets home safe. Thanks for watching."
+
+---
+
+### Science of Military Intelligence Key Concepts:
+1.  **SOLAS (Safety of Life at Sea)**: The international treaty that mandates maritime safety equipment and procedures.
+2.  **X-band (9 GHz)**: High-resolution radar used for coastal navigation and detecting small objects.
+3.  **S-band (3 GHz)**: Long-range radar that can penetrate heavy rain and sea clutter better than X-band.
+4.  **AIS (Automatic Identification System)**: A broadcast transponder system that shares vessel identity and position data.
+5.  **Maritime Domain Awareness (MDA)**: The effective understanding of anything associated with the global maritime domain that could impact security, safety, economy, or environment.
+6.  **VHF Data Link**: The radio frequency band used by AIS for short-range communication.
+7.  **MarineTraffic/VesselFinder**: Public-facing websites that aggregate AIS data for global ship tracking.
+8.  **The Radar Mile (12.36µs)**: The time it takes for a signal to travel one nautical mile and return.
+9.  **Collision Avoidance (COLREGs)**: The 'Rules of the Road' for ships, which rely heavily on radar and AIS data.
+10. **The Maxwell-Hertz Foundation**: The theoretical and experimental proof of electromagnetic waves that makes all modern radar and AIS possible.

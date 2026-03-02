@@ -1,0 +1,73 @@
+Episode 16.7: The Untouchables: Lines in the Sand
+
+### Cold Open: The Ghost Target
+(Visual: A high-resolution satellite view of a city. Dozens of red squares highlight potential targets—factories, depots, barracks. Text: **TARGET ACQUISITION**.)
+
+Narrator: "In the modern age of precision warfare, we have the technology to hit a specific window from a thousand miles away. Our sensors can see everything, and our mathematics can solve any trajectory. We have engineered the ability to destroy anything."
+
+(Visual: One square in the center of the city turns from Red to Green. It is a hospital. Inside the square, the text changes to: **PROTECTED / DO NOT STRIKE**.)
+
+Narrator: "But just because we *can* hit everything doesn't mean we *do*. In fact, the most sophisticated part of modern targeting isn't the missile—it's the 'No-Strike List.' It is the digital wall of law, ethics, and treaties that forbids the system from doing its job."
+
+Narrator: "Today, we look at the 'The Untouchables'—the locations that have been deemed off-limits by the conscience of humanity. This is the Engineering of Ethics."
+
+(Visual: Title Card: **Episode 16.7: The Untouchables**)
+
+---
+
+### Act 1: The Geneva Barrier (Humanitarian Zones)
+(Visual: The iconic Red Cross emblem against a white background. Text: **GENEVA CONVENTION / 1949**)
+
+Narrator: "The first and most sacred line is the humanitarian one. Under the Geneva Conventions, hospitals, clinics, and ambulances are 'Untouchable.' They must be respected and protected at all times. They aren't just civilian objects; they are 'Sanctuaries.'"
+
+Narrator: "This is a technical challenge for an army. You have to ensure that every pilot, every artilleryman, and every drone operator knows exactly where these zones are. If you strike a hospital, the 'Science' of your targeting has failed the 'Ethics' of your state."
+
+---
+
+### Act 2: The Resonant Vault (Cultural Property)
+(Visual: The Blue Shield emblem. A photo of the Louvre or the ruins of Palmyra. Text: **HAGUE CONVENTION / 1954**)
+
+Narrator: "Intelligence is also tasked with protecting the past. The 1954 Hague Convention was born from the rubble of WWII. It protects 'Cultural Property'—museums, libraries, archaeological sites, and monuments."
+
+Narrator: "Militaries maintain databases of these 'Resonant Vaults.' If a site is granted 'Enhanced Protection' by UNESCO, it is immune from attack even if it has been occupied by an enemy. The goal is to ensure that while a war might destroy the present, it doesn't delete the history of a people."
+
+---
+
+### Act 3: The Dangerous Force (Nuclear & Dams)
+(Visual: A diagram of a massive hydroelectric dam holding back millions of tons of water. Text: **DANGEROUS FORCES / 1977 PROTOCOLS**)
+
+Narrator: "In 1977, the rules were expanded to include a new category: 'Works and Installations Containing Dangerous Forces.' This means Nuclear Power Plants and Hydroelectric Dams."
+
+Narrator: "Striking a dam doesn't just destroy a military objective; it releases a mechanical force—a flood—that could kill thousands of civilians. Striking a nuclear plant releases a biological force—radiation. These sites are 'Untouchable' because the 'Collateral Damage' of a single strike would be mathematically and morally unacceptable."
+
+---
+
+### Act 4: The No-Strike List (The Digital Shield)
+(Visual: A computer screen showing a map of a city. Thousands of 'Point Targets' are visible. A lawyer and a captain are reviewing the list. Text: **NSL / NO-STRIKE LIST**)
+
+Narrator: "How does this work in reality? It’s called the **No-Strike List (NSL)**. It is a geospatial database of protected sites—embassies, schools, religious landmarks, and hospitals."
+
+Narrator: "Before a single bomb is dropped, targeting software runs a 'CDE'—a Collateral Damage Estimate. It calculates the blast radius and checks it against the NSL. If the blast even touches a protected square, the computer flags it. A lawyer—a 'JAG'—must then review the strike."
+
+Narrator: "This is the final checkpoint in the engineering of war. It is the moment where the 'Efficiency' of the machine is paused for the 'Decency' of the human."
+
+---
+
+### Conclusion: The Final Decency
+Narrator: "We have spent this series looking at how we can see, how we can listen, and how we can destroy. But the most important part of the 'Science of Military Intelligence' is knowing when to close the eye."
+
+Narrator: "Because the ultimate goal of any engineering project should be to preserve life, not just to map its end. Thanks for watching."
+
+---
+
+### Science of Military Intelligence Key Concepts:
+1.  **No-Strike List (NSL)**: A designated list of targets protected from attack by law, treaty, or policy.
+2.  **Principle of Distinction**: The legal requirement to distinguish between combatants and civilians, and between military objectives and civilian objects.
+3.  **Collateral Damage Estimate (CDE)**: The technical process of predicting the unintended damage a strike will cause.
+4.  **Hague Convention (1954)**: The primary international treaty protecting cultural heritage during conflict.
+5.  **Enhanced Protection**: A UNESCO status that grants absolute immunity to cultural sites of 'greatest importance.'
+6.  **Dangerous Forces (Article 56)**: The specific protection for dams, dikes, and nuclear electrical generating stations.
+7.  **Sovereign Inviolability**: The rule that diplomatic missions (embassies) cannot be targeted or entered.
+8.  **JAG (Judge Advocate General)**: The military lawyers who review targeting data for legal compliance.
+9.  **The 'Broken Rule' Paradox**: When an enemy purposely uses a protected site (like a school) for military operations, complicating the targeting logic.
+10. **The Blue Shield**: The international emblem used to mark protected cultural property.

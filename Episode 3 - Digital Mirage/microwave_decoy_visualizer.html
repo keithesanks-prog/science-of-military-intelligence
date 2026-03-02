@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The "Microwave Decoy" Tactic | Electronic Warfare</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020408;
+            --panel-bg: rgba(5, 12, 24, 0.95);
+            --accent: #ff00ff;
+            --secondary: #00d2ff;
+            --warning: #ff3e3e;
+            --text: #e0f2f1;
+            --border: rgba(255, 0, 255, 0.2);
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Orbitron', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(26, 5, 40, 1) 0%, rgba(0, 0, 0, 1) 100%),
+                url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+        }
+
+        header {
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand h1 {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        .module-id {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--secondary);
+            letter-spacing: 1px;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .section-container {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            display: inline-block;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .vis-area {
+            background: #000;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .controls-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-group {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--secondary);
+        }
+
+        .control-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--secondary);
+            cursor: pointer;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .logic-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed var(--border);
+            padding: 15px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text);
+        }
+
+        .status-badge {
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            border-radius: 3px;
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+
+        /* Tactical Map Specific */
+        .tactical-map {
+            background: radial-gradient(circle, #0a1018 0%, #000 100%);
+            position: relative;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 20px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .btn.secondary {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn.secondary:hover {
+            background: var(--secondary);
+            color: #000;
+            box-shadow: 0 0 15px var(--secondary);
+        }
+
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <h1>The "Microwave Decoy" Tactic</h1>
+        </div>
+        <div class="module-id">EW-OPS: BALKAN-99</div>
+    </header>
+
+    <main>
+        <!-- Section 1: The Magnetron Foundation -->
+        <section class="section-container" id="magnetron-section">
+            <div class="section-header">
+                <div class="section-title">01. The Common Foundation (Magnetron)</div>
+                <div class="status-badge">PHYSICS SIMULATION ACTIVE</div>
+            </div>
+            <div class="content-grid">
+                <div class="controls-panel">
+                    <p class="description">
+                        At the heart of both a domestic microwave and a radar installation is the
+                        <strong>Magnetron</strong>.
+                        It converts high-voltage electricity into high-power radio frequency energy. Domestic units
+                        operate
+                        at <strong>2.45 GHz</strong>, which conveniently falls near the detection bands of many
+                        anti-radiation seekers.
+                    </p>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>ANODE VOLTAGE</span>
+                            <span id="voltageVal">4000V</span>
+                        </div>
+                        <input type="range" min="1000" max="8000" step="100" value="4000" id="voltageInput">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>MAGNETIC FIELD STRENGTH</span>
+                            <span id="magFieldVal">0.3 Tesla</span>
+                        </div>
+                        <input type="range" min="0.1" max="1.0" step="0.05" value="0.3" id="magFieldInput">
+                    </div>
+                    <div class="logic-card">
+                        <div style="color: var(--secondary); margin-bottom: 5px;">&gt; MAGNETRON LOGIC</div>
+                        Electrons spiral around the central cathode toward resonant cavities. This rotational energy
+                        induces high-frequency EM oscillations.
+                    </div>
+                </div>
+                <div class="vis-area">
+                    <canvas id="magnetronCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Signature Comparison -->
+        <section class="section-container" id="signature-section">
+            <div class="section-header">
+                <div class="section-title">02. Signature Comparison (The Deception)</div>
+                <div class="status-badge">SIGNAL ANALYSIS ACTIVE</div>
+            </div>
+            <div class="content-grid">
+                <div class="vis-area">
+                    <canvas id="signalCanvas"></canvas>
+                </div>
+                <div class="controls-panel">
+                    <p class="description">
+                        NATO's AGM-88 HARM (High-speed Anti-Radiation Missile) looks for specific frequency patterns
+                        emitted by air defense radars. By operating a microwave with the door open or bypassed,
+                        Serbian forces created a "pseudo-radar" signature that successfully diverted missiles.
+                    </p>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>MICROWAVE POWER (RF NOISE)</span>
+                            <span id="mwPowerVal">100%</span>
+                        </div>
+                        <input type="range" min="0" max="100" step="1" value="100" id="mwPowerInput">
+                    </div>
+                    <div class="btn-group" style="display: flex; gap: 10px;">
+                        <button class="btn secondary" id="modeRadar">TARGET RADAR</button>
+                        <button class="btn accent" id="modeDecoy">TARGET DECOY</button>
+                    </div>
+                    <div class="logic-card" id="seekerStatus">
+                        <div style="color: var(--warning); margin-bottom: 5px;">&gt; SEEKER TELEMETRY</div>
+                        [SCANNING...] FREQ LOCK: 2.45 GHz<br>
+                        SIGNAL STRENGTH: OPTIMAL<br>
+                        TARGET ACQUIRED: EMITTER_ALPHA
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Lateral Engagement -->
+        <section class="section-container" id="tactical-section">
+            <div class="section-header">
+                <div class="section-title">03. Lateral Engagement (Side View)</div>
+                <div class="status-badge">MISSILE SIMULATION</div>
+            </div>
+            <div class="content-grid">
+                <div class="controls-panel">
+                    <p class="description">
+                        This <strong>profile view</strong> shows how a domestic microwave on the ground can misdirect
+                        a HARM missile approaching a high-value radar installation. Launch the missile and toggle
+                        the microwave decoy to see the missile's seeker lock on to the "cheap" target.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button class="btn accent" id="launchMissile">LAUNCH AGM-88 HARM</button>
+                        <button class="btn secondary" id="resetSim">RESET ENVIRONMENT</button>
+                    </div>
+                </div>
+                <div class="vis-area side-view"
+                    style="background: linear-gradient(to bottom, #050a14 0%, #0a1018 70%, #1a1a1a 100%);">
+                    <canvas id="sideCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Improvised EW -->
+        <section class="section-container" id="herf-section">
+            <div class="section-header">
+                <div class="section-title">04. Improvised EW (HERF & Jamming)</div>
+                <div class="status-badge">HIGH-ENERGY RF DEMO</div>
+            </div>
+            <div class="content-grid">
+                <div class="vis-area">
+                    <canvas id="herfCanvas"></canvas>
+                </div>
+                <div class="controls-panel">
+                    <p class="description">
+                        Beyond simple decoys, salvaged magnetrons can be mounted to directional antennas to create
+                        <strong>HERF Guns</strong> (High Energy Radio Frequency). These "directed energy" weapons
+                        can fry the delicate control circuits of drones or disrupt IED triggers.
+                    </p>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>HERF DISCHARGE POWER</span>
+                            <span id="herfPowerVal">0 kW</span>
+                        </div>
+                        <input type="range" min="0" max="2000" step="10" value="0" id="herfPowerInput">
+                    </div>
+                    <button class="btn accent" id="triggerPulse">DISCHARGE PULSE</button>
+                    <div class="logic-card" id="herfStatus">
+                        <div style="color: var(--secondary); margin-bottom: 5px;">&gt; EW IMPACT ANALYSIS</div>
+                        TARGET: C2_DRONE_NODE<br>
+                        STATUS: SIGNAL_DEGRADED (0%)<br>
+                        EFFECT: MONITORING...
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- GLOBAL STATE ---
+        const state = {
+            magnetron: {
+                voltage: 4000,
+                magField: 0.3,
+                time: 0
+            },
+            signal: {
+                mwPower: 100,
+                time: 0,
+                mode: 'decoy' // radar or decoy
+            },
+            sim: {
+                active: false,
+                missile: null,
+                targets: [], // Initialized in initSim
+                time: 0
+            },
+            herf: {
+                power: 0,
+                pulses: [],
+                droneHealth: 100,
+                time: 0
+            }
+        };
+
+        // --- UTILS ---
+        const $ = (id) => document.getElementById(id);
+
+        function initSim() {
+            const canvas = $('sideCanvas');
+            if (!canvas) return;
+            const w = canvas.width;
+            const h = canvas.height;
+            state.sim.targets = [
+                { x: w - 100, y: h - 60, type: 'radar', active: true, label: 'SA-3 RADAR' },
+                { x: w / 2, y: h - 30, type: 'decoy', active: true, label: 'MICROWAVE DECOY' }
+            ];
+        }
+
+        // --- MAGNETRON ANIMATION ---
+        const mCanvas = $('magnetronCanvas');
+        const mCtx = mCanvas.getContext('2d');
+
+        function drawMagnetron() {
+            const w = mCanvas.width;
+            const h = mCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            mCtx.clearRect(0, 0, w, h);
+
+            // Draw Anode Block (The outer ring with cavities)
+            mCtx.strokeStyle = 'rgba(255, 0, 255, 0.4)';
+            mCtx.lineWidth = 2;
+            mCtx.beginPath();
+            mCtx.arc(cx, cy, 100, 0, Math.PI * 2);
+            mCtx.stroke();
+
+            // Cavities
+            const numCavities = 8;
+            for (let i = 0; i < numCavities; i++) {
+                const angle = (i / numCavities) * Math.PI * 2;
+                const rx = cx + Math.cos(angle) * 80;
+                const ry = cy + Math.sin(angle) * 80;
+
+                mCtx.beginPath();
+                mCtx.arc(rx, ry, 20, 0, Math.PI * 2);
+                mCtx.fillStyle = 'rgba(255, 0, 255, 0.1)';
+                mCtx.fill();
+                mCtx.stroke();
+            }
+
+            // Cathode (Center)
+            mCtx.fillStyle = '#fff';
+            mCtx.beginPath();
+            mCtx.arc(cx, cy, 15, 0, Math.PI * 2);
+            mCtx.fill();
+
+            // Electrons
+            const spiralFactor = state.magnetron.magField * 5;
+            const speed = state.magnetron.voltage / 2000;
+            state.magnetron.time += 0.05 * speed;
+
+            for (let i = 0; i < 20; i++) {
+                const t = (state.magnetron.time + i * 0.5) % 10;
+                const dist = 15 + t * 8;
+                if (dist > 85) continue;
+
+                const angle = (t * spiralFactor);
+                const ex = cx + Math.cos(angle) * dist;
+                const ey = cy + Math.sin(angle) * dist;
+
+                mCtx.fillStyle = '#00d2ff';
+                mCtx.beginPath();
+                mCtx.arc(ex, ey, 2, 0, Math.PI * 2);
+                mCtx.fill();
+
+                mCtx.shadowBlur = 5;
+                mCtx.shadowColor = '#00d2ff';
+            }
+            mCtx.shadowBlur = 0;
+
+            mCtx.strokeStyle = 'rgba(0, 210, 255, 0.5)';
+            mCtx.setLineDash([5, 5]);
+            mCtx.beginPath();
+            mCtx.arc(cx, cy, 120 + Math.sin(state.magnetron.time * 2) * 10, 0, Math.PI * 2);
+            mCtx.stroke();
+            mCtx.setLineDash([]);
+        }
+
+        // --- SIGNAL ANIMATION ---
+        const sCanvas = $('signalCanvas');
+        const sCtx = sCanvas.getContext('2d');
+
+        function drawSignals() {
+            const w = sCanvas.width;
+            const h = sCanvas.height;
+            const cy = h / 2;
+            sCtx.clearRect(0, 0, w, h);
+
+            sCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            for (let x = 0; x < w; x += 40) { sCtx.beginPath(); sCtx.moveTo(x, 0); sCtx.lineTo(x, h); sCtx.stroke(); }
+            for (let y = 0; y < h; y += 40) { sCtx.beginPath(); sCtx.moveTo(0, y); sCtx.lineTo(w, y); sCtx.stroke(); }
+
+            state.signal.time += 0.1;
+
+            sCtx.lineWidth = 2;
+            sCtx.beginPath();
+
+            if (state.signal.mode === 'radar') {
+                sCtx.strokeStyle = '#00d2ff';
+                for (let x = 0; x < w; x++) {
+                    const isPulse = (Math.floor(x / 100) % 2 === 0);
+                    const amp = isPulse ? 60 : 2;
+                    const y = cy + Math.sin(x * 0.5 + state.signal.time) * amp;
+                    if (x === 0) sCtx.moveTo(x, y);
+                    else sCtx.lineTo(x, y);
+                }
+            } else {
+                sCtx.strokeStyle = '#ff00ff';
+                const power = state.signal.mwPower / 100;
+                for (let x = 0; x < w; x++) {
+                    const noise = (Math.random() - 0.5) * 10 * power;
+                    const y = cy + Math.sin(x * 0.2 + state.signal.time) * 50 * power + noise;
+                    if (x === 0) sCtx.moveTo(x, y);
+                    else sCtx.lineTo(x, y);
+                }
+            }
+            sCtx.stroke();
+        }
+
+        // --- SIDE VIEW SIMULATION ---
+        const vCanvas = $('sideCanvas');
+        const vCtx = vCanvas.getContext('2d');
+
+        function drawSideView() {
+            const w = vCanvas.width;
+            const h = vCanvas.height;
+            vCtx.clearRect(0, 0, w, h);
+
+            // Ground
+            vCtx.fillStyle = '#111';
+            vCtx.fillRect(0, h - 20, w, 20);
+            vCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            vCtx.strokeRect(0, h - 20, w, 20);
+
+            // Draw Targets
+            state.sim.targets.forEach(tgt => {
+                const color = tgt.type === 'radar' ? '#00d2ff' : '#ff00ff';
+                vCtx.fillStyle = color;
+
+                if (tgt.type === 'radar') {
+                    // Radar Dish Shape
+                    vCtx.beginPath();
+                    vCtx.moveTo(tgt.x - 10, tgt.y);
+                    vCtx.lineTo(tgt.x + 10, tgt.y);
+                    vCtx.lineTo(tgt.x, tgt.y - 20);
+                    vCtx.fill();
+                    vCtx.beginPath();
+                    vCtx.arc(tgt.x, tgt.y - 20, 15, Math.PI, 0);
+                    vCtx.stroke();
+                } else {
+                    // Microwave Box
+                    vCtx.fillRect(tgt.x - 10, tgt.y - 10, 20, 15);
+                    vCtx.strokeStyle = '#fff';
+                    vCtx.strokeRect(tgt.x - 10, tgt.y - 10, 20, 15);
+                    if (state.signal.mwPower > 0) {
+                        // Emission waves
+                        vCtx.strokeStyle = color;
+                        vCtx.beginPath();
+                        vCtx.arc(tgt.x, tgt.y - 10, 10 + (Date.now() % 500) / 10, -Math.PI, 0);
+                        vCtx.stroke();
+                    }
+                }
+
+                vCtx.font = '8px Orbitron';
+                vCtx.fillStyle = color;
+                vCtx.fillText(tgt.label, tgt.x - 20, tgt.y + 15);
+            });
+
+            // Incoming Missile
+            if (state.sim.active && state.sim.missile) {
+                const m = state.sim.missile;
+                const radarTgt = state.sim.targets.find(t => t.type === 'radar');
+                const decoyTgt = state.sim.targets.find(t => t.type === 'decoy');
+
+                // Logic: Initially target Radar. When close enough AND decoy is active, distracted by decoy.
+                let target = radarTgt;
+                let distracted = false;
+
+                const distToDecoy = Math.sqrt((decoyTgt.x - m.x) ** 2 + (decoyTgt.y - m.y) ** 2);
+                if (state.signal.mwPower > 50 && distToDecoy < 300) {
+                    target = decoyTgt;
+                    distracted = true;
+                }
+
+                const dx = target.x - m.x;
+                const dy = target.y - m.y;
+                const angleToTarget = Math.atan2(dy, dx);
+
+                // Gradual steering towards target (turn rate limit)
+                const angleDiff = angleToTarget - m.angle;
+                m.angle += Math.sign(angleDiff) * Math.min(Math.abs(angleDiff), 0.05);
+
+                m.vx = Math.cos(m.angle) * 3.5;
+                m.vy = Math.sin(m.angle) * 3.5;
+                m.x += m.vx;
+                m.y += m.vy;
+
+                // 1. Ghost Path (Translucent Original Radar Path)
+                if (distracted) {
+                    vCtx.setLineDash([5, 5]);
+                    vCtx.strokeStyle = 'rgba(0, 210, 255, 0.2)';
+                    vCtx.beginPath();
+                    vCtx.moveTo(m.x, m.y);
+                    vCtx.lineTo(radarTgt.x, radarTgt.y);
+                    vCtx.stroke();
+                    vCtx.setLineDash([]);
+
+                    vCtx.font = '8px Orbitron';
+                    vCtx.fillStyle = 'rgba(0, 210, 255, 0.4)';
+                    vCtx.fillText("PREVIOUS TRACK", m.x + 20, m.y - 10);
+                }
+
+                // 2. Seeker Bounding Box
+                vCtx.strokeStyle = distracted ? '#ff00ff' : '#00d2ff';
+                vCtx.lineWidth = 1;
+                vCtx.beginPath();
+                const boxSize = 20 + Math.sin(Date.now() / 100) * 5;
+                vCtx.strokeRect(target.x - boxSize / 2, target.y - boxSize / 2, boxSize, boxSize);
+
+                // Scanning brackets
+                vCtx.font = '8px Orbitron';
+                vCtx.fillStyle = distracted ? '#ff00ff' : '#00d2ff';
+                vCtx.fillText(distracted ? "LOCK: DECOY" : "LOCK: RADAR", target.x + 15, target.y - 15);
+
+                // 3. Line of Sight (LOS)
+                vCtx.strokeStyle = distracted ? 'rgba(255, 0, 255, 0.4)' : 'rgba(0, 210, 255, 0.4)';
+                vCtx.beginPath();
+                vCtx.moveTo(m.x, m.y);
+                vCtx.lineTo(target.x, target.y);
+                vCtx.stroke();
+
+                // Draw Missile
+                vCtx.save();
+                vCtx.translate(m.x, m.y);
+                vCtx.rotate(m.angle);
+
+                // Flame/Exhaust
+                vCtx.fillStyle = '#ff3e3e';
+                vCtx.beginPath();
+                vCtx.moveTo(-10, 0);
+                vCtx.lineTo(-15, -3 + Math.random() * 6);
+                vCtx.lineTo(-10, 0);
+                vCtx.fill();
+
+                vCtx.fillStyle = '#fff';
+                vCtx.fillRect(-8, -2, 16, 4);
+                vCtx.restore();
+
+                // Check impact
+                const distToFinal = Math.sqrt((target.x - m.x) ** 2 + (target.y - m.y) ** 2);
+                if (distToFinal < 10) {
+                    state.sim.active = false;
+                    const card = document.querySelector('#tactical-section .controls-panel');
+                    const status = document.createElement('div');
+                    status.className = 'logic-card';
+                    status.style.border = distracted ? '1px solid var(--accent)' : '1px solid var(--secondary)';
+                    status.innerHTML = `<div style="color: ${distracted ? 'var(--accent)' : 'var(--secondary)'}; margin-bottom: 5px;">&gt; SEEKER FINAL REPORT</div> 
+                        IMPACT: ${target.label}<br>
+                        ASSESSMENT: ${distracted ? 'DECEPTION SUCCESSFUL. RADAR SAFE.' : 'MISSION COMPLETE. RADAR DESTROYED.'}`;
+                    card.appendChild(status);
+                    setTimeout(() => status.remove(), 5000);
+                }
+            }
+        }
+
+        // --- HERF ANIMATION ---
+        const hCanvas = $('herfCanvas');
+        const hCtx = hCanvas.getContext('2d');
+
+        function drawHerf() {
+            const w = hCanvas.width;
+            const h = hCanvas.height;
+            const cy = h / 2;
+            hCtx.clearRect(0, 0, w, h);
+
+            // Source (The HERF Gun)
+            hCtx.fillStyle = '#ff00ff';
+            hCtx.fillRect(20, cy - 30, 40, 60);
+            hCtx.strokeStyle = '#fff';
+            hCtx.strokeRect(20, cy - 30, 40, 60);
+
+            // Target (Drone)
+            state.herf.time += 0.05;
+            const droneX = w - 100;
+            const droneY = cy + Math.sin(state.herf.time) * 50;
+
+            hCtx.fillStyle = state.herf.droneHealth > 0 ? '#00d2ff' : '#555';
+            hCtx.beginPath();
+            hCtx.moveTo(droneX - 20, droneY);
+            hCtx.lineTo(droneX + 20, droneY);
+            hCtx.lineTo(droneX, droneY - 15);
+            hCtx.closePath();
+            hCtx.fill();
+
+            // Pulses
+            for (let i = state.herf.pulses.length - 1; i >= 0; i--) {
+                const p = state.herf.pulses[i];
+                p.x += 10;
+
+                hCtx.strokeStyle = 'rgba(255, 0, 255, ' + p.life + ')';
+                hCtx.lineWidth = 2;
+                hCtx.beginPath();
+                hCtx.arc(p.x, cy, p.r, -Math.PI / 4, Math.PI / 4);
+                hCtx.stroke();
+
+                p.r += 2;
+                p.life -= 0.02;
+
+                if (p.x > droneX - 20 && p.x < droneX + 20) {
+                    state.herf.droneHealth -= 0.5 * (state.herf.power / 500);
+                    if (state.herf.droneHealth < 0) state.herf.droneHealth = 0;
+                }
+
+                if (p.life <= 0) state.herf.pulses.splice(i, 1);
+            }
+
+            // Status Update
+            $('herfStatus').innerHTML = `<div style="color: var(--secondary); margin-bottom: 5px;">&gt; EW IMPACT ANALYSIS</div> TARGET: C2_DRONE_NODE<br>STATUS: ${state.herf.droneHealth > 0 ? 'SIGNAL_DEGRADED' : 'NODE_CRITICAL'} (${Math.floor(Math.max(0, 100 - state.herf.droneHealth))}%)<br>EFFECT: ${state.herf.droneHealth > 0 ? 'MONITORING...' : 'ELECTRONIC_FAILURE'}`;
+        }
+
+        // --- MAIN LOOP ---
+        function animate() {
+            drawMagnetron();
+            drawSignals();
+            drawSideView();
+            drawHerf();
+            requestAnimationFrame(animate);
+        }
+
+        function resize() {
+            [mCanvas, sCanvas, vCanvas, hCanvas].forEach(c => {
+                if (c && c.parentElement) {
+                    c.width = c.parentElement.clientWidth;
+                    c.height = c.parentElement.clientHeight;
+                }
+            });
+            initSim();
+        }
+
+        // --- EVENTS ---
+        $('voltageInput').addEventListener('input', (e) => {
+            state.magnetron.voltage = e.target.value;
+            $('voltageVal').innerText = e.target.value + 'V';
+        });
+
+        $('magFieldInput').addEventListener('input', (e) => {
+            state.magnetron.magField = e.target.value;
+            $('magFieldVal').innerText = e.target.value + ' Tesla';
+        });
+
+        $('mwPowerInput').addEventListener('input', (e) => {
+            state.signal.mwPower = e.target.value;
+            $('mwPowerVal').innerText = e.target.value + '%';
+        });
+
+        $('modeRadar').addEventListener('click', () => {
+            state.signal.mode = 'radar';
+            $('seekerStatus').innerHTML = `<div style="color: var(--secondary); margin-bottom: 5px;">&gt; SEEKER TELEMETRY</div> TARGET: AIR_DEF_RADAR<br>FREQ: 3.2 GHz<br>STATUS: TRACKING`;
+        });
+
+        $('modeDecoy').addEventListener('click', () => {
+            state.signal.mode = 'decoy';
+            $('seekerStatus').innerHTML = `<div style="color: var(--warning); margin-bottom: 5px;">&gt; SEEKER TELEMETRY</div> TARGET: EMITTER_ALPHA<br>FREQ: 2.45 GHz<br>STATUS: DECOY_ALERT`;
+        });
+
+        $('launchMissile').addEventListener('click', () => {
+            state.sim.active = true;
+            // Calculate initial angle towards radar
+            const radar = state.sim.targets.find(t => t.type === 'radar');
+            const angle = Math.atan2(radar.y - 50, radar.x - 50);
+            state.sim.missile = { x: 50, y: 50, vx: 0, vy: 0, angle: angle };
+        });
+
+        $('resetSim').addEventListener('click', () => {
+            state.sim.active = false;
+            state.sim.missile = null;
+            // Remove any existing logic cards from previous simulation runs
+            const existingCard = document.querySelector('#tactical-section .controls-panel .logic-card');
+            if (existingCard) existingCard.remove();
+        });
+
+        $('herfPowerInput').addEventListener('input', (e) => {
+            state.herf.power = e.target.value;
+            $('herfPowerVal').innerText = e.target.value + ' kW';
+        });
+
+        $('triggerPulse').addEventListener('click', () => {
+            state.herf.pulses.push({ x: 60, r: 10, life: 1.0 });
+        });
+
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+    </script>
+</body>
+
+</html>

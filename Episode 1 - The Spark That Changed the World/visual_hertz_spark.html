@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hertz's Experiment — 1888</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&family=IM+Fell+English+SC&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* Cinematic Stages */
+        .stage {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+            z-index: 5;
+        }
+
+        .stage.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Step 0: Chalkboard */
+        #stage-chalkboard {
+            background: #0d120d;
+            flex-direction: column;
+            color: rgba(220, 230, 220, 0.85);
+            font-family: 'IM Fell English SC', serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 80%),
+                url('https://www.transparenttextures.com/patterns/dark-leather.png');
+            /* Dusty board texture */
+        }
+
+        .chalkboard-content {
+            max-width: 900px;
+            text-align: center;
+            line-height: 2.2;
+            font-size: 2.2rem;
+            position: relative;
+            letter-spacing: 2px;
+        }
+
+        .chalk-footer {
+            margin-top: 60px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #a88a38;
+            opacity: 0.6;
+        }
+
+        .chalkboard-content::before {
+            content: '';
+            position: absolute;
+            inset: -50px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        /* Step 1: Portrait */
+        .portrait-container {
+            width: 50vh;
+            height: 65vh;
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(201, 168, 76, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .portrait-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.3) brightness(0.8) contrast(1.2);
+            display: block;
+        }
+
+        .portrait-vignette {
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 100px #000;
+            pointer-events: none;
+        }
+
+        /* Step 6: Confirmation Quote */
+        .quote-container {
+            max-width: 800px;
+            background: #fdf5e6;
+            padding: 80px 100px;
+            border-radius: 4px;
+            box-shadow: 0 50px 150px rgba(0, 0, 0, 0.9), inset 0 0 100px rgba(0, 0, 0, 0.05);
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.2rem;
+            line-height: 1.3;
+            color: #2c2c2c;
+            opacity: 0;
+            transform: translateY(40px) rotate(-1deg);
+            transition: all 3s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+        }
+
+        .stage.active .quote-container {
+            opacity: 1;
+            transform: translateY(0) rotate(-1.5deg);
+        }
+
+        .quote-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/papyros.png');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: block;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="stage-chalkboard" class="stage active">
+        <div class="chalkboard-content">
+            ∇ · E = ρ / ε₀<br>
+            ∇ · B = 0<br>
+            ∇ × E = −∂B/∂t<br>
+            ∇ × B = μ₀(J + ε₀∂E/∂t)<br>
+            <div class="chalk-footer">
+                Karlsruhe, 1888 — "The mathematical ghost summoned to life."
+            </div>
+        </div>
+    </div>
+
+    <div id="stage-lab-context" class="stage">
+        <div class="portrait-container" style="width: 80vw; height: auto; aspect-ratio: 16/9;">
+            <img src="hertz_lab_wide.jpg" alt="Hertz's Laboratory at Karlsruhe">
+            <div class="portrait-vignette"></div>
+            <div
+                style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); font-family: 'IM Fell English SC', serif; font-size: 1.5rem; color: #fff; text-shadow: 0 2px 10px #000;">
+                The lab at Karlsruhe Polytechnic — surrounded by the tools of an invisible search.
+            </div>
+        </div>
+    </div>
+
+    <div id="stage-ghost-spark" class="stage"></div>
+
+    <div id="stage-portrait" class="stage">
+        <div class="portrait-container">
+            <img src="hertz_portrait.jpg" alt="Heinrich Hertz">
+            <div class="portrait-vignette"></div>
+        </div>
+    </div>
+
+    <div id="stage-quote" class="stage">
+        <div class="quote-container">
+            "I do not think that the wireless waves I have discovered will have any practical application."
+            <div style="margin-top:20px; font-family:'IM Fell English SC', serif; font-size: 1.2rem; color: #a88a38;">
+                — Heinrich Hertz, 1890</div>
+        </div>
+    </div>
+
+    <canvas id="c"></canvas>
+
+    <script>
+        const STEPS = [
+            {
+                label: 'COMPONENT 01 OF 05', title: 'THE INDUCTION COIL', color: '#c8a838',
+                desc: `The coil is made of four parts working together:<br><br><strong>▶ Primary winding (large yellow loops):</strong> Battery current flows through this outer coil, creating a magnetic field inside the iron core.<br><br><strong>▶ Iron core:</strong> An iron rod through the center amplifies and focuses that magnetic field.<br><br><strong>▶ Mechanical interrupter:</strong> A vibrating contact switch buzzes hundreds of times per second, breaking and reconnecting the circuit. Each break causes the magnetic field to <em>collapse suddenly</em>.<br><br><strong>▶ Secondary winding (tight inner loops):</strong> Wound around the same core with far more turns. That sudden collapse induces a voltage spike here — stepped up to <strong>10,000+ volts</strong> out the terminal posts.`,
+                btn: 'NEXT →', cls: ''
+            },
+            {
+                label: 'COMPONENT 02 OF 05', title: 'THE BRASS SPHERE DIPOLE', color: '#f0b840',
+                desc: `The two brass spheres sat on <strong>insulated metal rods</strong> bolted to the lab bench. Thick copper wires ran from the coil’s high-voltage terminal posts — you can see them in the diagram — directly down and into those rods.<br><br>The spheres themselves just screwed onto the rod ends like a bolt. They weren’t plugged into anything; they <em>were</em> the ends of the conductor.<br><br>Charge flowed from the coil → down the wire → into the rod → into the sphere, building up on the surface until the electric field in the <strong>air gap</strong> between the two spheres became strong enough to rip the air apart.`,
+                btn: 'NEXT →', cls: ''
+            },
+            {
+                label: 'STEP 03 OF 05', title: 'FIRE THE TRANSMITTER', color: '#c080ff',
+                desc: `When the charge jumped the gap, electrons oscillated back and forth across it thousands of times per second.<br><br>This oscillating current <strong>shook the electromagnetic field</strong> itself, sending ripples outward at the <strong>speed of light</strong>.`,
+                btn: '⚡  DISCHARGE', cls: 'spark-btn'
+            },
+            {
+                label: 'STEP 04 OF 05', title: 'THE ELECTROMAGNETIC WAVE', color: '#4a9eff',
+                desc: `Rings of electromagnetic disturbance spread outward in all directions at <strong>186,000 miles per second</strong>.<br><br>Hertz called them "Hertzian waves." Today: <strong>radio waves</strong>. He proved they reflected and refracted like light — Maxwell's 1865 prediction was real.`,
+                btn: 'NEXT →', cls: ''
+            },
+            {
+                label: 'COMPONENT 05 OF 05', title: 'THE RECEIVER LOOP', color: '#44cc66',
+                desc: `The receiver was just a bent wire — <strong>no battery, no light bulb, nothing</strong>. Hertz filed both ends down to needle-sharp points, facing each other across a gap barely wider than a few sheets of paper.<br><br>When the wave arrived, it drove a tiny current around the loop. That current built up charge at the gap until a <strong>faint blue-white spark jumped across it</strong> — so small that Hertz had to <strong>darken the room completely</strong> and use a <strong>magnifying glass</strong> to see it.<br><br>That barely-visible flicker was the proof: an invisible wave had crossed 5 meters of empty space and conjured electricity from nothing. <strong>Maxwell's 1865 prediction was confirmed.</strong>`,
+                btn: '↺  START OVER', cls: ''
+            }
+        ];
+
+        let step = 0, t = 0;
+        let waveFront = 0, waveActive = false;
+        let sparkOn = false, sparkT = 0;
+        let rxSpark = false, rxSparkT = 0;
+
+        const cv = document.getElementById('c');
+        const g = cv.getContext('2d');
+        let W, H;
+
+        function resize() {
+            const panelW = 0; // Removed sidebar
+            const dpr = window.devicePixelRatio || 1;
+            W = window.innerWidth;
+            H = window.innerHeight;
+            cv.width = Math.round(W * dpr);
+            cv.height = Math.round(H * dpr);
+            cv.style.width = W + 'px';
+            cv.style.height = H + 'px';
+            g.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Layout — adjusted for full-width center
+        function CX() { return W * 0.15; } // Coil X
+        function TX() { return W * 0.45; } // Transmitter X
+        function RX() { return W * 0.85; } // Receiver Loop X
+        function BY() { return H * 0.75; }
+        function M1() { return H * 0.18; }
+
+        function next() {
+            if (step < 8) {
+                step++;
+                if (step === 5 || step === 6) fire();
+                updateUI();
+            }
+        }
+
+        function prev() {
+            if (step > 0) {
+                step--;
+                if (step < 5) { waveActive = false; waveFront = 0; rxSpark = false; sparkOn = false; }
+                updateUI();
+            }
+        }
+
+        function fire() {
+            sparkOn = true;
+            sparkT = 0;
+            if (step === 5) {
+                waveActive = true;
+                waveFront = 10;
+            }
+            // Step 6: Spark is triggered at receiver
+            rxSpark = step === 6;
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') next();
+            if (e.key === 'ArrowLeft') prev();
+        });
+
+        function updateUI() {
+            document.getElementById('stage-chalkboard').classList.toggle('active', step === 0);
+            document.getElementById('stage-portrait').classList.toggle('active', step === 1);
+            document.getElementById('stage-lab-context').classList.toggle('active', step === 2);
+            document.getElementById('stage-ghost-spark').classList.toggle('active', step === 6);
+            document.getElementById('stage-quote').classList.toggle('active', step === 7);
+        }
+
+        function frame() {
+            g.clearRect(0, 0, W, H);
+
+            if (step === 8) {
+                drawEchoTransition();
+            } else if (step >= 3 && step <= 7) {
+                const isZoom = step === 6;
+                const tx = TX(), rx = RX(), ty = BY(), m1 = M1();
+                const tableY = ty - m1 * 1.0;
+                const sy = tableY - 70; // transmitter gap
+                const rx_sy = tableY - 110; // receiver loop center
+
+                g.save();
+                if (isZoom) {
+                    // Extreme zoom on the RECEIVER gap
+                    const zoom = 5;
+                    g.translate(W / 2, H / 2);
+                    g.scale(zoom, zoom);
+                    g.translate(-rx, -rx_sy);
+                }
+
+                drawBg();
+                drawBench();
+                drawCoil();
+                drawSpheres();
+                if (waveActive) drawWaves();
+                drawLoop();
+                if (step >= 5 || waveActive) drawDistLabel();
+                drawResearcher();
+
+                g.restore();
+            }
+
+            t += 0.016;
+            if (sparkOn) {
+                sparkT += 0.016;
+                if (step === 5 && sparkT > 0.6) sparkOn = false;
+                // Step 6: Spark stays on or flickers
+            }
+            if (waveActive) {
+                waveFront += W * 0.012; // Narrative speed
+                if (!rxSpark && waveFront > RX() - TX() - 10) {
+                    rxSpark = true;
+                    rxSparkT = 0;
+                }
+                if (waveFront > W * 1.6) waveActive = false;
+            }
+            if (rxSpark) rxSparkT += 0.016;
+            requestAnimationFrame(frame);
+        }
+
+        function drawBg() {
+            // High-contrast, stylized lab walls
+            const g1 = g.createLinearGradient(0, 0, 0, H);
+            g1.addColorStop(0, '#02050a');
+            g1.addColorStop(1, '#051225');
+            g.fillStyle = g1;
+            g.fillRect(0, 0, W, H);
+
+            // Wall elements (Faint blackboard and window for context)
+            g.strokeStyle = 'rgba(255,255,255,0.03)'; g.lineWidth = 1;
+            // Blackboard on back wall
+            g.strokeRect(W * 0.1, H * 0.1, W * 0.3, H * 0.3);
+            g.fillStyle = 'rgba(255,255,255,0.01)';
+            g.fillRect(W * 0.1, H * 0.1, W * 0.3, H * 0.3);
+
+            // Perspective Floor
+            const floorY = BY();
+            const horizonY = floorY * 0.95;
+
+            // Draw floor gradient
+            const g2 = g.createLinearGradient(0, floorY, 0, H);
+            g2.addColorStop(0, '#0a1a35');
+            g2.addColorStop(1, '#02050a');
+            g.fillStyle = g2;
+            g.fillRect(0, floorY, W, H - floorY);
+
+            // Tiles (1-meter indicators)
+            // Distance TX -> RX is 0.5 * W, which represents 5 meters.
+            // So 1 meter = 0.1 * W.
+            const meterPX = W * 0.1;
+            g.strokeStyle = 'rgba(74, 158, 255, 0.15)'; g.lineWidth = 1;
+
+            // Longitudinal lines (perspective)
+            for (let i = -10; i <= 20; i++) {
+                const xAtBench = i * meterPX;
+                g.beginPath();
+                g.moveTo(W / 2 + (xAtBench - W / 2) * 0.1, horizonY); // Vanishing point area
+                g.lineTo(xAtBench, H);
+                g.stroke();
+            }
+
+            // Latitudinal lines (depth)
+            for (let d = 0; d < 10; d++) {
+                const y = floorY + (H - floorY) * (d / 10) * (d / 10);
+                g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke();
+            }
+        }
+
+        function drawBench() {
+            const m1 = M1();
+            const floorY = BY();
+            const tableY = floorY - m1 * 1.0; // Waist height
+            const thickness = 28;
+
+            // Table Legs
+            g.fillStyle = '#1a0d04';
+            [W * 0.1, W * 0.45, W * 0.55, W * 0.9].forEach(lx => {
+                g.fillRect(lx, tableY + 10, 15, floorY - tableY - 10);
+            });
+
+            // 3D Slab look
+            g.fillStyle = '#1e1005';
+            g.fillRect(0, tableY + 2, W, thickness);
+            // Top surface
+            const surf = g.createLinearGradient(0, tableY, 0, tableY + 22);
+            surf.addColorStop(0, '#3a220a');
+            surf.addColorStop(1, '#251606');
+            g.fillStyle = surf;
+            g.fillRect(0, tableY, W, 22);
+            // Highlights & edges
+            g.strokeStyle = 'rgba(120, 80, 40, 0.4)';
+            g.lineWidth = 2;
+            g.beginPath(); g.moveTo(0, tableY); g.lineTo(W, tableY); g.stroke();
+        }
+
+        function drawCoil() {
+            const tx = TX(), cx = CX(), ty = BY(), m1 = M1();
+            const tableY = ty - m1 * 1.0;
+            const bW = m1 * 0.7, bH = m1 * 0.4;
+            const cy = tableY - bH - 40, active = step === 3;
+            const col = active ? '#e8c040' : '#4a3a1a';
+
+            // sphere positions (must match drawSpheres sy and stands)
+            const sy = tableY - 70;
+            const standTop = sy + m1 * 0.08;
+
+            if (active) { g.shadowColor = '#e8c040'; g.shadowBlur = 48; }
+
+            // 3D Base/Plinth for the coil
+            const pW = bW + 20, pH = 15;
+            const pX = cx - pW / 2, pY = cy + bH;
+            // Base shadow
+            g.shadowBlur = 0;
+            g.fillStyle = 'rgba(0,0,0,0.5)';
+            g.fillRect(pX + 5, pY + pH - 5, pW, 10); // shadow on bench
+
+            // Base 3D center on CX
+            g.fillStyle = active ? '#3a2a10' : '#1a1408';
+            g.fillRect(pX, pY, pW, pH);
+            g.strokeStyle = col; g.lineWidth = 2;
+            g.strokeRect(pX, pY, pW, pH);
+            // highlight on top edge of base
+            g.strokeStyle = 'rgba(255,255,255,0.15)'; g.lineWidth = 1;
+            g.beginPath(); g.moveTo(pX, pY); g.lineTo(pX + pW, pY); g.stroke();
+
+            // The main coil body (Cylindrical Ruhmkorff Coil) centered on CX
+            const cg = g.createLinearGradient(cx - bW / 2, cy, cx - bW / 2, cy + bH);
+            cg.addColorStop(0, active ? '#3a1a05' : '#1a0d04');
+            cg.addColorStop(0.5, active ? '#5a2d0a' : '#2a1606');
+            cg.addColorStop(1, active ? '#251606' : '#100a04');
+            g.fillStyle = cg;
+            g.fillRect(cx - bW / 2, cy, bW, bH);
+            g.strokeStyle = col; g.lineWidth = active ? 2.5 : 1.2;
+            g.strokeRect(cx - bW / 2, cy, bW, bH);
+
+            // Left-side interrupter mechanism (Knobs and vibrator)
+            const ix = cx - bW / 2 - 25;
+            g.fillStyle = active ? '#e8c040' : '#6a5020';
+            g.fillRect(ix, cy + bH * 0.15, 15, bH * 0.7); // vertical post
+            // Adjusting knobs
+            g.beginPath(); g.arc(ix - 10, cy + bH * 0.3, bH * 0.12, 0, Math.PI * 2); g.fill();
+            g.beginPath(); g.arc(ix - 10, cy + bH * 0.65, bH * 0.12, 0, Math.PI * 2); g.fill();
+            // The vibrator arm
+            g.strokeStyle = '#aaa'; g.lineWidth = 3;
+            g.beginPath(); g.moveTo(ix + 15, cy + bH / 2); g.lineTo(cx - bW / 2, cy + bH / 2); g.stroke();
+
+            // ── IRON CORE: visible grey rod ──
+            const coreY = cy + bH * 0.45, coreH = bH * 0.15;
+            const coreGrad = g.createLinearGradient(cx - bW / 2 + 8, coreY, cx - bW / 2 + 8, coreY + coreH);
+            coreGrad.addColorStop(0, active ? '#c0c8d8' : '#4a5060');
+            coreGrad.addColorStop(0.5, active ? '#e8edf8' : '#7a8090');
+            coreGrad.addColorStop(1, active ? '#8090a8' : '#2a3040');
+            g.fillStyle = coreGrad;
+            g.fillRect(cx - bW / 2 + 6, coreY, bW - 12, coreH);
+
+            // Magnetic Field Glow in Core
+            if (active) {
+                g.save();
+                g.shadowColor = 'rgba(100, 160, 255, 0.6)'; g.shadowBlur = 20;
+                g.strokeStyle = 'rgba(120, 180, 255, 0.3)'; g.lineWidth = 2;
+                g.strokeRect(cx - bW / 2 + 6, coreY, bW - 12, coreH);
+                g.restore();
+            }
+
+            g.strokeStyle = active ? '#a0b0c8' : '#3a4050'; g.lineWidth = 1;
+            g.strokeRect(cx - bW / 2 + 6, coreY, bW - 12, coreH);
+            // iron core end caps
+            g.fillStyle = active ? '#b0c0d8' : '#40505e';
+            g.fillRect(cx - bW / 2 - 10, coreY + 2, 10, coreH - 4);
+            g.fillRect(cx + bW / 2, coreY + 2, 10, coreH - 4);
+
+            // Animation offset
+            const flowT = (Date.now() / 400) % 1;
+
+            // primary winding (drawn over core)
+            for (let i = -12; i <= 12; i++) {
+                const wx = cx + i * (bW / 26);
+                const isPrime = active;
+                g.strokeStyle = isPrime ? (i % 2 === 0 ? '#f0d050' : '#c09030') : (i % 2 === 0 ? '#7a6030' : '#4a3818');
+                g.lineWidth = bH * 0.04;
+
+                if (active) {
+                    g.setLineDash([8, 12]);
+                    g.lineDashOffset = -flowT * 20;
+                }
+
+                g.beginPath(); g.arc(wx, cy + bH * 0.3, bH * 0.12, Math.PI, Math.PI * 2); g.stroke();
+                g.setLineDash([]);
+            }
+            // secondary (inner, drawn over core)
+            for (let i = -12; i <= 12; i++) {
+                const wx = cx + i * (bW / 26);
+                g.strokeStyle = active ? '#d05020' : (step >= 1 ? '#a0401a' : '#4a1c0c');
+                g.lineWidth = bH * 0.02;
+
+                if (step >= 1 && step <= 3) {
+                    g.setLineDash([4, 10]);
+                    g.lineDashOffset = -flowT * 15;
+                }
+
+                g.beginPath(); g.arc(wx, cy + bH * 0.55, bH * 0.08, Math.PI, Math.PI * 2); g.stroke();
+                g.setLineDash([]);
+            }
+
+            // terminal posts (at top of coil)
+            g.fillStyle = active ? '#f0d050' : '#7a6030';
+            [cx - 75, cx + 75].forEach(px => {
+                g.fillRect(px - 5, cy - 16, 10, 18);
+                g.beginPath(); g.arc(px, cy - 16, 5, 0, Math.PI * 2); g.fill();
+            });
+
+            // HIGH-VOLTAGE LEADS (Bridge from Coil CX to Oscillator TX)
+            const leadsActive = step >= 1 && step <= 3;
+            const leadColor = leadsActive ? '#e8c040' : (active ? '#d0b030' : '#6a4c10');
+            g.strokeStyle = leadColor;
+            g.lineWidth = leadsActive ? 3.5 : (active ? 2.5 : 1.5);
+
+            // Animated flow on leads
+            if (leadsActive) {
+                g.setLineDash([12, 18]);
+                g.lineDashOffset = -flowT * 30;
+                if (step === 3) { g.shadowColor = '#fff'; g.shadowBlur = 10; } // discharge flash
+            }
+
+            // Outer spheres A/B are at tx - outerDist and tx + outerDist
+            const outerDist = m1 * 0.9;
+            const targetLX = tx - outerDist, targetRX = tx + outerDist;
+
+            g.beginPath();
+            g.moveTo(cx - 75, cy - 16);
+            g.bezierCurveTo(cx - 100, cy - 50, targetLX - 50, sy + 30, targetLX, sy);
+            g.stroke();
+
+            g.beginPath();
+            g.moveTo(cx + 75, cy - 16);
+            g.bezierCurveTo(cx + 100, cy - 50, targetRX + 50, sy + 30, targetRX, sy);
+            g.stroke();
+
+            g.setLineDash([]);
+            g.shadowBlur = 0;
+
+            // Animated Arrows on leads (Directional)
+            if (leadsActive) {
+                const drawArrow = (x, y, ang) => {
+                    g.save(); g.translate(x, y); g.rotate(ang); g.fillStyle = '#fff';
+                    g.beginPath(); g.moveTo(0, 0); g.lineTo(-8, -5); g.lineTo(-8, 5); g.closePath(); g.fill(); g.restore();
+                };
+                // Show direction along the path
+                drawArrow(cx - 95, cy - 40, -0.6);
+                drawArrow(cx + 95, cy - 40, 0.6);
+                drawArrow(tx - outerDist + 30, sy + 20, -0.3);
+                drawArrow(tx + outerDist - 30, sy + 20, 0.3);
+            }
+
+            // Historical Label "2"
+            g.fillStyle = '#fff'; g.font = 'italic bold 20px serif';
+            g.fillText('2', cx, cy - 40);
+
+            // label
+            g.fillStyle = active ? '#f0d050' : '#7a6030';
+            g.font = active ? 'bold 18px Orbitron, monospace' : '12px Orbitron, monospace';
+            g.textAlign = 'center';
+            g.fillText('INDUCTION COIL', cx, cy - 60);
+
+            if (active) {
+                // Canvas callouts pointing at coil parts
+                g.font = '11px Inter, sans-serif';
+                g.textAlign = 'left';
+
+                // Primary winding label (right side of coil)
+                const rightEdge = cx + bW / 2;
+                g.strokeStyle = 'rgba(240,200,64,0.5)'; g.lineWidth = 1;
+                g.beginPath(); g.moveTo(rightEdge + 10, cy + 20); g.lineTo(rightEdge + 55, cy + 20); g.stroke();
+                g.fillStyle = 'rgba(240,200,64,0.85)';
+                g.fillText('Primary winding', rightEdge + 58, cy + 24);
+
+                // Secondary winding label (right side, lower)
+                g.strokeStyle = 'rgba(210,80,32,0.5)';
+                g.beginPath(); g.moveTo(rightEdge + 10, cy + 40); g.lineTo(rightEdge + 55, cy + 40); g.stroke();
+                g.fillStyle = 'rgba(210,80,32,0.85)';
+                g.fillText('Secondary winding', rightEdge + 58, cy + 44);
+
+                // Iron core label (left side)
+                const leftEdge = cx - bW / 2;
+                g.strokeStyle = 'rgba(160,160,200,0.45)';
+                g.beginPath(); g.moveTo(leftEdge - 10, cy + bH / 2); g.lineTo(leftEdge - 55, cy + bH / 2); g.stroke();
+                g.fillStyle = 'rgba(160,160,200,0.75)';
+                g.textAlign = 'right';
+                g.fillText('Iron core', leftEdge - 58, cy + bH / 2 + 4);
+
+                g.textAlign = 'center';
+                // voltage output label
+                g.fillStyle = 'rgba(232,192,64,0.9)';
+                g.font = 'bold 15px Orbitron, monospace';
+                g.fillText('→ 10,000+ VOLTS OUT', cx, cy + bH + 35);
+
+                g.fillStyle = 'rgba(120, 180, 255, 0.7)';
+                g.font = 'italic 12px Inter, sans-serif';
+                g.fillText('Primary current builds magnetic field...', cx, cy - 85);
+            }
+            g.textAlign = 'left';
+
+            // Battery Box (Always visible, moved left to sit with Coil)
+            const batX = cx - bW / 2 - 140, batTopY = cy + 30;
+            const crW = 85, crH = 75;
+            g.shadowBlur = 0;
+            g.fillStyle = '#1a1a1a';
+            g.fillRect(batX, batTopY, crW, crH);
+            g.strokeStyle = '#444'; g.lineWidth = 2;
+            g.strokeRect(batX, batTopY, crW, crH);
+            g.fillStyle = '#333';
+            g.fillRect(batX + 5, batTopY + 5, crW - 10, crH - 10);
+            g.fillStyle = '#666';
+            g.fillRect(batX + crW / 2 - 15, batTopY - 10, 30, 10); // positive terminal
+            g.fillRect(batX + crW / 2 - 15, batTopY + crH, 30, 10); // negative terminal
+            g.fillStyle = '#fff'; g.font = 'bold 10px Orbitron, monospace'; g.textAlign = 'center';
+            g.fillText('BATTERY (3)', batX + crW / 2, batTopY + crH / 2 + 4);
+            // Large "3" to match engraving style
+            g.fillStyle = '#fff'; g.font = 'italic bold 20px serif';
+            g.fillText('3', batX + crW / 2, batTopY - 15);
+            g.textAlign = 'left';
+
+            // Simple Wirings (from Battery to Coil CX)
+            g.save();
+            if (active) {
+                g.setLineDash([10, 10]);
+                g.lineDashOffset = -flowT * 20;
+            }
+            g.strokeStyle = '#2a8030'; g.lineWidth = 2.5;
+            g.beginPath(); g.moveTo(batX + crW / 2 + 15, batTopY - 8); g.bezierCurveTo(batX + crW / 2 + 30, batTopY - 40, cx - 60, cy + 40, cx - bW / 2, cy + 50); g.stroke();
+            g.strokeStyle = '#802a30'; g.lineWidth = 2.5;
+            g.beginPath(); g.moveTo(batX + crW / 2 - 15, batTopY + crH + 8); g.bezierCurveTo(batX + crW / 2 - 30, batTopY + crH + 40, cx - 60, cy + 20, cx - bW / 2, cy + 30); g.stroke();
+            g.restore();
+
+            // Animated Arrows on wires
+            if (active) {
+                const drawArr = (x, y, ang) => {
+                    g.save(); g.translate(x, y); g.rotate(ang); g.fillStyle = '#fff';
+                    g.beginPath(); g.moveTo(0, 0); g.lineTo(-6, -4); g.lineTo(-6, 4); g.closePath(); g.fill(); g.restore();
+                };
+                // Just a few static markers to show direction
+                drawArr(cx - bW / 2 - 10, cy + 50, 0.2);
+                drawArr(cx - bW / 2 - 10, cy + 30, -0.2);
+            }
+        }
+
+        function drawSpheres() {
+            const tx = TX(), ty = BY(), m1 = M1();
+            const tableY = ty - m1 * 1.0;
+            const sy = tableY - 70;
+            const gap = m1 * 0.1;
+
+            // Central small spheres (a, b)
+            const gapR = m1 * 0.08; // ~12cm diam
+            const alx = tx - gap / 2 - gapR, arx = tx + gap / 2 + gapR;
+
+            // Large outer spheres (A, B)
+            const outerR = m1 * 0.28; // ~40cm diam
+            const outerDist = m1 * 0.9; // ~1.8m total width
+            const Alx = tx - outerDist, Brx = tx + outerDist;
+
+            const active = step === 4, charging = step === 4 || (step === 5 && !sparkOn);
+            const col = active ? '#f0b840' : '#8a6a20';
+
+            // Connecting Horizontal Rods
+            g.strokeStyle = col; g.lineWidth = 10;
+            g.beginPath(); g.moveTo(Alx, sy); g.lineTo(Brx, sy); g.stroke();
+            // Highlight on rods
+            g.strokeStyle = 'rgba(255,255,255,0.2)'; g.lineWidth = 3;
+            g.beginPath(); g.moveTo(Alx, sy - 3); g.lineTo(Brx, sy - 3); g.stroke();
+
+            // Field lines across gap
+            if (active || charging) {
+                for (let fi = -3; fi <= 3; fi++) {
+                    g.strokeStyle = `rgba(190,110,255,${active ? 0.6 : 0.35})`;
+                    g.lineWidth = 1.5;
+                    g.beginPath();
+                    g.moveTo(alx + gapR, sy + fi * 4);
+                    g.lineTo(arx - gapR, sy + fi * 4);
+                    g.stroke();
+                }
+            }
+
+            // Transmitter Spark (Wide shot only)
+            if (sparkOn && step === 5) {
+                for (let b = 0; b < 2; b++) {
+                    const fa = Math.max(0, 0.9 - sparkT * 1.6);
+                    g.save();
+                    g.strokeStyle = b === 0 ? `rgba(230,170,255,${fa})` : `rgba(170,80,255,${fa * 0.6})`;
+                    g.lineWidth = b === 0 ? 6 : 2.5;
+                    g.shadowColor = '#cc80ff'; g.shadowBlur = 50;
+                    g.beginPath(); g.moveTo(alx + gapR, sy);
+                    for (let s = 1; s <= 5; s++) g.lineTo(alx + gapR + (s / 5) * gap + (Math.random() - 0.5) * 7, sy + (Math.random() - 0.5) * 18);
+                    g.lineTo(arx - gapR, sy);
+                    g.stroke(); g.restore();
+                }
+            }
+
+            // reusable sphere render
+            function sph(ox, oy, r, label) {
+                // Drop shadow on table
+                g.save();
+                g.fillStyle = 'rgba(0,0,0,0.3)';
+                g.beginPath(); g.ellipse(ox, tableY + 5, r * 0.7, 5, 0, 0, Math.PI * 2); g.fill();
+                g.restore();
+
+                const glow = active ? r * 0.8 : (sparkOn ? r * 1.2 : step === 2 ? r * 0.4 : 5);
+                g.shadowColor = sparkOn ? '#cc80ff' : active ? '#f0c040' : '#907020';
+                g.shadowBlur = glow;
+
+                g.strokeStyle = active || sparkOn ? '#fff' : col;
+                g.lineWidth = active ? 3 : 1.5;
+
+                const gr = g.createRadialGradient(ox - r * 0.3, oy - r * 0.3, r * 0.1, ox, oy, r * 1.2);
+                if (active || step >= 2) {
+                    gr.addColorStop(0, '#fffbe0');
+                    gr.addColorStop(0.2, '#f5d57a');
+                    gr.addColorStop(0.5, '#c9a84c');
+                    gr.addColorStop(1, '#452a05');
+                } else {
+                    gr.addColorStop(0, '#e0d0a0');
+                    gr.addColorStop(0.4, '#a08040');
+                    gr.addColorStop(1, '#2a1a08');
+                }
+                g.fillStyle = gr;
+                g.beginPath(); g.arc(ox, oy, r, 0, Math.PI * 2); g.fill();
+                g.stroke();
+
+                // Specular Glint
+                g.fillStyle = 'rgba(255,255,255,0.3)';
+                g.beginPath(); g.ellipse(ox - r * 0.4, oy - r * 0.4, r * 0.2, r * 0.1, -Math.PI / 4, 0, Math.PI * 2); g.fill();
+
+                // Historical Labels (A, B, a, b)
+                g.shadowBlur = 0;
+                g.fillStyle = active ? '#fff' : 'rgba(255,255,255,0.5)';
+                g.font = `bold ${r > 20 ? 22 : 12}px Orbitron, monospace`;
+                g.textAlign = 'center';
+                g.fillText(label, ox, oy + r + (r > 20 ? 35 : 18));
+            }
+
+            // Draw outer large spheres A, B
+            sph(Alx, sy, outerR, 'A');
+            sph(Brx, sy, outerR, 'B');
+            // Draw inner small spheres a, b
+            sph(alx, sy, gapR, 'a');
+            sph(arx, sy, gapR, 'b');
+
+            // Support Pillars (Glass/Ceramic from engraving)
+            g.save();
+            const standW = Brx - Alx - 120;
+            const standX = tx - standW / 2;
+            const standY = tableY - 5;
+
+            // Wooden Base Plank of the stand
+            g.fillStyle = '#2a1a0a';
+            g.fillRect(standX, standY, standW, 10);
+            g.strokeStyle = '#1a1005'; g.lineWidth = 1.5;
+            g.strokeRect(standX, standY, standW, 10);
+
+            // Two vertical pillars
+            const px1 = standX + 40, px2 = standX + standW - 40;
+            [px1, px2].forEach(px => {
+                // Glass-like pillar
+                const grad = g.createLinearGradient(px - 10, sy, px + 10, sy);
+                grad.addColorStop(0, '#e8f0ff44');
+                grad.addColorStop(0.5, '#ffffffaa');
+                grad.addColorStop(1, '#e8f0ff44');
+                g.fillStyle = grad;
+                g.fillRect(px - 8, sy + 5, 16, standY - sy - 5);
+                g.strokeStyle = 'rgba(255,255,255,0.2)'; g.lineWidth = 1;
+                g.strokeRect(px - 8, sy + 5, 16, standY - sy - 5);
+                // Brass caps
+                g.fillStyle = col;
+                g.fillRect(px - 10, sy + 2, 20, 8);
+                g.fillRect(px - 10, standY - 4, 20, 8);
+            });
+            g.restore();
+
+            // Historical Label "1"
+            g.fillStyle = '#fff'; g.font = 'italic bold 20px serif';
+            g.fillText('1', tx, sy - outerR - 20);
+
+            // Label
+            const lo = active ? '#f0b840' : '#9a7a40';
+            g.fillStyle = lo;
+            g.font = active ? 'bold 16px Orbitron, monospace' : 'bold 13px Orbitron, monospace';
+            g.textAlign = 'center';
+            g.fillText('HERTZ OSCILLATOR (TRANSMITTER)', tx, tableY + 75);
+            g.textAlign = 'left';
+        }
+
+        function drawWaves() {
+            const m1 = M1();
+            const tableY = BY() - m1 * 1.0;
+            const ox = TX(), oy = tableY - 70;
+            for (let r = 0; r < 7; r++) {
+                const rf = waveFront - r * 95;
+                if (rf <= 0) continue;
+                const prog = rf / (W * 1.3);
+                const a = Math.max(0, (1 - prog) * 0.95 * (1 - r * 0.1));
+
+                // Vibrant Pop gradient for waves
+                const rr = Math.round(100 - prog * 60);
+                const gg = Math.round(150 + prog * 105);
+                g.strokeStyle = `rgba(${rr},${gg},255,${a})`;
+                g.lineWidth = 4 - r * 0.4;
+
+                g.shadowColor = `rgba(${rr},${gg},255,0.6)`; g.shadowBlur = 12;
+                g.beginPath(); g.arc(ox, oy, rf, 0, Math.PI * 2); g.stroke();
+
+                // Add a "core" white thin line to make it pop
+                g.strokeStyle = `rgba(255,255,255,${a * 0.4})`;
+                g.lineWidth = 1;
+                g.stroke();
+
+                g.shadowBlur = 0;
+            }
+        }
+
+        function drawLoop() {
+            const lx = RX(), ty = BY(), m1 = M1();
+            const tableY = ty - m1 * 1.0;
+            // Visual scale for clarity (approx 15cm diameter visually), while labeling actual 7.5cm size
+            const lcy = tableY - 110, lR = 70;
+            const active = step === 7, lit = step >= 5;
+
+            // Loop Shadow on table
+            g.save();
+            g.fillStyle = 'rgba(0,0,0,0.3)';
+            g.beginPath(); g.ellipse(lx, tableY + 5, 45, 8, 0, 0, Math.PI * 2); g.fill();
+            g.restore();
+
+            if (rxSpark && rxSparkT < 0.7) { g.shadowColor = '#44ee88'; g.shadowBlur = 60; }
+            else if (active) { g.shadowColor = '#44cc66'; g.shadowBlur = 44; }
+
+            // Outer thick outline (Cartoon)
+            g.strokeStyle = '#051a0a';
+            g.lineWidth = active ? 10 : 7;
+            g.beginPath(); g.arc(lx, lcy, lR, 0, Math.PI * 2); g.stroke();
+
+            // Inner green color with highlight
+            g.strokeStyle = rxSpark && rxSparkT < 0.65 ? `rgba(80,250,160,${Math.max(0.3, 1 - rxSparkT * 2)})`
+                : active ? '#44cc66' : lit ? '#1e6030' : '#0e2818';
+            g.lineWidth = active ? 6 : 4;
+            g.beginPath(); g.arc(lx, lcy, lR, 0, Math.PI * 2); g.stroke();
+
+            // Rim light/highlight on loop
+            g.strokeStyle = 'rgba(255,255,255,0.1)'; g.lineWidth = 1.5;
+            g.beginPath(); g.arc(lx, lcy, lR - 2, 0, Math.PI * 2); g.stroke();
+
+            g.shadowBlur = 0;
+
+            // gap
+            const ga1 = Math.PI * 0.4, ga2 = Math.PI * 0.6;
+            g.strokeStyle = '#050e1c'; g.lineWidth = 12;
+            g.beginPath(); g.arc(lx, lcy, lR, ga1, ga2); g.stroke();
+
+            // needles
+            const g1x = lx + Math.cos(ga1) * lR, g1y = lcy + Math.sin(ga1) * lR;
+            const g2x = lx + Math.cos(ga2) * lR, g2y = lcy + Math.sin(ga2) * lR;
+            const iD = { x: -(g1y - lcy) / lR, y: (g1x - lx) / lR };
+            const nc = active ? '#44cc66' : lit ? '#1e6030' : '#0e2818';
+
+            // Needle styling (Visual pop - beefier than 1mm)
+            [{ x: g1x, y: g1y, dx: iD.x, dy: iD.y }, { x: g2x, y: g2y, dx: -iD.x, dy: -iD.y }].forEach(n => {
+                g.strokeStyle = '#051a0a'; g.lineWidth = 6;
+                g.beginPath(); g.moveTo(n.x, n.y); g.lineTo(n.x + n.dx * 13, n.y + n.dy * 13); g.stroke();
+                g.strokeStyle = active ? '#50ff80' : nc; g.lineWidth = 3;
+                g.beginPath(); g.moveTo(n.x, n.y); g.lineTo(n.x + n.dx * 13, n.y + n.dy * 13); g.stroke();
+            });
+
+            // stand (3D look like dipole rods)
+            g.save();
+            g.strokeStyle = '#051a0a'; g.lineWidth = 10; g.lineCap = 'round';
+            g.beginPath(); g.moveTo(lx, tableY); g.lineTo(lx, lcy + lR); g.stroke();
+            g.strokeStyle = active ? '#2a6a40' : '#0a2016'; g.lineWidth = 6;
+            g.beginPath(); g.moveTo(lx, tableY); g.lineTo(lx, lcy + lR); g.stroke();
+            g.restore();
+
+            // Small "Ghost Spark" at Receiver gap (during Step 6 zoom)
+            if (step === 6 || rxSpark) {
+                const isZoom = step === 6;
+                const fa = isZoom ? (0.7 + Math.random() * 0.3) : Math.max(0, 1.0 - rxSparkT * 1.5);
+
+                g.save();
+                // Position at the bottom gap between needle tips
+                const gapY = lcy + lR + 5;
+                const gapW = isZoom ? 14 : 10;
+
+                // Outer Bloom
+                g.shadowColor = isZoom ? '#ff80ec' : '#cc80ff';
+                g.shadowBlur = isZoom ? 25 : 15;
+
+                // Discharge Bolt (Violet/Pink flare)
+                g.strokeStyle = isZoom ? `rgba(255, 160, 255, ${fa})` : `rgba(200, 240, 255, ${fa})`;
+                g.lineWidth = isZoom ? 5 : 3;
+                g.lineCap = 'round';
+
+                g.beginPath();
+                g.moveTo(lx - gapW / 2, gapY);
+                // Narrative jitter
+                for (let i = 1; i <= 4; i++) {
+                    g.lineTo(lx - gapW / 2 + (i / 4) * gapW, gapY + (Math.random() - 0.5) * (isZoom ? 2 : 4));
+                }
+                g.stroke();
+
+                // Bright core
+                g.strokeStyle = `rgba(255, 255, 255, ${fa * 0.9})`;
+                g.lineWidth = isZoom ? 1.5 : 1;
+                g.stroke();
+
+                g.restore();
+            }
+
+            // receiver spark
+            if (rxSpark && rxSparkT < 0.65) {
+                const gmx = (g1x + g2x) / 2, gmy = (g1y + g2y) / 2;
+                const fa = Math.max(0, 1 - rxSparkT * 2);
+                g.save();
+                // Outer glow arc
+                g.strokeStyle = `rgba(100,255,180,${fa})`; g.lineWidth = 6;
+                g.shadowColor = '#60ffb0'; g.shadowBlur = 35;
+                g.beginPath();
+                g.moveTo(g1x + iD.x * 12, g1y + iD.y * 12);
+                g.lineTo(gmx + (Math.random() - 0.5) * 8, gmy + (Math.random() - 0.5) * 8);
+                g.lineTo(g2x - iD.x * 12, g2y - iD.y * 12);
+                g.stroke();
+                // Core bright arc
+                g.strokeStyle = `rgba(255,255,255,${fa})`; g.lineWidth = 2;
+                g.beginPath();
+                g.moveTo(g1x + iD.x * 12, g1y + iD.y * 12);
+                g.lineTo(gmx + (Math.random() - 0.5) * 6, gmy + (Math.random() - 0.5) * 6);
+                g.lineTo(g2x - iD.x * 12, g2y - iD.y * 12);
+                g.stroke();
+                g.restore();
+
+                g.restore();
+            }
+
+            // label
+            const lc = active ? '#50ff80' : lit ? '#2a9060' : '#2a7050';
+            g.fillStyle = lc;
+            g.font = active ? 'bold 15px Orbitron, monospace' : 'bold 13px Orbitron, monospace';
+            g.textAlign = 'center';
+            g.fillText('SPARK RECEIVER', lx, ty + 62);
+
+            if (active) {
+                g.fillStyle = 'rgba(100,255,180,0.85)';
+                g.font = '12px Inter, sans-serif';
+                g.fillText('1mm brass wire, 7.5cm diameter loop', lx, ty + 78);
+                g.fillText('set ~1.5m from oscillator', lx, ty + 92);
+            }
+            g.textAlign = 'left';
+        }
+
+        function drawDistLabel() {
+            const m1 = M1();
+            const ay = BY() + 85;
+            const midX = (TX() + RX()) / 2;
+
+            // Stylized Floor Ruler/Scale
+            g.strokeStyle = 'rgba(100, 180, 255, 0.4)'; g.lineWidth = 2;
+            g.beginPath(); g.moveTo(TX(), ay); g.lineTo(RX(), ay); g.stroke();
+
+            // End caps
+            g.beginPath(); g.moveTo(TX(), ay - 10); g.lineTo(TX(), ay + 10); g.stroke();
+            g.beginPath(); g.moveTo(RX(), ay - 10); g.lineTo(RX(), ay + 10); g.stroke();
+
+            // 1.5 Meter Distance Ruler
+            g.fillStyle = 'rgba(120, 190, 255, 0.9)';
+            g.font = 'bold 16px Orbitron, monospace';
+            g.textAlign = 'center';
+            g.fillText('~1.5 METERS', midX, ay + 30);
+
+            g.font = '12px Orbitron, monospace';
+            g.fillStyle = 'rgba(120, 190, 255, 0.5)';
+            g.fillText('EXPERIMENTAL BRIDGE (Karlsruhe, 1888)', midX, ay + 50);
+            g.textAlign = 'left';
+        }
+
+        function drawResearcher() {
+            // Detailed Silhouette for visibility and better scale (Hertz)
+            const m1 = M1();
+            const rx = (TX() + RX()) / 2 - m1 * 0.4; // Stand slightly left of center to overlook the 1.5m gap
+            const ry = BY() - 10;
+            const h = m1 * 2.2;
+
+            g.save();
+            g.fillStyle = '#0a0d15';
+            g.strokeStyle = 'rgba(100, 160, 255, 0.5)';
+            g.lineWidth = 2;
+
+            // Head & Beard
+            const hr = h * 0.1;
+            g.beginPath(); g.ellipse(rx, ry - h, hr * 0.8, hr, 0, 0, Math.PI * 2); g.fill(); g.stroke();
+            // Beard profile
+            g.beginPath(); g.moveTo(rx - hr * 0.4, ry - h + hr * 0.5); g.lineTo(rx, ry - h + hr * 1.2); g.lineTo(rx + hr * 0.4, ry - h + hr * 0.5); g.fill();
+
+            // Torso (Frock coat)
+            const torsoH = h * 0.45;
+            const torsoY = ry - h + hr;
+            const torso = new Path2D();
+            torso.moveTo(rx - 30, torsoY + 20); // shoulders
+            torso.lineTo(rx + 30, torsoY + 20);
+            torso.lineTo(rx + 40, torsoY + torsoH); // flare of coat
+            torso.lineTo(rx - 40, torsoY + torsoH);
+            torso.closePath();
+            g.fill(torso); g.stroke(torso);
+
+            // Legs (Proportional)
+            const legH = h * 0.45;
+            const legW = 16;
+            g.fillRect(rx - 22, ry - legH, legW, legH); g.strokeRect(rx - 22, ry - legH, legW, legH);
+            g.fillRect(rx + 6, ry - legH, legW, legH); g.strokeRect(rx + 6, ry - legH, legW, legH);
+
+            // Arms (one holding a notebook/observations)
+            g.lineWidth = 14; g.lineCap = 'round'; g.strokeStyle = '#0a0d15';
+            // Left arm down
+            g.beginPath(); g.moveTo(rx - 30, torsoY + 30); g.lineTo(rx - 55, torsoY + 110); g.stroke();
+            // Right arm bent (holding something)
+            g.beginPath(); g.moveTo(rx + 30, torsoY + 30); g.lineTo(rx + 70, torsoY + 80); g.lineTo(rx + 40, torsoY + 95); g.stroke();
+
+            // Notebook
+            g.fillStyle = '#1a1a1a';
+            g.fillRect(rx + 35, torsoY + 85, 20, 25);
+            g.strokeStyle = 'rgba(255,255,255,0.1)'; g.lineWidth = 1;
+            g.strokeRect(rx + 35, torsoY + 85, 20, 25);
+
+            // Internal rim highlights
+            g.strokeStyle = 'rgba(100, 160, 255, 0.3)'; g.lineWidth = 2;
+            g.beginPath(); g.moveTo(rx - 28, torsoY + 35); g.lineTo(rx - 52, torsoY + 105); g.stroke();
+
+            // Label
+            g.fillStyle = 'rgba(120, 180, 255, 0.8)';
+            g.font = 'bold 14px Orbitron, monospace';
+            g.textAlign = 'center';
+            g.fillText('HEINRICH HERTZ (1.8m SCALE)', rx, ry + 15);
+            g.restore();
+        }
+
+        let planes = [];
+        function initPlanes() {
+            planes = [];
+            for (let i = 0; i < 5; i++) {
+                planes.push({
+                    x: W * 0.2 + Math.random() * W * 0.6,
+                    y: H * 0.2 + Math.random() * H * 0.4,
+                    s: 0.5 + Math.random() * 0.5,
+                    vx: -1 - Math.random() * 2
+                });
+            }
+        }
+        initPlanes();
+
+        function drawEchoTransition() {
+            // Dark Night Sky
+            const sky = g.createLinearGradient(0, 0, 0, H);
+            sky.addColorStop(0, '#00050a');
+            sky.addColorStop(1, '#050a15');
+            g.fillStyle = sky;
+            g.fillRect(0, 0, W, H);
+
+            // Stars
+            g.fillStyle = '#fff';
+            for (let i = 0; i < 50; i++) {
+                const x = (Math.sin(i * 123.4) * 0.5 + 0.5) * W;
+                const y = (Math.cos(i * 567.8) * 0.5 + 0.5) * H;
+                g.globalAlpha = 0.2 + Math.random() * 0.4;
+                g.fillRect(x, y, 1.5, 1.5);
+            }
+            g.globalAlpha = 1;
+
+            const time = t * 0.8;
+            const sweep = (Math.sin(time * 0.5) * 0.5 + 0.5) * Math.PI * 0.4 - Math.PI * 0.2;
+
+            // Sweeping Radar Pulse (The Echo Through Time)
+            g.save();
+            g.translate(W / 2, H * 1.2);
+            g.rotate(sweep);
+
+            const pulse = g.createRadialGradient(0, -H * 1.2, 0, 0, -H * 1.2, H * 1.5);
+            pulse.addColorStop(0, 'rgba(100, 200, 255, 0.4)');
+            pulse.addColorStop(0.1, 'rgba(100, 200, 255, 0.1)');
+            pulse.addColorStop(0.4, 'rgba(100, 200, 255, 0)');
+
+            g.fillStyle = pulse;
+            g.beginPath();
+            g.moveTo(0, 0);
+            g.arc(0, 0, H * 1.5, -Math.PI / 2 - 0.15, -Math.PI / 2 + 0.15);
+            g.fill();
+            g.restore();
+
+            // Draw Planes
+            planes.forEach(p => {
+                p.x += p.vx;
+                if (p.x < -100) p.x = W + 100;
+
+                g.save();
+                g.translate(p.x, p.y);
+                g.scale(p.s, p.s);
+
+                // Silhouette
+                g.fillStyle = '#010305';
+                g.beginPath();
+                // Fuselage
+                g.ellipse(0, 0, 40, 8, 0, 0, Math.PI * 2);
+                // Wings
+                g.ellipse(0, 0, 10, 60, 0, 0, Math.PI * 2);
+                // Tail
+                g.ellipse(-35, 0, 8, 20, 0, 0, Math.PI * 2);
+                g.fill();
+
+                // Flash when hit by sweep
+                const angleToPlane = Math.atan2(p.y - H * 1.2, p.x - W / 2) + Math.PI / 2;
+                const diff = Math.abs(angleToPlane - sweep);
+                if (diff < 0.1) {
+                    const hit = (0.1 - diff) / 0.1;
+                    g.shadowColor = '#80c0ff';
+                    g.shadowBlur = 20 * hit;
+                    g.strokeStyle = `rgba(150, 220, 255, ${hit})`;
+                    g.lineWidth = 2 * hit;
+                    g.stroke();
+                }
+                g.restore();
+            });
+
+        }
+
+        frame();
+    </script>
+</body>
+
+</html>
