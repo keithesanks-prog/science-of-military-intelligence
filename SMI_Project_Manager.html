@@ -1760,15 +1760,19 @@
                 });
             }
 
-            const blob = new Blob([md], { type: 'text/markdown' });
+            const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `SMI_AI_Pipeline_Ep_${epId.replace('.', '_')}.md`;
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+
+            // Delay cleanup to ensure browser has started the download
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
         }
 
         function setAIStage(epId, taskIdx, stageIdx) {
