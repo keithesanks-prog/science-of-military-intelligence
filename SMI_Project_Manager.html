@@ -1579,6 +1579,14 @@
             const data = getEpProd(epId);
             const container = document.getElementById('ai-pipeline-content');
 
+            let headerHtml = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0;">AI Visual Production Pipeline</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem; border-color: var(--accent-orange); color: var(--accent-orange);" onclick="restoreAIPipelineContext('${epId}')">✨ Restore Script Context</button>
+                    <button class="btn btn-primary" onclick="exportAIPipeline()">📥 Export Pipeline (.md)</button>
+                </div>
+            </div>`;
+
             if (data.aiTasks.length === 0) {
                 container.innerHTML = `<div class="card"><p style="color: var(--text-dim);">No AI tasks for this episode. Add them via the Production Board.</p></div>`;
                 return;
@@ -1631,7 +1639,25 @@
                 html += `</div>`;
             });
 
-            container.innerHTML = html;
+            container.innerHTML = headerHtml + html;
+        }
+
+        function restoreAIPipelineContext(epId) {
+            const nid = normId(epId);
+            if (!DEFAULT_PRODUCTION[nid]) {
+                alert("No script-aligned context available for this episode in defaults.");
+                return;
+            }
+            if (!confirm("This will overwrite existing Director Context with high-fidelity visual storyboards from the script. Continue?")) return;
+
+            const data = getEpProd(nid);
+            DEFAULT_PRODUCTION[nid].aiTasks.forEach((dT, i) => {
+                if (data.aiTasks[i]) {
+                    data.aiTasks[i].context = dT.context;
+                }
+            });
+            saveProductionData();
+            renderAIPipeline();
         }
 
         function exportAIPipeline() {
