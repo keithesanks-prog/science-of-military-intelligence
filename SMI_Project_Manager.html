@@ -1324,60 +1324,70 @@
                         id: "A1", scene: "Act 1 — Maxwell", year: "1865", visualFormat: "Portrait + Diagram",
                         elements: { characters: ["James Clerk Maxwell"], locations: ["1865 study"], devices: ["Battery", "lightbulb", "wires"], concepts: ["Displacement Current", "Poynting Vector"] },
                         diagram: { shape: "Battery → wires → lightbulb", flow: "Poynting Vector energy flows through air around wires", output: "Light produced at bulb" },
+                        context: "A scholarly 1865 study. Maxwell explains the bridge between electricity and magnetism. Camera pans to a drawing on his desk.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A2", scene: "Act 2 — Hertz", year: "1887", visualFormat: "Diagram",
                         elements: { characters: ["Heinrich Hertz", "students"], locations: ["Dimly lit lab"], devices: ["Leyden jars", "induction coils", "brass spheres", "spark gap", "receiver loop"], concepts: ["LC Resonance", "ionization"] },
                         diagram: { shape: "Battery → transformer → inductor(L) + capacitor(C) → spark gap", flow: "Charge builds in LC circuit, voltage ionizes air at spark gap", output: "EM wave radiates to receiver loop, tiny spark at receiver gap" },
+                        context: "A dimly lit university lab. Hertz triggers the spark; a ghostly blue glow appears, leading to the technical LC Resonance overlay.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A3", scene: "Act 3 — Marconi", year: "1896–1912", visualFormat: "Diagram",
                         elements: { characters: ["Guglielmo Marconi"], locations: ["Coastal England"], devices: ["Spark gap", "antenna", "ground wire", "Coherer receiver"], concepts: ["Ground circuit", "signal range"] },
                         diagram: { shape: "Battery → spark gap → vertical antenna (up) + ground wire (down)", flow: "Signal radiates from antenna using Earth as conductive plate", output: "Coherer filings stick together at receiver, ringing bell" },
+                        context: "Rugged cliffs of coastal England. Marconi struggles with a wire antenna, then gestures to the horizon as the signal radiates over the ocean.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A4", scene: "Act 4 — Hülsmeyer", year: "1904", visualFormat: "Diagram",
                         elements: { characters: ["Christian Hülsmeyer"], locations: ["Foggy harbor"], devices: ["Telemobiloskop", "parabolic dishes", "coherer"], concepts: ["Directional Beam", "Reflection"] },
                         diagram: { shape: "Spark gap at focal point of parabolic dish", flow: "Radio beam focused by dish → hits ship hull → echo reflects back", output: "Echo detected at coherer, bell rings" },
+                        context: "Foggy harbor scene. Hülsmeyer demonstrates to skeptical spectators while a ship looms; cuts to top-down radio echo diagram.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A5", scene: "Act 5 — Titanic", year: "1912", visualFormat: "Scene",
                         elements: { characters: ["Cyril Evans", "Jack Phillips"], locations: ["Titanic wireless room", "SS Californian radio room"], devices: ["Spark-gap transmitter", "headphones"], concepts: ["Broadband/Jamming", "Spectrum Authority", "Signal Priority"] },
                         diagram: null,
+                        context: "Claustrophobic wireless room. High tension as Phillips sends CQD while the Californian shuts down, highlighting the human error.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A6", scene: "Act 6 — Echo Discovery", year: "1880s–1900s", visualFormat: "Diagram",
                         elements: { characters: [], locations: ["Laboratory"], devices: ["Metal plate", "transmitter"], concepts: ["Metal surface reflection"] },
                         diagram: { shape: "Transmitter → metal plate", flow: "Wave hits metal surface", output: "Faint echo wave returns to source" },
+                        context: "Laboratory setting. Scientists are amazed at metal reflection; transitions into clear physics diagram of wave paths.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A7", scene: "Act 7 — National Silos", year: "1930s", visualFormat: "Scene",
                         elements: { characters: [], locations: ["UK coast", "Germany", "Potomac River"], devices: ["Antenna arrays"], concepts: ["Chain Home", "Freya", "Pulse-Echo"] },
                         diagram: null,
+                        context: "Montage of masts and war-room blueprints as generals discuss the 'Invisible Wall' protectng the nations.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A8", scene: "Act 8 — Tizard Mission", year: "1940", visualFormat: "Diagram",
                         elements: { characters: [], locations: ["American shores"], devices: ["Tizard Box", "Cavity Magnetron"], concepts: ["Microwave Power", "Resonance"] },
                         diagram: { shape: "Central cathode surrounded by circular copper cavities", flow: "Electrons spiral past cavity openings, induce high-frequency waves", output: "Massive microwave energy, radar shrunk to cockpit size" },
+                        context: "Secret meeting on American shores. Scientists unveil the 'most valuable cargo'—the Cavity Magnetron; camera goes 'inside' the device.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A9", scene: "Act 9 — Opana Point", year: "1941", visualFormat: "Diagram",
                         elements: { characters: ["Joseph Lockard", "George Elliott"], locations: ["Opana Point, Oahu"], devices: ["SCR-270 antenna", "A-Scope oscilloscope"], concepts: ["Pulse-Echo Method"] },
                         diagram: { shape: "SCR-270 'Bedspring' antenna → A-Scope display", flow: "Pulse transmitted → travels 132 mi → hits aircraft → echo returns", output: "Vertical spike on oscilloscope at 132-mile marker" },
+                        context: "Dawn at Opana Point. Operators see a massive spike on the scope; scene blends into a technical A-Scope explanation.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     },
                     {
                         id: "A10", scene: "Act 10 — Tyler Problem", year: "1941", visualFormat: "Scene",
                         elements: { characters: ["Lieutenant Tyler"], locations: ["Information center, Oahu"], devices: ["Radar scope"], concepts: ["Information Silo", "Detection ≠ Intelligence"] },
                         diagram: null,
+                        context: "Chaotic Information Center. Breakdown in intelligence as Tyler dismisses the report, capping the 'Information Silo' theme.",
                         stage: "To Do", dateSent: "", dateReceived: "", notes: ""
                     }
                 ],
@@ -1506,6 +1516,12 @@
                     html += `<div style="margin-bottom: 4px;"><strong>Concepts:</strong> ${t.elements.concepts.map(c => `<span class="element-tag concept">${c}</span>`).join('')}</div>`;
                 }
 
+                if (t.context) {
+                    html += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted var(--border-color); font-style: italic; font-size: 0.85rem; color: var(--text-dim);">
+                        <strong>Director Context:</strong> ${t.context}
+                    </div>`;
+                }
+
                 html += `</div>`;
 
                 // Diagram spec
@@ -1605,6 +1621,13 @@
                 ].join('');
                 if (allElements) html += `<div style="margin-top: 8px;">${allElements}</div>`;
 
+                html += `<div style="margin-top: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; border: 1px solid var(--border-color);">
+                    <label style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">🎬 Director Context</label>
+                    <textarea class="edit-context-area" style="width: 100%; background: transparent; border: none; color: var(--text-light); font-size: 0.85rem; font-family: inherit; resize: vertical; min-height: 40px;" 
+                        placeholder="Describe the scene setup for the AI editor..." 
+                        onchange="updateAIContext('${epId}', ${i}, this.value)">${t.context || ''}</textarea>
+                </div>`;
+
                 html += `</div>`;
             });
 
@@ -1634,6 +1657,10 @@
                     md += `- **Stage**: ${t.stage}\n`;
                     if (t.dateSent) md += `- **Sent**: ${t.dateSent}\n`;
                     if (t.dateReceived) md += `- **Received**: ${t.dateReceived}\n`;
+
+                    if (t.context) {
+                        md += `\n### 🎬 Director's Context\n> ${t.context}\n`;
+                    }
 
                     md += `\n### Element Breakdown\n`;
                     if (t.elements.characters.length) md += `- **Characters**: ${t.elements.characters.join(', ')}\n`;
@@ -1667,6 +1694,12 @@
             getEpProd(epId).aiTasks[taskIdx].stage = AI_STAGES[stageIdx];
             saveProductionData();
             renderAIPipeline();
+        }
+
+        function updateAIContext(epId, taskIdx, val) {
+            getEpProd(epId).aiTasks[taskIdx].context = val;
+            saveProductionData();
+            // Silent update to state, if user switches tabs and back it will persist.
         }
 
         function setAIDate(epId, taskIdx, field, val) {
