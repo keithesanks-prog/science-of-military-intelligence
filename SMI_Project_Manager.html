@@ -1424,19 +1424,31 @@
         function getEpProd(epId) {
             const nid = normId(epId);
             if (!productionData[nid]) {
-                // Find if any existing key normalizes to this ID (e.g. "1.0" matches "1")
                 const existingKey = Object.keys(productionData).find(k => normId(k) === nid);
                 if (existingKey) {
-                    console.log(`Found existing data under alias: ${existingKey}. Mapping to normalized: ${nid}`);
                     productionData[nid] = productionData[existingKey];
-                    // Keep original key only if it's identical to the normalized one
                     if (nid !== existingKey) delete productionData[existingKey];
                 } else {
-                    console.log(`No data found for Episode ${epId} (normalized ${nid}). Creating new.`);
                     productionData[nid] = { filmingTasks: [], aiTasks: [], equipment: [] };
                 }
-                saveProductionData();
             }
+
+            // Auto-patch missing context from defaults
+            if (DEFAULT_PRODUCTION[nid]) {
+                DEFAULT_PRODUCTION[nid].aiTasks.forEach((dT, i) => {
+                    // Initialize task if it exists in defaults but not in state (rare)
+                    if (!productionData[nid].aiTasks[i]) {
+                        productionData[nid].aiTasks[i] = JSON.parse(JSON.stringify(dT));
+                    } else {
+                        // Patch missing or empty context
+                        const t = productionData[nid].aiTasks[i];
+                        if (t.context === undefined || t.context === '') {
+                            t.context = dT.context;
+                        }
+                    }
+                });
+            }
+
             return productionData[nid];
         }
 
