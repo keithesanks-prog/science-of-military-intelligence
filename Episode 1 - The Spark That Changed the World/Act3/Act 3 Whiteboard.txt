@@ -1,0 +1,61 @@
+# Episode 1, Act 3: The Whiteboard Session – Marconi’s "Tether"
+
+## Scene Setup
+**Visual**: The Narrator stands in a modern studio space with a massive floor-to-ceiling dry-erase board. To his left is a small replica of Hertz’s spark gap apparatus. He holds a black marker.
+
+---
+
+## Phase 1: The Hertzian "Whisper"
+**Visual Goal**: Illustrate how Hertz’s energy was mathematically "trapped."
+
+*   **Narration**: "To understand why Marconi succeeded where science had stalled, we have to look at a concept called **Impedance Matching**. It sounds like jargon, but it’s actually about 'grip.' Hertz had the power, but he had no way to grip the atmosphere."
+*   **Drawing Action**: On the board, draw two small circles with a tiny $1$-cm gap (the Hertzian Dipole). Immediately surround them with a tight, circular scribble of waves that don't travel more than a few inches.
+*   **Narration**: "Hertz was a physicist. He proved the wave existed, but his math was 'contained.' Because his equipment was small, his waves were short—centimeters long. They stayed trapped in the room like a whisper in a jar. In the world of RF, size is everything."
+*   **Concept**: **Scientific Liminality** – Proving a phenomenon exists vs. engineering it for use.
+
+---
+
+## Phase 2: The Marconi "Tether"
+**Visual Goal**: Show the shift from a localized experiment to a global circuit.
+
+*   **Narration**: "Marconi changed the variables. He realized that the Earth itself could be half of his circuit. By 'grounding' his transmitter, he wasn't just throwing a spark into the air; he was tethering the wave to the planet. He turned the entire world into his sounding board."
+*   **Drawing Action**: 
+    1. Draw a thick, solid horizontal line at the bottom of the board. Label it: **EARTH/GROUND**.
+    2. Draw a vertical line rising from it to the top of the board. Label it: **AERIAL**.
+    3. Draw a spiral "zig-zag" (the Inductor) between the vertical line and ground.
+*   **Narrator Action**: Tap the marker firmly on the **GROUND** line to emphasize the connection.
+*   **Concept**: **Antenna Grounding** – Expanding the electrical "image" of the antenna.
+
+---
+
+## Phase 3: The Deep Dive – The Quarter-Wave Secret
+**Visual Goal**: Show the physical relationship between math and antenna height.
+
+*   **Narration**: "This is the math Marconi mastered. $186,000$ miles per second ($c$) is the speed of light—a constant. $f$ is frequency, and $\lambda$ is wavelength. To get a signal over the horizon, you need a long wavelength. But there is a physical catch."
+*   **Drawing Action**: Clear a space and write the fundamental equation:
+    $$\large c = f \lambda$$
+*   **Action**: Draw one massive, smooth Sine Wave stretching across the board. Measure the height from the baseline to the first peak. Draw a bracket and label it: **$\frac{1}{4}$ Wave**.
+*   **Narration**: "To launch that wave efficiently, your antenna needs to be a specific fraction of that length—usually one-quarter. If you want to send a 1,000-meter wave, your antenna needs to be 250 meters tall. Marconi’s massive 'Aerials' were just physical manifestations of this equation."
+*   **Concept**: **Resonant Frequency** – Tuning the hardware to the physics of the wave.
+
+---
+
+## Phase 4: Ground Waves & Navy Interest
+**Visual Goal**: Show the tactical advantage of low-frequency "clinging" waves.
+
+*   **Narration**: "This is why the Navy stopped and took notice. Because Marconi’s math favored these long wavelengths, his signals became **Ground Waves**."
+*   **Drawing Action**: Draw a curved arc representing the Earth's horizon. Place a ship on the far left and a coastal tower on the right. 
+*   **Action**: Draw waves that stay flush against the curve, "clinging" to the surface of the ocean rather than floating into the sky.
+*   **Narration**: "They didn't just fly off into space; they 'clung' to the conductivity of the salt water. For the first time in history, a ship at sea wasn't a lonely island; it was a node on a global mathematical grid."
+*   **Concept**: **Surface Wave Propagation** – Utilizing the Earth's conductivity.
+
+---
+
+## Phase 5: The "Bonfire" (The Dirty Math)
+**Visual Goal**: Transition from clean theory to the chaos of interference.
+
+*   **Narration**: "But it came with a price. By using these massive waves, he was 'shouting' across a huge chunk of the spectrum. He wasn't using a laser; he was using a bonfire. It was effective... but it was incredibly 'dirty' math."
+*   **Drawing Action**: Use the side of the marker at the AERIAL line to create a massive, chaotic "V" shape (megaphone) spreading out. Aggressively scribble jagged, lightning-bolt lines inside the "V."
+*   **Action**: Draw a second ship (The **SS Californian**) directly inside the scribbled mess. Take the marker and literally "black out" the area between the two ships with total visual noise.
+*   **Narration**: "When everyone starts building bonfires at once, the whole world goes blind. In 1912, that 'dirty' math was about to collide with cold reality. Because when you're shouting with a bonfire, you can't hear the person standing right next to you... and you definitely can't hear the ice."
+*   **Concept**: **Spectral Efficiency** – The trade-off between power/range and interference.

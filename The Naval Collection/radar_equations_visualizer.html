@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMI Technical Briefing: Radar Equations Visualizer</title>
+    <style>
+        :root {
+            --bg: #050a0f;
+            --ui-bg: rgba(10, 20, 30, 0.85);
+            --accent: #00f2ff;
+            --accent-dim: rgba(0, 242, 255, 0.2);
+            --accent-warm: #ff3c00;
+            --border: rgba(0, 242, 255, 0.3);
+            --text: #e0faff;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Controls */
+        #sidebar {
+            background: var(--ui-bg);
+            border-right: 1px solid var(--border);
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        h1 {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 0 0 5px 0;
+        }
+
+        .subtitle {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .control-group {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 242, 255, 0.1);
+            border-radius: 2px;
+            appearance: none;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .val-display {
+            float: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        /* Main View */
+        #main-view {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .viz-card {
+            background: var(--ui-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .viz-header {
+            grid-column: span 2;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .canvas-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            height: 300px;
+            /* Fixed height for stability */
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .explanation {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Tooltips/Badges */
+        .badge {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--accent-dim);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            text-align: center;
+            font-size: 10px;
+            line-height: 14px;
+            cursor: help;
+            margin-left: 5px;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .tooltip-icon:hover {
+            opacity: 1;
+            background: var(--accent-dim);
+        }
+
+        .control-label-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .mental-model {
+            display: none;
+            position: absolute;
+            left: 360px;
+            background: var(--ui-bg);
+            border: 1px solid var(--accent);
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            width: 250px;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+        }
+
+        .control-group:hover .mental-model {
+            display: block;
+        }
+
+        /* Summary Table */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--accent);
+            background: rgba(0, 242, 255, 0.05);
+            text-transform: uppercase;
+            font-size: 0.65rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="sidebar">
+        <h1>Physics Dashboard</h1>
+        <div class="subtitle">Radar Principles Visualizer</div>
+
+        <div class="control-group">
+            <div class="control-label-wrapper">
+                <label>Range (R) <span class="tooltip-icon">?</span></label>
+                <span class="val-display" id="range-val">10.0 km</span>
+            </div>
+            <input type="range" id="range-slider" min="1" max="50" step="0.5" value="10">
+            <div class="mental-model"><strong>Mental Model:</strong> Think of a Flashlight. When you shine it at a wall
+                2
+                feet away, the circle of light is small and bright. When you shine it at a building 100 yards away, the
+                circle is huge but very dim. That 'spread' is $W$.</div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-label-wrapper">
+                <label>Transmit Power (Pt) <span class="tooltip-icon">?</span></label>
+                <span class="val-display" id="power-val">1.0 MW</span>
+            </div>
+            <input type="range" id="power-slider" min="0.1" max="10" step="0.1" value="1">
+            <div class="mental-model"><strong>Mental Model:</strong> Imagine Shouting into a Grand Canyon. You have to
+                shout loud enough for the sound to reach the far wall, but the wall 'shouts' back with only a fraction
+                of that energy.</div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-label-wrapper">
+                <label>Beamwidth (θ) <span class="tooltip-icon">?</span></label>
+                <span class="val-display" id="beam-val">1.7°</span>
+            </div>
+            <input type="range" id="beam-slider" min="0.5" max="10" step="0.1" value="1.7">
+            <div class="mental-model"><strong>Mental Model:</strong> Think of a megaphone. As range ($R$) increases, the
+                beamwidth ($\theta$) forces the beam to expand into a physical width ($W$).</div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-label-wrapper">
+                <label>Target Velocity (v) <span class="tooltip-icon">?</span></label>
+                <span class="val-display" id="vel-val">500 m/s</span>
+            </div>
+            <input type="range" id="vel-slider" min="-2000" max="2000" step="50" value="500">
+            <div class="mental-model"><strong>Mental Model:</strong> Think of a Race Car. As it approaches, engine
+                sounds high-pitched ($EEEE$). As it passes, it drops to a low pitch ($OOOO$).</div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-label-wrapper">
+                <label>Phase Shift (Δφ) <span class="tooltip-icon">?</span></label>
+                <span class="val-display" id="phase-val">0°</span>
+            </div>
+            <input type="range" id="phase-slider" min="-90" max="90" step="1" value="0">
+            <div class="mental-model"><strong>Mental Model:</strong> Think of The Wave at a stadium. The people aren't
+                running; they just stand up at the right time. Wave travels, people don't.</div>
+        </div>
+
+        <div class="control-group" style="border-color: var(--accent-warm)">
+            <div class="control-label-wrapper">
+                <label>Dwell Time (n Pulses) <span class="tooltip-icon">?</span></label>
+                <span class="val-display" id="dwell-val">10</span>
+            </div>
+            <input type="range" id="dwell-slider" min="1" max="100" step="1" value="10">
+            <div class="mental-model"><strong>Mental Model:</strong> Imagine a crowded bar. If a friend says their name
+                once, you might miss it. If they repeat it 10 times, your brain 'integrates' the sound.</div>
+        </div>
+
+        <div class="control-group" style="border: 1px dashed var(--accent); background: rgba(0,242,255,0.02);">
+            <header
+                style="font-size: 0.65rem; color: var(--accent); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <span>VARIABLE GROUPING</span>
+            </header>
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Group</th>
+                        <th>Component</th>
+                        <th>Concept</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Spatial</td>
+                        <td>$R, \theta, W$</td>
+                        <td>Where is energy?</td>
+                    </tr>
+                    <tr>
+                        <td>Energy</td>
+                        <td>$P_t, G, \sigma$</td>
+                        <td>How much strength?</td>
+                    </tr>
+                    <tr>
+                        <td>Temporal</td>
+                        <td>$n, \Delta\phi$</td>
+                        <td>How long/where?</td>
+                    </tr>
+                    <tr>
+                        <td>Decision</td>
+                        <td>$SNR, f_d$</td>
+                        <td>Is it real/fast?</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="main-view">
+
+        <!-- Divergence Viz -->
+        <div class="viz-card">
+            <div class="viz-header">
+                <div>
+                    <span class="badge">Principle 1</span>
+                    <strong style="margin-left:10px">The Geometry of the Beam</strong>
+                </div>
+                <div class="equation">W = 2 • R • tan(θ/2)</div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="divergence-canvas"></canvas>
+            </div>
+
+            <div class="explanation">
+                <p>First, let’s look at the shape of our radar. People think of radar as a 'corridor' of light, but it’s
+                    actually a cone. As the range (<span class="highlight">R</span>) increases, the beamwidth (<span
+                        class="highlight">θ</span>) forces the beam to expand into a physical width (<span
+                        class="highlight">W</span>). This isn't a glitch; it's a law of physics called <span
+                        class="highlight">Diffraction</span>.</p>
+                <div style="background: rgba(0,242,255,0.05); padding: 15px; border-radius: 4px; margin-top: 10px;">
+                    <strong
+                        style="color: var(--accent); font-size: 0.8rem; display: block; margin-bottom: 8px;">Breaking
+                        Down the Formula: $W = 2 \cdot R \cdot \tan(\theta/2)$</strong>
+                    <p style="font-size: 0.7rem; opacity: 0.8;">If you imagine the radar beam as a triangle, $R$ is the
+                        length from the tip to the base. We take the total angle $\theta$ and cut it in half:
+                        $\theta/2$. The "Opposite" side of that right triangle is half of our total width: $W/2$. The
+                        "Adjacent" side is our Range: $R$.</p>
+                    <p style="font-size: 0.7rem; opacity: 0.8; margin-top: 5px;">Using the identity $\tan(\text{angle})
+                        =
+                        \text{Opposite} / \text{Adjacent}$: <strong>$\tan(\theta/2) = \frac{W/2}{R}$</strong></p>
+                    <p style="font-size: 0.7rem; opacity: 0.8; margin-top: 5px;">Rearrange to solve for $W$: <strong>$W
+                            =
+                            2 \cdot R \cdot \tan(\theta/2)$</strong>.</p>
+                </div>
+                <p style="margin-top: 10px;">Write: <span class="highlight">$W = \text{The size of the net}$</span></p>
+                <p>Analogy: <span class="highlight">Think of a Flashlight</span>. When you shine it at a wall 2 feet
+                    away, the circle of light is small and bright. When you shine it at a building 100 yards away, the
+                    circle is huge but dim.</p>
+            </div>
+        </div>
+
+        <!-- Power Law Viz -->
+        <div class="viz-card">
+            <div class="viz-header">
+                <div>
+                    <span class="badge">Principle 2</span>
+                    <strong style="margin-left:10px">The Return Trip (R⁴ Law)</strong>
+                </div>
+                <div class="equation">Pr ∝ 1/R⁴</div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="power-canvas"></canvas>
+            </div>
+
+            <div class="explanation">
+                <p>This is the 'Fourth-Power Law.' It's the most brutal part of radar physics. To see a target, the
+                    energy has to travel out to the target (<span class="highlight">1/R²</span>), and then the tiny
+                    echo has to travel all the way back (<span class="highlight">1/R²</span>).</p>
+                <p>Write: <span class="highlight">$1/R^4 = \text{The Round-Trip Tax}$</span></p>
+                <p>Analogy: <span class="highlight">Imagine Shouting into a Grand Canyon</span>. You have to shout loud
+                    enough for the sound to reach the far wall, but the wall 'shouts' back with only a fraction of that
+                    energy. Every time you double the distance, the signal doesn't just get 2x weaker—it gets 16x
+                    weaker.</p>
+            </div>
+        </div>
+
+        <!-- Huygens-Fresnel Viz -->
+        <div class="viz-card">
+            <div class="viz-header">
+                <div>
+                    <span class="badge">Principle 3</span>
+                    <strong style="margin-left:10px">The Electronic "Jump"</strong>
+                </div>
+                <div class="equation">Δφ = (2πd/λ) sin(θs)</div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="huygens-canvas"></canvas>
+            </div>
+
+            <div class="explanation">
+                <p>The SPY-1 doesn't have a motor; it doesn't spin. Instead, we use <span class="highlight">Phase
+                        Shifting (Δφ)</span>. By changing the timing of the electricity at each of these blue dots, we
+                    make the waves 'line up' in a specific direction. This is how the beam <span
+                        class="highlight">'jumps'</span> across the sky instantly.</p>
+                <p>Write: <span class="highlight">$\Delta\phi = \text{The Steering Wheel}$</span></p>
+                <p>Analogy: <span class="highlight">Think of The Wave</span> at a stadium. The people aren't running
+                    around the track; they are just standing up and sitting down at the right time. Wave travels, people
+                    don't.</p>
+            </div>
+        </div>
+
+        <!-- Doppler Viz -->
+        <div class="viz-card">
+            <div class="viz-header">
+                <div>
+                    <span class="badge">Principle 4</span>
+                    <strong style="margin-left:10px">The Doppler Shift</strong>
+                </div>
+                <div class="equation">fd = 2v / λ</div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="doppler-canvas"></canvas>
+            </div>
+
+            <div class="explanation">
+                <p>Finally, we don't just see where the target is; we see how fast it's moving. When the beam hits a
+                    moving object, the frequency shifts.</p>
+                <p>Write: <span class="highlight">Blue Shift = Closing / Red Shift = Receding</span></p>
+                <p>Analogy: <span class="highlight">Think of a Race Car</span> passing you. As it approaches, the engine
+                    sounds high-pitched ($EEEE$). As it passes, it drops to a low pitch ($OOOO$). The radar 'hears' that
+                    pitch change to calculate speed instantly.</p>
+            </div>
+        </div>
+
+        <!-- SNR Decision Viz -->
+        <div class="viz-card" style="border-left: 4px solid var(--accent-warm)">
+            <div class="viz-header">
+                <div>
+                    <span class="badge"
+                        style="background: rgba(255, 60, 0, 0.2); border-color: var(--accent-warm); color: var(--accent-warm)">Principle
+                        5</span>
+                    <strong style="margin-left:10px">Clarity through Repetition</strong>
+                </div>
+                <div class="equation">SNR ∝ (Pt • n) / R⁴</div>
+            </div>
+
+            <div class="explanation">
+                <p>The ocean is noisy—waves, rain, and birds create 'clutter.' To find a real target, we use <span
+                        class="highlight">Dwell Time (n)</span>. We hit the same spot multiple times and average the
+                    results. This builds up our Signal-to-Noise Ratio (SNR) until the computer is sure it’s a real
+                    threat.</p>
+                <p>Write: <span class="highlight">n = The 'Are you sure?' button</span></p>
+                <p>Analogy: <span class="highlight">Imagine hearing a friend in a crowded bar</span>. If they say their
+                    name once, you might miss it. If they repeat it 10 times, your brain 'integrates' those sounds and
+                    filters out the background music. That 10th repeat is your n.</p>
+            </div>
+
+            <div id="snr-status"
+                style="margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent-warm);">
+                TRACK STATUS: SEARCHING...</div>
+        </div>
+
+        <script>
+            const rangeSlider = document.getElementById('range-slider');
+            const powerSlider = document.getElementById('power-slider');
+            const beamSlider = document.getElementById('beam-slider');
+            const velSlider = document.getElementById('vel-slider');
+            const phaseSlider = document.getElementById('phase-slider');
+            const dwellSlider = document.getElementById('dwell-slider');
+
+            const divCanvas = document.getElementById('divergence-canvas');
+            const powCanvas = document.getElementById('power-canvas');
+            const huyCanvas = document.getElementById('huygens-canvas');
+            const dopCanvas = document.getElementById('doppler-canvas');
+            const snrCanvas = document.getElementById('snr-canvas');
+
+            const divCtx = divCanvas.getContext('2d');
+            const powCtx = powCanvas.getContext('2d');
+            const huyCtx = huyCanvas.getContext('2d');
+            const dopCtx = dopCanvas.getContext('2d');
+            const snrCtx = snrCanvas.getContext('2d');
+
+            function resizeCanvases() {
+                [divCanvas, powCanvas, huyCanvas, dopCanvas, snrCanvas].forEach(c => {
+                    c.width = c.parentElement.offsetWidth;
+                    c.height = c.parentElement.offsetHeight;
+                });
+            }
+
+            window.addEventListener('resize', () => {
+                resizeCanvases();
+                update();
+            });
+
+            function drawDivergence(R, theta) {
+                const w = divCanvas.width;
+                const h = divCanvas.height;
+                if (!divCtx) return;
+                divCtx.clearRect(0, 0, w, h);
+
+                const padding = 40;
+                const startX = 20;
+                const startY = h / 2;
+                const endX = w - padding;
+
+                // Math
+                const thetaRad = (theta * Math.PI) / 180;
+                const actualW = 2 * R * Math.tan(thetaRad / 2);
+                document.getElementById('actual-width').innerText = actualW.toFixed(2) + " km";
+
+                // Draw Cone
+                const coneHeight = (actualW / R) * (endX - startX) * 20; // Scaled for viz
+
+                const gradient = divCtx.createLinearGradient(startX, 0, endX, 0);
+                gradient.addColorStop(0, 'rgba(0, 242, 255, 0.8)');
+                gradient.addColorStop(1, 'rgba(0, 242, 255, 0.1)');
+
+                divCtx.beginPath();
+                divCtx.moveTo(startX, startY);
+                divCtx.lineTo(endX, startY - coneHeight / 2);
+                divCtx.lineTo(endX, startY + coneHeight / 2);
+                divCtx.closePath();
+                divCtx.fillStyle = gradient;
+                divCtx.fill();
+                divCtx.strokeStyle = '#00f2ff';
+                divCtx.lineWidth = 1;
+                divCtx.stroke();
+
+                // Labels
+                divCtx.fillStyle = '#fff';
+                divCtx.font = '10px JetBrains Mono';
+                divCtx.fillText("ANTENNA", startX, startY - 20);
+                divCtx.fillText(`RANGE: ${R}km`, endX - 60, startY + coneHeight / 2 + 20);
+
+                divCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+                divCtx.setLineDash([5, 5]);
+                divCtx.beginPath();
+                divCtx.moveTo(endX, startY - coneHeight / 2);
+                divCtx.lineTo(endX, startY + coneHeight / 2);
+                divCtx.stroke();
+                divCtx.setLineDash([]);
+                divCtx.fillText(`W = ${actualW.toFixed(2)}km`, endX + 5, startY);
+            }
+
+            function drawPowerCurve(R, Pt) {
+                const w = powCanvas.width;
+                const h = powCanvas.height;
+                if (!powCtx) return;
+                powCtx.clearRect(0, 0, w, h);
+
+                const padding = 40;
+                const graphW = w - padding * 2;
+                const graphH = h - padding * 2;
+
+                // Axis
+                powCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+                powCtx.beginPath();
+                powCtx.moveTo(padding, padding);
+                powCtx.lineTo(padding, h - padding);
+                powCtx.lineTo(w - padding, h - padding);
+                powCtx.stroke();
+
+                // Inverse Square (Outbound) - S = Pt / R^2
+                powCtx.strokeStyle = 'rgba(0, 242, 255, 0.4)';
+                powCtx.setLineDash([2, 4]);
+                powCtx.beginPath();
+                for (let x = 0; x <= graphW; x++) {
+                    let rVal = (x / graphW) * 50 + 1; // Range 1 to 50
+                    let sVal = Pt / (rVal * rVal);
+                    let y = (h - padding) - (sVal * graphH * 5); // Scaled
+                    if (x === 0) powCtx.moveTo(padding + x, y);
+                    else powCtx.lineTo(padding + x, y);
+                }
+                powCtx.stroke();
+                powCtx.fillStyle = 'rgba(0, 242, 255, 1)';
+                powCtx.fillText("1/R² (DENSITY)", graphW / 2, padding + 20);
+
+                // Inverse Fourth (Echo) - Pr = Pt / R^4
+                powCtx.strokeStyle = '#ff3c00';
+                powCtx.setLineDash([]);
+                powCtx.beginPath();
+                for (let x = 0; x <= graphW; x++) {
+                    let rVal = (x / graphW) * 50 + 1;
+                    let sVal = (Pt * 100) / Math.pow(rVal, 4);
+                    let y = (h - padding) - (sVal * graphH);
+                    if (y < padding) y = padding;
+                    if (x === 0) powCtx.moveTo(padding + x, y);
+                    else powCtx.lineTo(padding + x, y);
+                }
+                powCtx.stroke();
+                powCtx.fillStyle = '#ff3c00';
+                powCtx.fillText("1/R⁴ (ECHO STRENGTH)", graphW / 2, padding + 40);
+
+                // Current Point
+                let curX = ((R - 1) / 49) * graphW;
+                powCtx.fillStyle = '#fff';
+                powCtx.beginPath();
+                powCtx.arc(padding + curX, h - padding, 4, 0, Math.PI * 2);
+                powCtx.fill();
+                powCtx.fillText(`CURRENT R: ${R}km`, padding + curX - 30, h - 20);
+            }
+
+            function drawHuygens(phaseDeg) {
+                const w = huyCanvas.width;
+                const h = huyCanvas.height;
+                if (!huyCtx) return;
+                huyCtx.clearRect(0, 0, w, h);
+
+                const sources = 10;
+                const spacing = h / (sources + 1);
+                const time = performance.now() / 1000;
+                const phaseRad = (phaseDeg * Math.PI) / 180;
+
+                for (let i = 0; i < sources; i++) {
+                    const y = spacing * (i + 1);
+                    const x = 30;
+                    const sourcePhase = i * phaseRad * 0.2; // Steering delay
+
+                    // Phase pulse for the source point (The "Clock")
+                    const pulse = Math.sin(time * 10 - sourcePhase * 10) * 0.5 + 0.5;
+
+                    // Source point
+                    huyCtx.fillStyle = `rgba(0, 242, 255, ${0.4 + pulse * 0.6})`;
+                    huyCtx.beginPath();
+                    huyCtx.arc(x, y, 3 + pulse * 2, 0, Math.PI * 2);
+                    huyCtx.fill();
+
+                    // Wavelets
+                    huyCtx.strokeStyle = 'rgba(0, 242, 255, 0.1)';
+                    for (let r = 0; r < 5; r++) {
+                        const radius = ((time * 60 - sourcePhase * 50 + r * 60) % 300);
+                        if (radius > 0) {
+                            huyCtx.beginPath();
+                            huyCtx.arc(x, y, radius, -Math.PI / 2, Math.PI / 2);
+                            huyCtx.stroke();
+                        }
+                    }
+                }
+
+                // Beam Indicator
+                huyCtx.save();
+                huyCtx.translate(30, h / 2);
+                huyCtx.rotate(phaseRad * -0.5);
+                const beamGrad = huyCtx.createLinearGradient(0, 0, 200, 0);
+                beamGrad.addColorStop(0, 'rgba(0, 242, 255, 0.4)');
+                beamGrad.addColorStop(1, 'rgba(0, 242, 255, 0)');
+                huyCtx.fillStyle = beamGrad;
+                huyCtx.fillRect(0, -20, 300, 40);
+                huyCtx.restore();
+            }
+
+            function drawDoppler(velocity) {
+                const w = dopCanvas.width;
+                const h = dopCanvas.height;
+                if (!dopCtx) return;
+                dopCtx.clearRect(0, 0, w, h);
+
+                const midY = h / 2;
+                const time = performance.now() / 500;
+
+                // Transmitted
+                dopCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+                dopCtx.beginPath();
+                for (let x = 0; x < w; x++) {
+                    const y = midY - 60 + Math.sin(x * 0.05 + time * 2) * 20;
+                    if (x === 0) dopCtx.moveTo(x, y);
+                    else dopCtx.lineTo(x, y);
+                }
+                dopCtx.stroke();
+                dopCtx.fillStyle = 'rgba(255,255,255,0.5)';
+                dopCtx.font = '10px JetBrains Mono';
+                dopCtx.fillText("TRANSMITTED CARRIER", 10, midY - 90);
+
+                // Echo Shifted
+                const freqShift = 1.0 + (velocity / 5000);
+                const color = velocity > 0 ? '#00f2ff' : '#ff3c00';
+                dopCtx.strokeStyle = color;
+                dopCtx.lineWidth = 2;
+                dopCtx.beginPath();
+                for (let x = 0; x < w; x++) {
+                    const y = midY + 40 + Math.sin(x * 0.05 * freqShift + time * 2) * 20;
+                    if (x === 0) dopCtx.moveTo(x, y);
+                    else dopCtx.lineTo(x, y);
+                }
+                dopCtx.stroke();
+                dopCtx.fillStyle = color;
+                dopCtx.fillText(velocity > 0 ? "BLUE SHIFT (CLOSING)" : "RED SHIFT (RECEDING)", 10, midY + 80);
+            }
+
+            function drawSNR(R, Pt, n) {
+                const w = snrCanvas.width;
+                const h = snrCanvas.height;
+                if (!snrCtx) return;
+                snrCtx.clearRect(0, 0, w, h);
+
+                const midY = h * 0.7;
+                const noiseFloorMax = 40;
+                const threshold = 100;
+
+                // Draw Noise Floor (Random Grass)
+                // Noise reduction through integration follows 1/sqrt(n)
+                const noiseScale = 1 / Math.sqrt(n);
+                snrCtx.strokeStyle = 'rgba(0, 255, 0, 0.4)';
+                snrCtx.beginPath();
+                for (let x = 0; x < w; x += 2) {
+                    const noise = Math.random() * noiseFloorMax * noiseScale;
+                    snrCtx.moveTo(x, midY);
+                    snrCtx.lineTo(x, midY - noise);
+                }
+                snrCtx.stroke();
+
+                // Draw Threshold Line
+                snrCtx.setLineDash([5, 5]);
+                snrCtx.strokeStyle = '#ff3c00';
+                snrCtx.beginPath();
+                snrCtx.moveTo(0, midY - threshold);
+                snrCtx.lineTo(w, midY - threshold);
+                snrCtx.stroke();
+                snrCtx.setLineDash([]);
+                snrCtx.fillStyle = '#ff3c00';
+                snrCtx.font = '10px JetBrains Mono';
+                snrCtx.fillText("DETECTION THRESHOLD", 10, midY - threshold - 5);
+
+                // Draw Target Signal
+                // Simplified SNR: Signal = (Pt * constant * n) / R^4
+                const signalStrength = (Pt * 800000 * n) / Math.pow(R, 4);
+                const targetX = w * 0.6;
+
+                const gradient = snrCtx.createLinearGradient(0, midY, 0, midY - signalStrength);
+                gradient.addColorStop(0, 'rgba(0, 242, 255, 0)');
+                gradient.addColorStop(1, 'rgba(0, 242, 255, 1)');
+
+                snrCtx.shadowBlur = signalStrength > threshold ? 15 : 0;
+                snrCtx.shadowColor = '#00f2ff';
+
+                snrCtx.fillStyle = gradient;
+                snrCtx.beginPath();
+                snrCtx.moveTo(targetX - 15, midY);
+                snrCtx.lineTo(targetX, midY - signalStrength);
+                snrCtx.lineTo(targetX + 15, midY);
+                snrCtx.fill();
+
+                snrCtx.shadowBlur = 0;
+
+                // Status Update
+                const statusEl = document.getElementById('decision-status');
+                if (signalStrength > threshold) {
+                    statusEl.innerText = "STATUS: TRACK COMMITTED";
+                    statusEl.style.borderColor = "#00f2ff";
+                    statusEl.style.color = "#00f2ff";
+                    statusEl.style.boxShadow = "0 0 15px rgba(0, 242, 255, 0.5)";
+                } else {
+                    statusEl.innerText = "STATUS: NO TRACK";
+                    statusEl.style.borderColor = "#ff3c00";
+                    statusEl.style.color = "#ff3c00";
+                    statusEl.style.boxShadow = "none";
+                }
+            }
+
+            function update() {
+                const R = parseFloat(rangeSlider.value);
+                const Pt = parseFloat(powerSlider.value);
+                const theta = parseFloat(beamSlider.value);
+                const vel = parseFloat(velSlider.value);
+                const phase = parseFloat(phaseSlider.value);
+                const dwell = parseFloat(dwellSlider.value);
+
+                document.getElementById('range-val').innerText = R.toFixed(1) + " km";
+                document.getElementById('power-val').innerText = Pt.toFixed(1) + " MW";
+                document.getElementById('beam-val').innerText = theta.toFixed(1) + "°";
+                document.getElementById('vel-val').innerText = vel + " m/s";
+                document.getElementById('phase-val').innerText = phase + "°";
+                document.getElementById('dwell-val').innerText = dwell;
+
+                drawDivergence(R, theta);
+                drawPowerCurve(R, Pt);
+                drawHuygens(phase);
+                drawDoppler(vel);
+                drawSNR(R, Pt, dwell);
+
+                requestAnimationFrame(update);
+            }
+
+            [rangeSlider, powerSlider, beamSlider, velSlider, phaseSlider, dwellSlider].forEach(s => s.addEventListener('input', () => { }));
+
+            resizeCanvases();
+            update();
+        </script>
+</body>
+
+</html>

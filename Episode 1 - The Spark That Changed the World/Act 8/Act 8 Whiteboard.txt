@@ -1,0 +1,59 @@
+# Episode 1, Act 8: The Whiteboard Session – The Cavity Magnetron
+
+## Scene Setup
+**Visual**: The Narrator stands at the board. He holds a black marker. The background is slightly darker, emphasizing the glow of the technical diagrams.
+
+---
+
+## Phase 1: The Microwave Wall
+**Visual Goal**: Illustrate the physical limitation of pre-war vacuum tubes.
+
+*   **Narration**: "By 1939, radar had a 'weight' problem. If you wanted to see something small—like a Nazi U-boat periscope—you needed high-frequency microwaves. But the vacuum tubes of the day were like old-fashioned steam engines. If you pushed them hard enough to create those frequencies, they would simply melt."
+*   **Drawing Action**: Draw a fragile-looking, oversized vacuum tube on the left side of the board. Draw jagged "heat" lines radiating from it to show it failing under stress.
+*   **Concept**: **Thermal Constraint** – The trade-off between power and frequency in conventional electronics.
+
+---
+
+## Phase 2: The Six-Shooter Geometry
+**Visual Goal**: Introduce the radical architecture of the Magnetron.
+
+*   **Narration**: "The solution wasn't a bigger tube; it was a clever bit of geometry. This is the **Cavity Magnetron**. Think of it as a solid block of copper with 'whistles' carved into it. But instead of blowing air, we’re going to blow a cloud of electrons."
+*   **Drawing Action**: Draw a large circle in the center of the board. Carve several smaller circles (cavities) into its perimeter.
+*   **Visual Reference**: It should look like the cylinder of a six-shooter revolver.
+*   **Concept**: **Geometric Resonance** – Using physical space to dictate frequency.
+
+---
+
+## Phase 3: The Steering Wheel (Lorentz Force)
+**Visual Goal**: Explain how the magnetic field manipulates electron paths.
+
+*   **Narration**: "This is where the 'Magnet' in Magnetron comes in. In a normal tube, electrons fly in a straight line. But when we place this copper block inside a powerful magnetic field, the physics changes."
+*   **Drawing Action**: 
+    1. In the center of the large circle, draw a small dot labeled **(-)** for the **Cathode**.
+    2. Draw two large blocks on either side of the device labeled **'N'** and **'S'** for a Permanent Magnet.
+*   **Action**: Write the Lorentz Force equation next to the magnets:
+    $$\large F = q(\vec{v} \times \vec{B})$$
+*   **Narration**: "This is the **Lorentz Force**. The magnetic field ($B$) acts like a 'steering wheel' on the moving electrons ($v$). Instead of hitting the walls, the electrons are forced into a spiral."
+*   **Concept**: **Electromagnetic Displacement** – Controlling subatomic particles with fields.
+
+---
+
+## Phase 4: The Microwave Whistle
+**Visual Goal**: Show the spiraling electrons creating high-frequency vibration.
+
+*   **Narration**: "As this cloud of electrons whips past those copper cavities, they cause the space inside to 'ring'—vibrating at billions of times per second. This is **Resonance**. It’s a whistle that screams at the speed of light."
+*   **Drawing Action**: Draw a spiral path starting from the center Cathode dot, showing the electrons whipping in a circle, just grazing the openings of the perimeter cavities.
+*   **Action**: Write the tactical result in bold, sharp letters: **10cm Wavelength / 100kW Power**.
+*   **Concept**: **Electronic Resonance** – Converting kinetic energy into high-frequency EM radiation.
+
+---
+
+## Phase 5: The Tactical Shift
+**Visual Goal**: Show the change in scale of radar technology.
+
+*   **Narration**: "Suddenly, we weren't 'shouting' with a building-sized antenna anymore. We had a 'Microwave Whistle' that could fit in the nose of a fighter plane. This didn't just change the war; it changed the scale of human sight."
+*   **Drawing Action**: 
+    1. On the far left, draw a simple, towering lattice structure (representing the 1930s coastal radars) and draw a large, red **'X'** over it.
+    2. On the right, draw a sharp silhouette of a fighter plane's nose cone.
+    3. Inside the nose cone, sketch a small, glowing circle to represent the **Magnetron**.
+*   **Concept**: **Miniaturization** – Transitioning from stationary coastal defense to mobile tactical sensors.
